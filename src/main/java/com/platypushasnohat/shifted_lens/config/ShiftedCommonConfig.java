@@ -9,13 +9,12 @@ public class ShiftedCommonConfig {
     public static final ForgeConfigSpec COMMON;
 
     static {
-        ForgeConfigSpec.Builder CONFIG_BUILDER = new ForgeConfigSpec.Builder();
-        CONFIG_BUILDER.comment("Shifted Lens Configs").push("shifted_lens_common_config");
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        CONFIG_BUILDER.comment("Replace Mobs").push("mob_config");
+        builder.push("mob-spawning");
+        REPLACE_GHAST = builder.comment("Replace Vanilla Ghast").define("replace-ghast", true);
+        builder.pop();
 
-        REPLACE_GHAST = CONFIG_BUILDER.comment("Replace Ghast").define("replace_ghast", true);
-
-        COMMON = CONFIG_BUILDER.build();
+        COMMON = builder.build();
     }
 }

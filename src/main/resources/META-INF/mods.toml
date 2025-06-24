@@ -8,9 +8,7 @@ license = "MIT"
     logoFile = "shifted_lens.png"
     authors = ".magmastrider., -Ghoul-, platypushasnohat"
     displayName = "Shifted Lens"
-    description = '''
-    Reworks vanilla hostile mobs with new animations, models, textures, and behaviors!
-    '''
+    description = '''Reworks vanilla hostile mobs with new animations, models, textures, and behaviors!'''
 
 [[dependencies.shifted_lens]]
     modId = "minecraft"
