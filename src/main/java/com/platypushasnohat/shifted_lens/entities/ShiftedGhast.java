@@ -206,22 +206,20 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
                     if (this.chargeTime == 40) {
                         Vec3 vec3 = this.ghast.getViewVector(1.0F);
                         double d2 = target.getX() - (this.ghast.getX() + vec3.x * 4.0D);
-                        double d3 = target.getY(0.5D) - (0.5D + this.ghast.getY(0.5D));
+                        double d3 = target.getY(0.5D) - (0.5D + this.ghast.getY());
                         double d4 = target.getZ() - (this.ghast.getZ() + vec3.z * 4.0D);
 
                         if (!this.ghast.isSilent()) {
                             level.levelEvent(null, 1016, this.ghast.blockPosition(), 0);
                         }
-
-                        LargeFireball largefireball = new LargeFireball(level, this.ghast, d2, d3, d4, this.ghast.getExplosionPower());
-                        largefireball.setPos(this.ghast.getX() + vec3.x * 4.0D, this.ghast.getY(0.5D) + 0.5D, largefireball.getZ() + vec3.z * 4.0D);
-                        level.addFreshEntity(largefireball);
+                        LargeFireball fireball = new LargeFireball(level, this.ghast, d2, d3, d4, this.ghast.getExplosionPower());
+                        fireball.setPos(this.ghast.getX() + vec3.x * 4.0D, this.ghast.getY() + 0.5D, fireball.getZ() + vec3.z * 4.0D);
+                        level.addFreshEntity(fireball);
                         this.chargeTime = -40;
                     }
                 } else if (this.chargeTime > 0) {
                     --this.chargeTime;
                 }
-
                 this.ghast.setShooting(this.chargeTime > 10);
             }
         }
@@ -255,9 +253,9 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
 
         public void start() {
             RandomSource randomsource = this.ghast.getRandom();
-            double d0 = this.ghast.getX() + (double) ((randomsource.nextFloat() * 2.0F - 1.0F) * 24.0F);
-            double d1 = this.ghast.getY() + (double) ((randomsource.nextFloat() * 2.0F - 1.0F) * 24.0F);
-            double d2 = this.ghast.getZ() + (double) ((randomsource.nextFloat() * 2.0F - 1.0F) * 24.0F);
+            double d0 = this.ghast.getX() + (double) ((randomsource.nextFloat() * 2.0F - 1.0F) * 32.0F);
+            double d1 = this.ghast.getY() + (double) ((randomsource.nextFloat() * 2.0F - 1.0F) * 8.0F);
+            double d2 = this.ghast.getZ() + (double) ((randomsource.nextFloat() * 2.0F - 1.0F) * 32.0F);
             this.ghast.getMoveControl().setWantedPosition(d0, d1, d2, 1.0D);
         }
     }
@@ -282,14 +280,14 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
         public void tick() {
             if (this.ghast.getTarget() == null) {
                 Vec3 vec3 = this.ghast.getDeltaMovement();
-                this.ghast.setYRot(-((float)Mth.atan2(vec3.x, vec3.z)) * (180F / (float)Math.PI));
+                this.ghast.setYRot(-((float) Mth.atan2(vec3.x, vec3.z)) * (180F / (float) Math.PI));
                 this.ghast.yBodyRot = this.ghast.getYRot();
             } else {
                 LivingEntity target = this.ghast.getTarget();
                 if (target.distanceToSqr(this.ghast) < 4096.0D) {
                     double d1 = target.getX() - this.ghast.getX();
                     double d2 = target.getZ() - this.ghast.getZ();
-                    this.ghast.setYRot(-((float)Mth.atan2(d1, d2)) * (180F / (float)Math.PI));
+                    this.ghast.setYRot(-((float)Mth.atan2(d1, d2)) * (180F / (float) Math.PI));
                     this.ghast.yBodyRot = this.ghast.getYRot();
                 }
             }
@@ -315,12 +313,12 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
                     double length = vec3.length();
                     vec3 = vec3.normalize();
                     if (this.canReach(vec3, Mth.ceil(length))) {
-                        this.flightSpeed = Mth.clamp(this.flightSpeed, 0.0025D, 0.02D);
-                        this.flightSpeed *= 1.025D;
+                        this.flightSpeed = Mth.clamp(this.flightSpeed, 0.0075D, 0.05D);
+                        this.flightSpeed *= 1.003D;
                         this.ghast.setDeltaMovement(this.ghast.getDeltaMovement().add(vec3.scale(this.flightSpeed)));
                     } else {
                         this.operation = MoveControl.Operation.WAIT;
-                        this.flightSpeed = 0.0025D;
+                        this.flightSpeed *= 0.005D;
                     }
                 }
             }
