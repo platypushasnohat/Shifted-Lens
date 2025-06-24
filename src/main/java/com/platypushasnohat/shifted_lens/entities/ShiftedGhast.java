@@ -166,6 +166,11 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
         return true;
     }
 
+    @Override
+    public int getMaxHeadXRot() {
+        return 500;
+    }
+
     // goals
     static class GhastShootFireballGoal extends Goal {
 
@@ -199,7 +204,9 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
                     Level level = this.ghast.level();
                     this.chargeTime++;
 
-                    if (this.chargeTime == 30 && !this.ghast.isSilent()) {
+                    this.ghast.getLookControl().setLookAt(target, 10F, this.ghast.getMaxHeadXRot());
+
+                    if (this.chargeTime == 32 && !this.ghast.isSilent()) {
                         level.levelEvent(null, 1015, this.ghast.blockPosition(), 0);
                     }
 
@@ -235,13 +242,13 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
         }
 
         public boolean canUse() {
-            MoveControl movecontrol = this.ghast.getMoveControl();
-            if (!movecontrol.hasWanted()) {
+            MoveControl moveControl = this.ghast.getMoveControl();
+            if (!moveControl.hasWanted()) {
                 return true;
             } else {
-                double d0 = movecontrol.getWantedX() - this.ghast.getX();
-                double d1 = movecontrol.getWantedY() - this.ghast.getY();
-                double d2 = movecontrol.getWantedZ() - this.ghast.getZ();
+                double d0 = moveControl.getWantedX() - this.ghast.getX();
+                double d1 = moveControl.getWantedY() - this.ghast.getY();
+                double d2 = moveControl.getWantedZ() - this.ghast.getZ();
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 return d3 < 1.0D || d3 > 3600.0D;
             }
@@ -313,8 +320,8 @@ public class ShiftedGhast extends FlyingMob implements Enemy {
                     double length = vec3.length();
                     vec3 = vec3.normalize();
                     if (this.canReach(vec3, Mth.ceil(length))) {
-                        this.flightSpeed = Mth.clamp(this.flightSpeed, 0.0075D, 0.035D);
-                        this.flightSpeed += 0.00001D;
+                        this.flightSpeed = Mth.clamp(this.flightSpeed, 0.01D, 0.035D);
+                        this.flightSpeed += 0.000016D;
                         this.ghast.setDeltaMovement(this.ghast.getDeltaMovement().add(vec3.scale(this.flightSpeed)));
                     } else {
                         this.operation = MoveControl.Operation.WAIT;

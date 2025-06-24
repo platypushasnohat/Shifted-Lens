@@ -1,10 +1,10 @@
 package com.platypushasnohat.shifted_lens.client.models;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.ShiftedGhastAnimations;
 import com.platypushasnohat.shifted_lens.entities.ShiftedGhast;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,6 +12,8 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
@@ -32,6 +34,7 @@ public class ShiftedGhastModel<T extends ShiftedGhast> extends HierarchicalModel
 	private final ModelPart Tentacle7;
 	private final ModelPart Tentacle8;
 	private final ModelPart Tentacle9;
+	private final List<ModelPart> glowingLayerModelParts;
 
 	public ShiftedGhastModel(ModelPart root) {
 		this.root = root.getChild("root");
@@ -49,6 +52,8 @@ public class ShiftedGhastModel<T extends ShiftedGhast> extends HierarchicalModel
 		this.Tentacle7 = this.Ghast.getChild("Tentacle7");
 		this.Tentacle8 = this.Ghast.getChild("Tentacle8");
 		this.Tentacle9 = this.Ghast.getChild("Tentacle9");
+		this.glowingLayerModelParts = ImmutableList.of(this.Head, this.Eyes);
+
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -87,6 +92,9 @@ public class ShiftedGhastModel<T extends ShiftedGhast> extends HierarchicalModel
 		this.Tentacle7.xRot = (float) (limbSwingAmount * Math.toRadians(13) + Mth.cos(limbSwing * 0.19F) * 0.2F * limbSwingAmount);
 		this.Tentacle8.xRot = (float) (limbSwingAmount * Math.toRadians(13) + Mth.cos(limbSwing * 0.2F) * 0.2F * limbSwingAmount);
 		this.Tentacle9.xRot = (float) (limbSwingAmount * Math.toRadians(12) + Mth.cos(limbSwing * 0.18F) * 0.2F * limbSwingAmount);
+
+		this.Ghast.xRot = headPitch / (180F / (float) Math.PI);
+		this.Ghast.yRot = netHeadYaw / (180F / (float) Math.PI);
 	}
 
 	@Override
@@ -96,5 +104,9 @@ public class ShiftedGhastModel<T extends ShiftedGhast> extends HierarchicalModel
 
 	public ModelPart root() {
 		return this.root;
+	}
+
+	public List<ModelPart> getGlowingLayerModelParts() {
+		return this.glowingLayerModelParts;
 	}
 }

@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.client.renderer;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.ShiftedGhastModel;
+import com.platypushasnohat.shifted_lens.client.renderer.layers.GhastGlowLayer;
 import com.platypushasnohat.shifted_lens.entities.ShiftedGhast;
 import com.platypushasnohat.shifted_lens.registry.ShiftedModelLayers;
 import net.minecraft.client.renderer.RenderType;
@@ -16,9 +17,11 @@ import org.jetbrains.annotations.Nullable;
 public class ShiftedGhastRenderer extends MobRenderer<ShiftedGhast, ShiftedGhastModel<ShiftedGhast>> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast.png");
+    private static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast_glow.png");
 
     public ShiftedGhastRenderer(EntityRendererProvider.Context context) {
-        super(context, new ShiftedGhastModel<>(context.bakeLayer(ShiftedModelLayers.GHAST_LAYER)), 0.5F);
+        super(context, new ShiftedGhastModel<>(context.bakeLayer(ShiftedModelLayers.GHAST_LAYER)), 1.5F);
+        this.addLayer(new GhastGlowLayer<>(this, GLOW_TEXTURE, (entity, p_234802_, p_234803_) -> entity.isShooting() ? 1F : 0.5F, ShiftedGhastModel::getGlowingLayerModelParts));
     }
 
     @Override
