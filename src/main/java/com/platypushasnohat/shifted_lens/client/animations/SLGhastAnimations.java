@@ -8,7 +8,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ShiftedGhastAnimations {
+public class SLGhastAnimations {
 
 	public static final AnimationDefinition IDLE = AnimationDefinition.Builder.withLength(8.0F).looping()
 			.addAnimation("Ghast", new AnimationChannel(AnimationChannel.Targets.ROTATION,

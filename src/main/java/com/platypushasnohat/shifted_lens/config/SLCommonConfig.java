@@ -2,7 +2,7 @@ package com.platypushasnohat.shifted_lens.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ShiftedCommonConfig {
+public class SLCommonConfig {
 
     public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_GHAST;
 

@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens;
 
-import com.platypushasnohat.shifted_lens.config.ShiftedCommonConfig;
-import com.platypushasnohat.shifted_lens.registry.ShiftedEntities;
+import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -27,9 +27,9 @@ public class ShiftedLens {
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::dataSetup);
 
-        context.registerConfig(ModConfig.Type.COMMON, ShiftedCommonConfig.COMMON);
+        context.registerConfig(ModConfig.Type.COMMON, SLCommonConfig.COMMON);
 
-        ShiftedEntities.ENTITY_TYPES.register(modEventBus);
+        SLEntities.ENTITY_TYPES.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
     }

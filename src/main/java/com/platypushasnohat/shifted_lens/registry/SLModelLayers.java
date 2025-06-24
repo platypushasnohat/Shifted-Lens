@@ -7,7 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ShiftedModelLayers {
+public class SLModelLayers {
 
     public static final ModelLayerLocation GHAST_LAYER = main("ghast");
 

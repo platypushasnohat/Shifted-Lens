@@ -1,9 +1,9 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.config.ShiftedCommonConfig;
-import com.platypushasnohat.shifted_lens.entities.ShiftedGhast;
-import com.platypushasnohat.shifted_lens.registry.ShiftedEntities;
+import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.entities.SLGhast;
+import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Ghast;
@@ -22,9 +22,9 @@ public class ServerEvents {
         LivingEntity entity = event.getEntity();
         LevelAccessor level = event.getLevel();
         if (event.getResult() != Result.DENY) {
-            if (entity.getType() == EntityType.GHAST && ShiftedCommonConfig.REPLACE_GHAST.get()) {
+            if (entity.getType() == EntityType.GHAST && SLCommonConfig.REPLACE_GHAST.get()) {
                 Ghast ghast = (Ghast) entity;
-                ShiftedGhast shiftedGhast = ShiftedEntities.SHIFTED_GHAST.get().create((Level) level);
+                SLGhast shiftedGhast = SLEntities.SHIFTED_GHAST.get().create((Level) level);
                 if (shiftedGhast != null) {
                     shiftedGhast.copyPosition(ghast);
                     level.addFreshEntity(shiftedGhast);

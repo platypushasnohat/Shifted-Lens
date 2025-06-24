@@ -1,10 +1,10 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.client.models.ShiftedGhastModel;
-import com.platypushasnohat.shifted_lens.client.renderer.ShiftedGhastRenderer;
-import com.platypushasnohat.shifted_lens.registry.ShiftedEntities;
-import com.platypushasnohat.shifted_lens.registry.ShiftedModelLayers;
+import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
+import com.platypushasnohat.shifted_lens.client.renderer.SLGhastRenderer;
+import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -17,11 +17,11 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ShiftedEntities.SHIFTED_GHAST.get(), ShiftedGhastRenderer::new);
+        event.registerEntityRenderer(SLEntities.SHIFTED_GHAST.get(), SLGhastRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ShiftedModelLayers.GHAST_LAYER, ShiftedGhastModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.GHAST_LAYER, SLGhastModel::createBodyLayer);
     }
 }
