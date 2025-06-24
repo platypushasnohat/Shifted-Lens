@@ -79,16 +79,14 @@ public class ShiftedGhastModel<T extends ShiftedGhast> extends HierarchicalModel
 		this.animate(entity.idleAnimationState, ShiftedGhastAnimations.IDLE, ageInTicks, 1.75F);
 		this.animate(entity.shootAnimationState, ShiftedGhastAnimations.ATTACK, ageInTicks);
 
-		float tentacleRot = (float) (limbSwingAmount * Math.toRadians(8) + Mth.cos(limbSwing * 0.2F) * 0.2F * limbSwingAmount);
-
-		this.Tentacle1.xRot = tentacleRot;
-		this.Tentacle2.xRot = tentacleRot;
-		this.Tentacle3.xRot = tentacleRot;
-		this.Tentacle4.xRot = tentacleRot;
-		this.Tentacle6.xRot = tentacleRot;
-		this.Tentacle7.xRot = tentacleRot;
-		this.Tentacle8.xRot = tentacleRot;
-		this.Tentacle9.xRot = tentacleRot;
+		this.Tentacle1.xRot = (float) (limbSwingAmount * Math.toRadians(12) + Mth.cos(limbSwing * 0.19F) * 0.2F * limbSwingAmount);
+		this.Tentacle2.xRot = (float) (limbSwingAmount * Math.toRadians(10) + Mth.cos(limbSwing * 0.17F) * 0.2F * limbSwingAmount);
+		this.Tentacle3.xRot = (float) (limbSwingAmount * Math.toRadians(11) + Mth.cos(limbSwing * 0.2F) * 0.2F * limbSwingAmount);
+		this.Tentacle4.xRot = (float) (limbSwingAmount * Math.toRadians(12) + Mth.cos(limbSwing * 0.18F) * 0.2F * limbSwingAmount);
+		this.Tentacle6.xRot = (float) (limbSwingAmount * Math.toRadians(11) + Mth.cos(limbSwing * 0.2F) * 0.2F * limbSwingAmount);
+		this.Tentacle7.xRot = (float) (limbSwingAmount * Math.toRadians(13) + Mth.cos(limbSwing * 0.19F) * 0.2F * limbSwingAmount);
+		this.Tentacle8.xRot = (float) (limbSwingAmount * Math.toRadians(13) + Mth.cos(limbSwing * 0.2F) * 0.2F * limbSwingAmount);
+		this.Tentacle9.xRot = (float) (limbSwingAmount * Math.toRadians(12) + Mth.cos(limbSwing * 0.18F) * 0.2F * limbSwingAmount);
 	}
 
 	@Override
