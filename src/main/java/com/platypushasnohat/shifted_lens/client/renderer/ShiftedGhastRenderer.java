@@ -21,7 +21,7 @@ public class ShiftedGhastRenderer extends MobRenderer<ShiftedGhast, ShiftedGhast
 
     public ShiftedGhastRenderer(EntityRendererProvider.Context context) {
         super(context, new ShiftedGhastModel<>(context.bakeLayer(ShiftedModelLayers.GHAST_LAYER)), 1.5F);
-        this.addLayer(new GhastGlowLayer<>(this, GLOW_TEXTURE, (entity, p_234802_, p_234803_) -> entity.isShooting() ? 1F : 0.5F, ShiftedGhastModel::getGlowingLayerModelParts));
+        this.addLayer(new GhastGlowLayer<>(this, GLOW_TEXTURE, (entity, p_234802_, p_234803_) -> 0.75F, ShiftedGhastModel::getGlowingLayerModelParts));
     }
 
     @Override

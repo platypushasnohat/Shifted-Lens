@@ -42,18 +42,12 @@ public class GhastGlowLayer<T extends ShiftedGhast, M extends ShiftedGhastModel<
 
     private void onlyDrawSelectedParts() {
         List<ModelPart> list = this.drawSelector.getPartsToDraw(this.getParentModel());
-        this.getParentModel().root().getAllParts().forEach((modelPart) -> {
-            modelPart.skipDraw = true;
-        });
-        list.forEach((modelPart) -> {
-            modelPart.skipDraw = false;
-        });
+        this.getParentModel().root().getAllParts().forEach((modelPart) -> modelPart.skipDraw = true);
+        list.forEach((modelPart) -> modelPart.skipDraw = false);
     }
 
     private void resetDrawForAllParts() {
-        this.getParentModel().root().getAllParts().forEach((modelPart) -> {
-            modelPart.skipDraw = false;
-        });
+        this.getParentModel().root().getAllParts().forEach((modelPart) -> modelPart.skipDraw = false);
     }
 
     @OnlyIn(Dist.CLIENT)
