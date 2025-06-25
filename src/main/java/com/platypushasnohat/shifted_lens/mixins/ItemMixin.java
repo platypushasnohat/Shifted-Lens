@@ -27,7 +27,7 @@ public final class ItemMixin {
         if (itemStack.is(Items.FIRE_CHARGE)) {
             player.gameEvent(GameEvent.ITEM_INTERACT_START);
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.5F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
-            player.getCooldowns().addCooldown(itemStack.getItem(), 10);
+            player.getCooldowns().addCooldown(itemStack.getItem(), 20);
 
             if (!level.isClientSide) {
                 SmallFireball fireCharge = new SmallFireball(level, player, player.getLookAngle().x(), player.getLookAngle().y(), player.getLookAngle().z());

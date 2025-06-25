@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,7 +25,10 @@ public class SLLanguageProvider extends LanguageProvider {
     }
 
     @Override
-    protected void addTranslations(){
+    protected void addTranslations() {
+
+        SLItems.AUTO_TRANSLATE.forEach(this::forItems);
+
         this.forEntity(SLEntities.GHAST);
     }
 

@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.entities;
 
+import com.platypushasnohat.shifted_lens.entities.projectiles.GhastFireball;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -13,7 +14,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -139,7 +139,7 @@ public class SLGhast extends Ghast {
         double targetX = this.getTarget().getX() - (this.getX() + vec3.x() * 4.0D);
         double targetY = this.getTarget().getBoundingBox().minY + this.getTarget().getBbHeight() / 2.0F - (0.5D + this.getY() + this.getBbHeight() / 2.0F);
         double targetZ = this.getTarget().getZ() - (this.getZ() + vec3.z() * 4.0D);
-        LargeFireball fireball = new LargeFireball(this.level(), this, targetX, targetY, targetZ, this.getExplosionPower());
+        GhastFireball fireball = new GhastFireball(this.level(), this, targetX, targetY, targetZ, this.getExplosionPower());
         fireball.setPos(this.getX() + vec3.x() * 4.0D, this.getY(0.5D) + 0.5D, this.getZ() + vec3.z() * 4.0D);
         this.level().addFreshEntity(fireball);
     }

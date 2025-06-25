@@ -2,8 +2,11 @@ package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
 import com.platypushasnohat.shifted_lens.data.SLEntityTagProvider;
+import com.platypushasnohat.shifted_lens.data.SLItemModelProvider;
 import com.platypushasnohat.shifted_lens.data.SLLanguageProvider;
+import com.platypushasnohat.shifted_lens.data.SLRecipeProvider;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -37,6 +40,7 @@ public class ShiftedLens {
 
         context.registerConfig(ModConfig.Type.COMMON, SLCommonConfig.COMMON);
 
+        SLItems.ITEMS.register(modEventBus);
         SLEntities.ENTITY_TYPES.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -58,8 +62,10 @@ public class ShiftedLens {
 
         boolean server = data.includeServer();
         generator.addProvider(server, new SLEntityTagProvider(output, provider, helper));
+        generator.addProvider(server, new SLRecipeProvider(output));
 
         boolean client = data.includeClient();
+        generator.addProvider(client, new SLItemModelProvider(data));
         generator.addProvider(client, new SLLanguageProvider(data));
     }
 
