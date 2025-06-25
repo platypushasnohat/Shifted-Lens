@@ -1,11 +1,15 @@
 package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.data.SLEntityTagProvider;
 import com.platypushasnohat.shifted_lens.data.SLLanguageProvider;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -16,6 +20,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 
 @Mod(ShiftedLens.MOD_ID)
 public class ShiftedLens {
@@ -47,9 +52,14 @@ public class ShiftedLens {
 
     private void dataSetup(GatherDataEvent data) {
         DataGenerator generator = data.getGenerator();
+        PackOutput output = generator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> provider = data.getLookupProvider();
+        ExistingFileHelper helper = data.getExistingFileHelper();
+
+        boolean server = data.includeServer();
+        generator.addProvider(server, new SLEntityTagProvider(output, provider, helper));
 
         boolean client = data.includeClient();
-
         generator.addProvider(client, new SLLanguageProvider(data));
     }
 
