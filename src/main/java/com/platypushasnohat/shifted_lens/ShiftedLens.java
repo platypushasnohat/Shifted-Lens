@@ -1,7 +1,9 @@
 package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.data.SLLanguageProvider;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -44,7 +46,11 @@ public class ShiftedLens {
     }
 
     private void dataSetup(GatherDataEvent data) {
+        DataGenerator generator = data.getGenerator();
 
+        boolean client = data.includeClient();
+
+        generator.addProvider(client, new SLLanguageProvider(data));
     }
 
     public static ResourceLocation modPrefix(String name) {

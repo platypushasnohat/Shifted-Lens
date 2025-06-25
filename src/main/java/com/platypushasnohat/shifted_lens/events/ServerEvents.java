@@ -24,7 +24,7 @@ public class ServerEvents {
         if (event.getResult() != Result.DENY) {
             if (entity.getType() == EntityType.GHAST && SLCommonConfig.REPLACE_GHAST.get()) {
                 Ghast ghast = (Ghast) entity;
-                SLGhast shiftedGhast = SLEntities.SHIFTED_GHAST.get().create((Level) level);
+                SLGhast shiftedGhast = SLEntities.GHAST.get().create((Level) level);
                 if (shiftedGhast != null) {
                     shiftedGhast.copyPosition(ghast);
                     level.addFreshEntity(shiftedGhast);

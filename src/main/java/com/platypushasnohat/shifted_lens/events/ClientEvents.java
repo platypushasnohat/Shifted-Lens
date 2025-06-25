@@ -17,7 +17,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(SLEntities.SHIFTED_GHAST.get(), SLGhastRenderer::new);
+        event.registerEntityRenderer(SLEntities.GHAST.get(), SLGhastRenderer::new);
     }
 
     @SubscribeEvent

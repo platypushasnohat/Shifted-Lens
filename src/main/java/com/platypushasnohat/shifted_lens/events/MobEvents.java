@@ -12,6 +12,6 @@ public class MobEvents {
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(SLEntities.SHIFTED_GHAST.get(), SLGhast.createAttributes().build());
+        event.put(SLEntities.GHAST.get(), SLGhast.createAttributes().build());
     }
 }

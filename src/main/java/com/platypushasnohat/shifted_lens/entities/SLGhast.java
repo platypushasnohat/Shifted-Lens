@@ -96,6 +96,11 @@ public class SLGhast extends Ghast {
     }
 
     @Override
+    protected float getSoundVolume() {
+        return 3.0F;
+    }
+
+    @Override
     public void travel(Vec3 vec3) {
         if (this.isControlledByLocalInstance()) {
             if (this.isInWater()) {

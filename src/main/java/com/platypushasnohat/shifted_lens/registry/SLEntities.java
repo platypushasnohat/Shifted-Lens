@@ -15,7 +15,7 @@ public class SLEntities {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ShiftedLens.MOD_ID);
 
-    public static final RegistryObject<EntityType<SLGhast>> SHIFTED_GHAST = ENTITY_TYPES.register(
+    public static final RegistryObject<EntityType<SLGhast>> GHAST = ENTITY_TYPES.register(
             "ghast", () ->
             EntityType.Builder.of(SLGhast::new, MobCategory.MONSTER)
                     .sized(4.0F, 4.0F)
