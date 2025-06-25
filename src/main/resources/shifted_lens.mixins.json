@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "opposing_force.refmap.json",
   "mixins": [
+    "ItemMixin"
   ],
   "client": [
   ],

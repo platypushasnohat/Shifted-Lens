@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.entities.SLGhast;
+import com.platypushasnohat.shifted_lens.entities.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
