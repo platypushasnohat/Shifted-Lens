@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.platypushasnohat.shifted_lens.mixins",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "opposing_force.refmap.json",
+  "refmap": "shifted_lens.refmap.json",
   "mixins": [
     "ItemMixin"
   ],
