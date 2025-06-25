@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -34,7 +35,7 @@ public class SLGhast extends Ghast {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.FOLLOW_RANGE, 96.0D).add(Attributes.FLYING_SPEED, 0.1D);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.FOLLOW_RANGE, 100.0D).add(Attributes.FLYING_SPEED, 0.11D);
     }
 
     @Override
@@ -72,6 +73,25 @@ public class SLGhast extends Ghast {
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
+    }
+
+    private static boolean isReflectedFireball(DamageSource source) {
+        return source.getDirectEntity() instanceof GhastFireball && source.getEntity() instanceof Player;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return !isReflectedFireball(source) && super.isInvulnerableTo(source);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (isReflectedFireball(source)) {
+            super.hurt(source, 1000.0F);
+            return true;
+        } else {
+            return !this.isInvulnerableTo(source) && super.hurt(source, amount);
+        }
     }
 
     @Nullable
@@ -134,16 +154,6 @@ public class SLGhast extends Ghast {
         this.calculateEntityAnimation(false);
     }
 
-    public void shootFireball() {
-        Vec3 vec3 = this.getViewVector(1.0F);
-        double targetX = this.getTarget().getX() - (this.getX() + vec3.x() * 4.0D);
-        double targetY = this.getTarget().getBoundingBox().minY + this.getTarget().getBbHeight() / 2.0F - (0.5D + this.getY() + this.getBbHeight() / 2.0F);
-        double targetZ = this.getTarget().getZ() - (this.getZ() + vec3.z() * 4.0D);
-        GhastFireball fireball = new GhastFireball(this.level(), this, targetX, targetY, targetZ, this.getExplosionPower());
-        fireball.setPos(this.getX() + vec3.x() * 4.0D, this.getY(0.5D) + 0.5D, this.getZ() + vec3.z() * 4.0D);
-        this.level().addFreshEntity(fireball);
-    }
-
     // goals
     static class GhastAttackGoal extends Goal {
 
@@ -158,12 +168,34 @@ public class SLGhast extends Ghast {
             return this.ghast.getTarget() != null;
         }
 
+        @Override
+        public boolean canContinueToUse() {
+            LivingEntity target = this.ghast.getTarget();
+            if (target == null) {
+                return false;
+            } else if (!target.isAlive()) {
+                return false;
+            } else if (!this.ghast.isWithinRestriction(target.blockPosition())) {
+                return false;
+            } else {
+                return !(target instanceof Player) || !target.isSpectator() && !((Player) target).isCreative() || !this.ghast.getNavigation().isDone();
+            }
+        }
+
         public void start() {
             this.chargeTime = 0;
+            this.ghast.setCharging(false);
+            this.ghast.setAggressive(true);
         }
 
         public void stop() {
             this.ghast.setCharging(false);
+            LivingEntity target = this.ghast.getTarget();
+            if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) {
+                this.ghast.setTarget(null);
+            }
+            this.ghast.setAggressive(false);
+            this.ghast.getNavigation().stop();
         }
 
         public boolean requiresUpdateEveryTick() {
@@ -186,7 +218,15 @@ public class SLGhast extends Ghast {
 
                     if (this.chargeTime == 40) {
                         this.ghast.playSound(SoundEvents.GHAST_SHOOT, 10.0F, this.ghast.getVoicePitch());
-                        this.ghast.shootFireball();
+
+                        Vec3 vec3 = this.ghast.getViewVector(1.0F);
+                        double targetX = target.getX() - (this.ghast.getX() + vec3.x() * 4.0D);
+                        double targetY = target.getBoundingBox().minY + this.ghast.getTarget().getBbHeight() / 2.0F - (0.5D + this.ghast.getY() + this.ghast.getBbHeight() / 2.0F);
+                        double targetZ = target.getZ() - (this.ghast.getZ() + vec3.z() * 4.0D);
+                        GhastFireball fireball = new GhastFireball(this.ghast.level(), this.ghast, targetX, targetY, targetZ, this.ghast.getExplosionPower());
+                        fireball.setPos(this.ghast.getX() + vec3.x() * 4.0D, this.ghast.getY(0.5D) + 0.5D, this.ghast.getZ() + vec3.z() * 4.0D);
+                        this.ghast.level().addFreshEntity(fireball);
+
                         this.chargeTime = -40;
                     }
                 } else if (this.chargeTime > 0) {
