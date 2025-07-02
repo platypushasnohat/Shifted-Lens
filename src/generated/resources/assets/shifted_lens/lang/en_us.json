@@ -1,4 +1,7 @@
 {
+  "entity.shifted_lens.elder_guardian": "Elder Guardian",
   "entity.shifted_lens.ghast": "Ghast",
+  "entity.shifted_lens.ghast_fireball": "Ghast Fireball",
+  "entity.shifted_lens.guardian": "Guardian",
   "item.shifted_lens.inferno_charge": "Inferno Charge"
 }

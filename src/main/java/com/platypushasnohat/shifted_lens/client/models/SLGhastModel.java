@@ -80,6 +80,7 @@ public class SLGhastModel<T extends SLGhast> extends HierarchicalModel<T> {
 		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
+	@Override
 	public ModelPart root() {
 		return this.root;
 	}

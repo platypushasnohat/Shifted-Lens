@@ -2,7 +2,7 @@ package com.platypushasnohat.shifted_lens.client.renderer;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
-import com.platypushasnohat.shifted_lens.client.renderer.layers.GhastGlowLayer;
+import com.platypushasnohat.shifted_lens.client.renderer.layers.SLGhastGlowLayer;
 import com.platypushasnohat.shifted_lens.entities.SLGhast;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.RenderType;
@@ -21,7 +21,7 @@ public class SLGhastRenderer extends MobRenderer<SLGhast, SLGhastModel<SLGhast>>
 
     public SLGhastRenderer(EntityRendererProvider.Context context) {
         super(context, new SLGhastModel<>(context.bakeLayer(SLModelLayers.GHAST_LAYER)), 1.5F);
-        this.addLayer(new GhastGlowLayer<>(this));
+        this.addLayer(new SLGhastGlowLayer<>(this));
     }
 
     @Override

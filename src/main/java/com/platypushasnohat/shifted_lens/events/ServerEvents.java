@@ -2,11 +2,15 @@ package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.entities.SLElderGuardian;
 import com.platypushasnohat.shifted_lens.entities.SLGhast;
+import com.platypushasnohat.shifted_lens.entities.SLGuardian;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
@@ -24,10 +28,31 @@ public class ServerEvents {
         if (event.getResult() != Result.DENY) {
             if (entity.getType() == EntityType.GHAST && SLCommonConfig.REPLACE_GHAST.get()) {
                 Ghast ghast = (Ghast) entity;
-                SLGhast shiftedGhast = SLEntities.GHAST.get().create((Level) level);
-                if (shiftedGhast != null) {
-                    shiftedGhast.copyPosition(ghast);
-                    level.addFreshEntity(shiftedGhast);
+                SLGhast slGhast = SLEntities.GHAST.get().create((Level) level);
+                if (slGhast != null) {
+                    slGhast.copyPosition(ghast);
+                    level.addFreshEntity(slGhast);
+                }
+                event.setSpawnCancelled(true);
+                event.setResult(Result.DENY);
+            }
+
+            if (entity.getType() == EntityType.GUARDIAN && SLCommonConfig.REPLACE_GUARDIAN.get()) {
+                Guardian guardian = (Guardian) entity;
+                SLGuardian slGuardian = SLEntities.GUARDIAN.get().create((Level) level);
+                if (slGuardian != null) {
+                    slGuardian.copyPosition(guardian);
+                    level.addFreshEntity(slGuardian);
+                }
+                event.setSpawnCancelled(true);
+                event.setResult(Result.DENY);
+            }
+            if (entity.getType() == EntityType.ELDER_GUARDIAN && SLCommonConfig.REPLACE_ELDER_GUARDIAN.get()) {
+                ElderGuardian elderGuardian = (ElderGuardian) entity;
+                SLElderGuardian slElderGuardian = SLEntities.ELDER_GUARDIAN.get().create((Level) level);
+                if (slElderGuardian != null) {
+                    slElderGuardian.copyPosition(elderGuardian);
+                    level.addFreshEntity(slElderGuardian);
                 }
                 event.setSpawnCancelled(true);
                 event.setResult(Result.DENY);

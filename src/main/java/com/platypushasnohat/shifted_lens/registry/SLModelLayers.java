@@ -11,6 +11,9 @@ public class SLModelLayers {
 
     public static final ModelLayerLocation GHAST_LAYER = main("ghast");
 
+    public static final ModelLayerLocation GUARDIAN_LAYER = main("guardian");
+    public static final ModelLayerLocation ELDER_GUARDIAN_LAYER = main("elder_guardian");
+
     private static ModelLayerLocation register(String id, String name) {
         return new ModelLayerLocation(new ResourceLocation(ShiftedLens.MOD_ID, id), name);
     }
