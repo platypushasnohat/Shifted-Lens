@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
+import com.platypushasnohat.shifted_lens.registry.SLCreativeTab;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.sounds.SoundEvent;
@@ -26,6 +27,8 @@ public class SLLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+
+        addTab(SLCreativeTab.SHIFTED_LENS_TAB.get(), "Shifted Lens");
 
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
 
@@ -78,7 +81,7 @@ public class SLLanguageProvider extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect." + regName, "Arrow of " + name);
     }
 
-    public void addTabName(CreativeModeTab key, String name){
+    public void addTab(CreativeModeTab key, String name){
         add(key.getDisplayName().getString(), name);
     }
 

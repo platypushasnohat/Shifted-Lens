@@ -7,11 +7,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class BaseGuardian extends Guardian {
 
@@ -110,7 +113,7 @@ public class BaseGuardian extends Guardian {
             } else {
                 Entity entity = this.level().getEntity(this.entityData.get(ATTACK_TARGET));
                 if (entity instanceof LivingEntity) {
-                    this.clientAttackTarget = (LivingEntity)entity;
+                    this.clientAttackTarget = (LivingEntity) entity;
                     return this.clientAttackTarget;
                 } else {
                     return null;
@@ -118,6 +121,51 @@ public class BaseGuardian extends Guardian {
             }
         } else {
             return this.getTarget();
+        }
+    }
+
+    @Override
+    public int getMaxHeadXRot() {
+        return 30;
+    }
+
+    public static class GuardianMoveTowardsRestrictionGoal extends Goal {
+
+        private final BaseGuardian guardian;
+        private double wantedX;
+        private double wantedY;
+        private double wantedZ;
+
+        public GuardianMoveTowardsRestrictionGoal(BaseGuardian guardian) {
+            this.guardian = guardian;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (this.guardian.isWithinRestriction()) {
+                return false;
+            } else {
+                Vec3 vec3 = DefaultRandomPos.getPosTowards(this.guardian, 16, 8, Vec3.atBottomCenterOf(this.guardian.getRestrictCenter()), (float) Math.PI / 2F);
+                if (vec3 == null) {
+                    return false;
+                } else {
+                    this.wantedX = vec3.x;
+                    this.wantedY = vec3.y;
+                    this.wantedZ = vec3.z;
+                    return true;
+                }
+            }
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return !this.guardian.getNavigation().isDone();
+        }
+
+        @Override
+        public void start() {
+            this.guardian.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, 1.0D);
         }
     }
 }

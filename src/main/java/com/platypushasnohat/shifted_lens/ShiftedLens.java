@@ -5,6 +5,7 @@ import com.platypushasnohat.shifted_lens.data.SLEntityTagProvider;
 import com.platypushasnohat.shifted_lens.data.SLItemModelProvider;
 import com.platypushasnohat.shifted_lens.data.SLLanguageProvider;
 import com.platypushasnohat.shifted_lens.data.SLRecipeProvider;
+import com.platypushasnohat.shifted_lens.registry.SLCreativeTab;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.core.HolderLookup;
@@ -42,6 +43,7 @@ public class ShiftedLens {
 
         SLItems.ITEMS.register(modEventBus);
         SLEntities.ENTITY_TYPES.register(modEventBus);
+        SLCreativeTab.CREATIVE_TABS.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
     }

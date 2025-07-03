@@ -31,10 +31,9 @@ import java.util.function.Predicate;
 
 public class SLElderGuardian extends BaseGuardian {
 
-    private int attackTime = 0;
-
     public SLElderGuardian(EntityType<? extends BaseGuardian> entityType, Level level) {
         super(entityType, level);
+        this.setPersistenceRequired();
         this.xpReward = 36;
     }
 
@@ -50,6 +49,7 @@ public class SLElderGuardian extends BaseGuardian {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new ElderGuardianAttackGoal(this));
         this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1, 10));
+        this.goalSelector.addGoal(4, new GuardianMoveTowardsRestrictionGoal(this));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Guardian.class, 12.0F, 0.01F));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, new ElderGuardianAttackSelector(this)));
@@ -102,6 +102,7 @@ public class SLElderGuardian extends BaseGuardian {
     static class ElderGuardianAttackGoal extends Goal {
 
         private final SLElderGuardian elderGuardian;
+        private int attackTime;
 
         public ElderGuardianAttackGoal(SLElderGuardian elderGuardian) {
             this.elderGuardian = elderGuardian;
@@ -121,7 +122,7 @@ public class SLElderGuardian extends BaseGuardian {
 
         @Override
         public void start() {
-            this.elderGuardian.attackTime = -10;
+            this.attackTime = -10;
             this.elderGuardian.getNavigation().stop();
             LivingEntity livingentity = this.elderGuardian.getTarget();
             if (livingentity != null) {
@@ -133,6 +134,7 @@ public class SLElderGuardian extends BaseGuardian {
 
         @Override
         public void stop() {
+            this.attackTime = -10;
             this.elderGuardian.setActiveAttackTarget(0);
             this.elderGuardian.setTarget(null);
             this.elderGuardian.getNavigation().stop();
@@ -153,23 +155,24 @@ public class SLElderGuardian extends BaseGuardian {
                 if (!this.elderGuardian.hasLineOfSight(target)) {
                     this.elderGuardian.setTarget(null);
                 } else {
-                    this.elderGuardian.attackTime++;
-                    if (this.elderGuardian.attackTime == 0) {
+                    this.attackTime++;
+
+                    if (this.attackTime == 0) {
                         this.elderGuardian.setPose(SLPoses.BEAM_START.get());
                         this.elderGuardian.setActiveAttackTarget(target.getId());
-
-                        if (!this.elderGuardian.isSilent()) {
-                            this.elderGuardian.level().broadcastEntityEvent(this.elderGuardian, (byte) 21);
-                        }
+//                        if (!this.elderGuardian.isSilent()) {
+//                            this.elderGuardian.level().broadcastEntityEvent(this.elderGuardian, (byte) 21);
+//                        }
                     }
-                    if (this.elderGuardian.attackTime == 8) {
+
+                    if (this.attackTime == 8) {
                         this.elderGuardian.setPose(SLPoses.BEAM.get());
                     }
-                    if (this.elderGuardian.attackTime == this.elderGuardian.getAttackDuration() - 2) {
+                    if (this.attackTime == this.elderGuardian.getAttackDuration() - 2) {
                         this.elderGuardian.setPose(SLPoses.BEAM_END.get());
                     }
 
-                    else if (this.elderGuardian.attackTime >= this.elderGuardian.getAttackDuration()) {
+                    else if (this.attackTime >= this.elderGuardian.getAttackDuration()) {
 
                         float damage = 2.0F;
 

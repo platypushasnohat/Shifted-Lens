@@ -25,7 +25,7 @@ public class SLElderGuardianRenderer extends MobRenderer<SLElderGuardian, SLElde
     private static final ResourceLocation TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/elder_guardian.png");
 
     public SLElderGuardianRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLElderGuardianModel<>(context.bakeLayer(SLModelLayers.ELDER_GUARDIAN_LAYER)), 0.5F);
+        super(context, new SLElderGuardianModel<>(context.bakeLayer(SLModelLayers.ELDER_GUARDIAN_LAYER)), 1.2F);
     }
 
     @Override

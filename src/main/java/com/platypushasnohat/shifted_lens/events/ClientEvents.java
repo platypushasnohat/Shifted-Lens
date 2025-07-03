@@ -51,6 +51,8 @@ public final class ClientEvents {
         MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
         if (tabKey == CreativeModeTabs.INGREDIENTS) {
             entries.putAfter(new ItemStack(Items.FIRE_CHARGE), new ItemStack(SLItems.INFERNO_CHARGE.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            entries.putAfter(new ItemStack(Items.GLOW_INK_SAC), new ItemStack(SLItems.INK_ENGINE.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            entries.putAfter(new ItemStack(SLItems.INK_ENGINE.get()), new ItemStack(SLItems.WHIRLIGIG.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
     }
 }

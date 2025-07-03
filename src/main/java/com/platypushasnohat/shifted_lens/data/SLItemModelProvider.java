@@ -18,6 +18,9 @@ public class SLItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         item(INFERNO_CHARGE);
+
+        item(INK_ENGINE);
+        item(WHIRLIGIG);
     }
 
     private ItemModelBuilder item(RegistryObject<?> item) {

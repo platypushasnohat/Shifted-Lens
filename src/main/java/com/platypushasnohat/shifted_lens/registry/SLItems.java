@@ -18,6 +18,9 @@ public class SLItems {
 
     public static final RegistryObject<Item> INFERNO_CHARGE = registerItem("inferno_charge", () -> new InfernoChargeItem(new Item.Properties()));
 
+    public static final RegistryObject<Item> INK_ENGINE = registerItem("ink_engine", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> WHIRLIGIG = registerItem("whirligig", () -> new Item(new Item.Properties()));
+
     private static <I extends Item> RegistryObject<I> registerItem(String name, Supplier<? extends I> supplier) {
         RegistryObject<I> item = ITEMS.register(name, supplier);
         AUTO_TRANSLATE.add(item);

@@ -25,9 +25,9 @@ public class GuardianBeamRenderer {
     }
 
     public static void render(Entity entity, Entity target, PoseStack poseStack, MultiBufferSource buffer, float partialTicks) {
-        float f = 1;
+        float scale = 1;
 
-        if (entity instanceof SLElderGuardian|| entity instanceof SLGuardian) f = (((Guardian) entity).getAttackAnimationScale(partialTicks));
+        if (entity instanceof SLElderGuardian || entity instanceof SLGuardian) scale = (((Guardian) entity).getAttackAnimationScale(partialTicks));
 
         float f1 = (float) entity.level().getGameTime() + partialTicks;
         float f2 = f1 * 0.5F % 1.0F;
@@ -45,7 +45,7 @@ public class GuardianBeamRenderer {
         poseStack.mulPose(Axis.XP.rotation(f5));
 
         float f7 = f1 * 0.05F * -1.5F;
-        float f8 = f * f;
+        float f8 = scale * scale;
         int j = 64 + (int) (f8 * 191.0F);
         int k = 32 + (int) (f8 * 191.0F);
         int l = 128 - (int) (f8 * 64.0F);

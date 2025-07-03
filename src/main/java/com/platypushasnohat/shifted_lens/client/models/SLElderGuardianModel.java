@@ -84,7 +84,7 @@ public class SLElderGuardianModel<T extends SLElderGuardian> extends Hierarchica
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition elder_guardian = partdefinition.addOrReplaceChild("elder_guardian", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition elder_guardian = partdefinition.addOrReplaceChild("elder_guardian", CubeListBuilder.create(), PartPose.offset(0.0F, 19.0F, 0.0F));
 
 		PartDefinition body = elder_guardian.addOrReplaceChild("body", CubeListBuilder.create().texOffs(32, 80).addBox(-12.0F, -15.0F, -8.0F, 24.0F, 4.0F, 24.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 56).addBox(-16.0F, -11.0F, -8.0F, 4.0F, 24.0F, 24.0F, new CubeDeformation(0.0F))

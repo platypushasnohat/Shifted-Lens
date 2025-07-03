@@ -217,7 +217,9 @@ public class SLGhast extends Ghast {
                     }
 
                     if (this.chargeTime == 40) {
-                        this.ghast.playSound(SoundEvents.GHAST_SHOOT, 10.0F, this.ghast.getVoicePitch());
+                        if (!this.ghast.isSilent()) {
+                            this.ghast.playSound(SoundEvents.GHAST_SHOOT, 10.0F, this.ghast.getVoicePitch());
+                        }
 
                         Vec3 vec3 = this.ghast.getViewVector(1.0F);
                         double targetX = target.getX() - (this.ghast.getX() + vec3.x() * 4.0D);

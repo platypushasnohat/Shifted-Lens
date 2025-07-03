@@ -6,6 +6,7 @@
   "refmap": "shifted_lens.refmap.json",
   "mixins": [
     "ItemMixin",
+    "OceanMonumentPiecesMixin",
     "PoseMixin"
   ],
   "client": [
