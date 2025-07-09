@@ -25,7 +25,7 @@ public class SLGuardianRenderer extends MobRenderer<SLGuardian, SLGuardianModel<
     private static final ResourceLocation TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/guardian.png");
 
     public SLGuardianRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLGuardianModel<>(context.bakeLayer(SLModelLayers.GUARDIAN_LAYER)), 0.5F);
+        super(context, new SLGuardianModel<>(context.bakeLayer(SLModelLayers.GUARDIAN)), 0.5F);
     }
 
     @Override

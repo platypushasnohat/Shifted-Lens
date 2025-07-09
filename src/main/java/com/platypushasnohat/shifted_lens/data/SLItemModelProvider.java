@@ -21,6 +21,7 @@ public class SLItemModelProvider extends ItemModelProvider {
 
         item(INK_ENGINE);
         item(WHIRLIGIG);
+        item(STEEL_CHARIOT);
     }
 
     private ItemModelBuilder item(RegistryObject<?> item) {

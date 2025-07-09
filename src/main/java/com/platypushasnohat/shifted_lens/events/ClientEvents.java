@@ -4,9 +4,11 @@ import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLElderGuardianModel;
 import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
 import com.platypushasnohat.shifted_lens.client.models.SLGuardianModel;
+import com.platypushasnohat.shifted_lens.client.models.SteelChariotModel;
 import com.platypushasnohat.shifted_lens.client.renderer.SLElderGuardianRenderer;
 import com.platypushasnohat.shifted_lens.client.renderer.SLGhastRenderer;
 import com.platypushasnohat.shifted_lens.client.renderer.SLGuardianRenderer;
+import com.platypushasnohat.shifted_lens.client.renderer.SteelChariotRenderer;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
@@ -35,14 +37,18 @@ public final class ClientEvents {
 
         event.registerEntityRenderer(SLEntities.GUARDIAN.get(), SLGuardianRenderer::new);
         event.registerEntityRenderer(SLEntities.ELDER_GUARDIAN.get(), SLElderGuardianRenderer::new);
+
+        event.registerEntityRenderer(SLEntities.STEEL_CHARIOT.get(), SteelChariotRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(SLModelLayers.GHAST_LAYER, SLGhastModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
 
-        event.registerLayerDefinition(SLModelLayers.GUARDIAN_LAYER, SLGuardianModel::createBodyLayer);
-        event.registerLayerDefinition(SLModelLayers.ELDER_GUARDIAN_LAYER, SLElderGuardianModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.ELDER_GUARDIAN, SLElderGuardianModel::createBodyLayer);
+
+        event.registerLayerDefinition(SLModelLayers.STEEL_CHARIOT, SteelChariotModel::createBodyLayer);
     }
 
     @SubscribeEvent

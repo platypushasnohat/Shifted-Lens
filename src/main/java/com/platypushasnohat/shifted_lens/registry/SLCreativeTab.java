@@ -29,6 +29,7 @@ public class SLCreativeTab {
                         tabOutput.accept(Items.SQUID_SPAWN_EGG);
                         tabOutput.accept(INK_ENGINE.get());
                         tabOutput.accept(WHIRLIGIG.get());
+                        tabOutput.accept(STEEL_CHARIOT.get());
 
                     }).build());
 }

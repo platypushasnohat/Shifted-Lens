@@ -9,10 +9,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SLModelLayers {
 
-    public static final ModelLayerLocation GHAST_LAYER = main("ghast");
+    public static final ModelLayerLocation GHAST = main("ghast");
 
-    public static final ModelLayerLocation GUARDIAN_LAYER = main("guardian");
-    public static final ModelLayerLocation ELDER_GUARDIAN_LAYER = main("elder_guardian");
+    public static final ModelLayerLocation GUARDIAN = main("guardian");
+    public static final ModelLayerLocation ELDER_GUARDIAN = main("elder_guardian");
+
+    public static final ModelLayerLocation STEEL_CHARIOT = main("steel_chariot");
 
     private static ModelLayerLocation register(String id, String name) {
         return new ModelLayerLocation(new ResourceLocation(ShiftedLens.MOD_ID, id), name);

@@ -20,7 +20,7 @@ public class SLGhastRenderer extends MobRenderer<SLGhast, SLGhastModel<SLGhast>>
     private static final ResourceLocation RETRO_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast/retro_ghast.png");
 
     public SLGhastRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLGhastModel<>(context.bakeLayer(SLModelLayers.GHAST_LAYER)), 1.5F);
+        super(context, new SLGhastModel<>(context.bakeLayer(SLModelLayers.GHAST)), 1.5F);
         this.addLayer(new SLGhastGlowLayer<>(this));
     }
 
