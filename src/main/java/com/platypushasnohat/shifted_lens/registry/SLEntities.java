@@ -50,11 +50,11 @@ public class SLEntities {
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "elder_guardian").toString())
     );
 
-    public static final RegistryObject<EntityType<SteelChariot>> STEEL_CHARIOT = ENTITY_TYPES.register(
-            "steel_chariot", () ->
-                    EntityType.Builder.of(SteelChariot::new, MobCategory.MISC)
-                            .sized(1.8F, 2.0F)
-                            .clientTrackingRange(10)
-                            .build(new ResourceLocation(ShiftedLens.MOD_ID, "steel_chariot").toString())
+    public static final RegistryObject<EntityType<SLSalmon>> SALMON = ENTITY_TYPES.register(
+            "salmon", () ->
+            EntityType.Builder.of(SLSalmon::new, MobCategory.WATER_AMBIENT)
+                    .sized(0.7F, 0.4F)
+                    .clientTrackingRange(4)
+                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "salmon").toString())
     );
 }

@@ -16,7 +16,7 @@ public class SLCreativeTab {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ShiftedLens.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> SHIFTED_LENS_TAB = CREATIVE_TABS.register("shifted_lens",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(INK_ENGINE.get()))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(INFERNO_CHARGE.get()))
                     .title(Component.translatable("itemGroup.shifted_lens"))
                     .displayItems((pParameters, tabOutput) -> {
 
@@ -26,10 +26,7 @@ public class SLCreativeTab {
 
                         tabOutput.accept(Items.GUARDIAN_SPAWN_EGG);
                         tabOutput.accept(Items.ELDER_GUARDIAN_SPAWN_EGG);
-                        tabOutput.accept(Items.SQUID_SPAWN_EGG);
-                        tabOutput.accept(INK_ENGINE.get());
-                        tabOutput.accept(WHIRLIGIG.get());
-                        tabOutput.accept(STEEL_CHARIOT.get());
+                        tabOutput.accept(Items.SALMON_SPAWN_EGG);
 
                     }).build());
 }

@@ -8,6 +8,7 @@ public class SLCommonConfig {
 
     public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_GUARDIAN;
     public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_ELDER_GUARDIAN;
+    public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_SALMON;
 
     public static final ForgeConfigSpec COMMON;
 
@@ -19,6 +20,7 @@ public class SLCommonConfig {
 
         REPLACE_GUARDIAN = builder.comment("Replace Vanilla Guardian").define("replace-guardian", true);
         REPLACE_ELDER_GUARDIAN = builder.comment("Replace Vanilla Elder Guardian").define("replace-elder-guardian", true);
+        REPLACE_SALMON = builder.comment("Replace Vanilla Salmon").define("replace-salmon", true);
         builder.pop();
 
         COMMON = builder.build();

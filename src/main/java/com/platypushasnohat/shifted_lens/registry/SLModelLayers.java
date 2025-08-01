@@ -13,8 +13,7 @@ public class SLModelLayers {
 
     public static final ModelLayerLocation GUARDIAN = main("guardian");
     public static final ModelLayerLocation ELDER_GUARDIAN = main("elder_guardian");
-
-    public static final ModelLayerLocation STEEL_CHARIOT = main("steel_chariot");
+    public static final ModelLayerLocation SALMON = main("salmon");
 
     private static ModelLayerLocation register(String id, String name) {
         return new ModelLayerLocation(new ResourceLocation(ShiftedLens.MOD_ID, id), name);

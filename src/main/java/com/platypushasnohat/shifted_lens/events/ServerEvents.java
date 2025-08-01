@@ -5,10 +5,12 @@ import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
 import com.platypushasnohat.shifted_lens.entities.SLElderGuardian;
 import com.platypushasnohat.shifted_lens.entities.SLGhast;
 import com.platypushasnohat.shifted_lens.entities.SLGuardian;
+import com.platypushasnohat.shifted_lens.entities.SLSalmon;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Salmon;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Guardian;
@@ -57,6 +59,16 @@ public class ServerEvents {
                     if (slElderGuardian != null) {
                         slElderGuardian.copyPosition(elderGuardian);
                         level.addFreshEntity(slElderGuardian);
+                    }
+                    event.setSpawnCancelled(true);
+                    event.setResult(Result.DENY);
+                }
+                if (entity.getType() == EntityType.SALMON && SLCommonConfig.REPLACE_SALMON.get()) {
+                    Salmon salmon = (Salmon) entity;
+                    SLSalmon slSalmon = SLEntities.SALMON.get().create((Level) level);
+                    if (slSalmon != null) {
+                        slSalmon.copyPosition(salmon);
+                        level.addFreshEntity(slSalmon);
                     }
                     event.setSpawnCancelled(true);
                     event.setResult(Result.DENY);
