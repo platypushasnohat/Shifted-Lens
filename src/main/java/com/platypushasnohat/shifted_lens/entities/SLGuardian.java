@@ -77,10 +77,6 @@ public class SLGuardian extends BaseGuardian {
         public void start() {
             this.attackTime = -10;
             this.guardian.getNavigation().stop();
-            LivingEntity target = this.guardian.getTarget();
-            if (target != null) {
-                this.guardian.getLookControl().setLookAt(target, 360.0F, 360.0F);
-            }
             this.guardian.hasImpulse = true;
             this.guardian.setPose(Pose.SWIMMING);
         }

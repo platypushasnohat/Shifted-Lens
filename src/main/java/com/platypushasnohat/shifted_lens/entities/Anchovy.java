@@ -8,7 +8,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -19,17 +18,15 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
-public class SLSalmon extends SchoolingFish {
+public class Anchovy extends SchoolingFish {
 
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(SLSalmon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anchovy.class, EntityDataSerializers.INT);
 
-    public SLSalmon(EntityType<? extends SchoolingFish> entityType, Level level) {
+    public Anchovy(EntityType<? extends SchoolingFish> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 5, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 4);
@@ -43,14 +40,14 @@ public class SLSalmon extends SchoolingFish {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new CustomRandomSwimGoal(this, 1, 1, 20, 20, 3));
+        this.goalSelector.addGoal(1, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
         this.goalSelector.addGoal(2, new FollowSchoolLeaderGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 6.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.9F);
+                .add(Attributes.MAX_HEALTH, 2.0D)
+                .add(Attributes.MOVEMENT_SPEED, 1.0F);
     }
 
     @Override
@@ -86,23 +83,13 @@ public class SLSalmon extends SchoolingFish {
 
     @Override
     public int getMaxSchoolSize() {
-        return 20;
-    }
-
-    @Nullable
-    @Override
-    public ItemStack getPickResult() {
-        return new ItemStack(Items.SALMON_SPAWN_EGG);
+        return 120;
     }
 
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (level.getBiome(this.blockPosition()).is(BiomeTags.IS_OCEAN)) {
-            this.setVariant(1);
-        } else {
-            this.setVariant(0);
-        }
+        this.setVariant(level().getRandom().nextInt(1));
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 

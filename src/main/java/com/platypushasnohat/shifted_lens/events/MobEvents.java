@@ -1,10 +1,7 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.entities.SLElderGuardian;
-import com.platypushasnohat.shifted_lens.entities.SLGhast;
-import com.platypushasnohat.shifted_lens.entities.SLGuardian;
-import com.platypushasnohat.shifted_lens.entities.SLSalmon;
+import com.platypushasnohat.shifted_lens.entities.*;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,5 +17,6 @@ public class MobEvents {
         event.put(SLEntities.GUARDIAN.get(), SLGuardian.createAttributes().build());
         event.put(SLEntities.ELDER_GUARDIAN.get(), SLElderGuardian.createAttributes().build());
         event.put(SLEntities.SALMON.get(), SLSalmon.createAttributes().build());
+        event.put(SLEntities.ANCHOVY.get(), SLSalmon.createAttributes().build());
     }
 }

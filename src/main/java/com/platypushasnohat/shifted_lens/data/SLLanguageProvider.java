@@ -38,6 +38,7 @@ public class SLLanguageProvider extends LanguageProvider {
         this.forEntity(SLEntities.GUARDIAN);
         this.forEntity(SLEntities.ELDER_GUARDIAN);
         this.forEntity(SLEntities.SALMON);
+        this.forEntity(SLEntities.ANCHOVY);
     }
 
     @Override

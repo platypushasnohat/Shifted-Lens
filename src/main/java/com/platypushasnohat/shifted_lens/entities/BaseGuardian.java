@@ -30,6 +30,8 @@ public class BaseGuardian extends Guardian {
     public final AnimationState beamAnimationState = new AnimationState();
     public final AnimationState beamEndAnimationState = new AnimationState();
 
+    private int idleAnimationTimeout = 0;
+
     public BaseGuardian(EntityType<? extends BaseGuardian> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
@@ -58,7 +60,12 @@ public class BaseGuardian extends Guardian {
     }
 
     private void setupAnimationStates() {
-        this.idleAnimationState.animateWhen(this.isAlive(), this.tickCount);
+        if (this.idleAnimationTimeout == 0) {
+            this.idleAnimationTimeout = 160;
+            this.idleAnimationState.start(this.tickCount);
+        } else {
+            --this.idleAnimationTimeout;
+        }
         this.eyeAnimationState.animateWhen(this.isAlive() && this.getTarget() == null && !this.hasActiveAttackTarget(), this.tickCount);
     }
 
@@ -79,8 +86,8 @@ public class BaseGuardian extends Guardian {
             this.beamStartAnimationState.start(this.tickCount);
         }
         else if (this.getPose() == SLPoses.BEAM.get()) {
-            this.beamAnimationState.start(this.tickCount);
             this.beamStartAnimationState.stop();
+            this.beamAnimationState.start(this.tickCount);
         }
         else if (this.getPose() == SLPoses.BEAM_END.get()) {
             this.beamAnimationState.stop();
@@ -126,7 +133,7 @@ public class BaseGuardian extends Guardian {
 
     @Override
     public int getMaxHeadXRot() {
-        return 30;
+        return 500;
     }
 
     public static class GuardianMoveTowardsRestrictionGoal extends Goal {

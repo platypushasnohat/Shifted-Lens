@@ -6,9 +6,12 @@
   "refmap": "shifted_lens.refmap.json",
   "mixins": [
     "ItemMixin",
-    "PoseMixin"
+    "PoseMixin",
+    "TropicalFishMixin"
   ],
   "client": [
+    "client.TropicalFishModelAMixin",
+    "client.TropicalFishModelBMixin"
   ],
   "injectors": {
     "defaultRequire": 1
