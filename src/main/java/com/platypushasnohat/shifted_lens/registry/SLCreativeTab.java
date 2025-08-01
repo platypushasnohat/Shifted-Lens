@@ -21,12 +21,11 @@ public class SLCreativeTab {
                     .displayItems((pParameters, tabOutput) -> {
 
                         tabOutput.accept(Items.GHAST_SPAWN_EGG);
-                        tabOutput.accept(Items.FIRE_CHARGE);
-                        tabOutput.accept(INFERNO_CHARGE.get());
-
                         tabOutput.accept(Items.GUARDIAN_SPAWN_EGG);
                         tabOutput.accept(Items.ELDER_GUARDIAN_SPAWN_EGG);
                         tabOutput.accept(Items.SALMON_SPAWN_EGG);
+                        tabOutput.accept(Items.FIRE_CHARGE);
+                        tabOutput.accept(INFERNO_CHARGE.get());
 
                     }).build());
 }

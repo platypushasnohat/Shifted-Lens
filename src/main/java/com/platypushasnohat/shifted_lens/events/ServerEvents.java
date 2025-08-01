@@ -7,15 +7,18 @@ import com.platypushasnohat.shifted_lens.entities.SLGhast;
 import com.platypushasnohat.shifted_lens.entities.SLGuardian;
 import com.platypushasnohat.shifted_lens.entities.SLSalmon;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.animal.Salmon;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.Event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +30,11 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onLivingSpawn(MobSpawnEvent.FinalizeSpawn event) {
         LivingEntity entity = event.getEntity();
-        LevelAccessor level = event.getLevel();
+        ServerLevelAccessor level = event.getLevel();
+        DifficultyInstance difficulty = event.getDifficulty();
+        MobSpawnType spawnType = event.getSpawnType();
+        SpawnGroupData spawnData = event.getSpawnData();
+        CompoundTag compoundTag = event.getSpawnTag();
 
         boolean invalidSpawnType = event.getSpawnType() == MobSpawnType.STRUCTURE;
         if (!invalidSpawnType) {
@@ -42,7 +49,6 @@ public class ServerEvents {
                     event.setSpawnCancelled(true);
                     event.setResult(Result.DENY);
                 }
-
                 if (entity.getType() == EntityType.GUARDIAN && SLCommonConfig.REPLACE_GUARDIAN.get()) {
                     Guardian guardian = (Guardian) entity;
                     SLGuardian slGuardian = SLEntities.GUARDIAN.get().create((Level) level);
@@ -68,6 +74,7 @@ public class ServerEvents {
                     SLSalmon slSalmon = SLEntities.SALMON.get().create((Level) level);
                     if (slSalmon != null) {
                         slSalmon.copyPosition(salmon);
+                        slSalmon.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
                         level.addFreshEntity(slSalmon);
                     }
                     event.setSpawnCancelled(true);
