@@ -26,6 +26,8 @@ public class Anchovy extends SchoolingFish {
 
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anchovy.class, EntityDataSerializers.INT);
 
+    public final AnimationState flopAnimationState = new AnimationState();
+
     public Anchovy(EntityType<? extends SchoolingFish> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 5, 0.02F, 0.1F, true);
@@ -48,6 +50,19 @@ public class Anchovy extends SchoolingFish {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 2.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.0F);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.level().isClientSide()) {
+            this.setupAnimationStates();
+        }
+    }
+
+    private void setupAnimationStates() {
+        this.flopAnimationState.animateWhen(this.isAlive() && !this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override

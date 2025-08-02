@@ -1,5 +1,7 @@
 package com.platypushasnohat.shifted_lens.client.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.AnchovyModel;
 import com.platypushasnohat.shifted_lens.entities.Anchovy;
@@ -30,6 +32,17 @@ public class AnchovyRenderer extends MobRenderer<Anchovy, AnchovyModel<Anchovy>>
 
     @Override
     protected @Nullable RenderType getRenderType(Anchovy entity, boolean bodyVisible, boolean translucent, boolean glowing) {
-        return RenderType.entityCutoutNoCull(getTextureLocation(entity));
+        return RenderType.entityCutout(getTextureLocation(entity));
+    }
+
+    @Override
+    public void setupRotations(Anchovy entity, PoseStack matrixStack, float f, float g, float h) {
+        super.setupRotations(entity, matrixStack, f, g, h);
+        matrixStack.scale(0.75F, 0.75F, 0.75F);
+
+        if (!entity.isInWater()) {
+            matrixStack.translate(0, 0.1, 0);
+            matrixStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+        }
     }
 }

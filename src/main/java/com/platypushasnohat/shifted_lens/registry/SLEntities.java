@@ -50,14 +50,6 @@ public class SLEntities {
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "elder_guardian").toString())
     );
 
-    public static final RegistryObject<EntityType<SLSalmon>> SALMON = ENTITY_TYPES.register(
-            "salmon", () ->
-            EntityType.Builder.of(SLSalmon::new, MobCategory.WATER_AMBIENT)
-                    .sized(0.7F, 0.4F)
-                    .clientTrackingRange(4)
-                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "salmon").toString())
-    );
-
     public static final RegistryObject<EntityType<Anchovy>> ANCHOVY = ENTITY_TYPES.register(
             "anchovy", () ->
             EntityType.Builder.of(Anchovy::new, MobCategory.WATER_AMBIENT)

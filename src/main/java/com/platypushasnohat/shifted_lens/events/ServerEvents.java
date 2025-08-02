@@ -7,7 +7,6 @@ import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Salmon;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Guardian;
@@ -59,17 +58,6 @@ public class ServerEvents {
                     if (slElderGuardian != null) {
                         slElderGuardian.copyPosition(elderGuardian);
                         level.addFreshEntity(slElderGuardian);
-                    }
-                    event.setSpawnCancelled(true);
-                    event.setResult(Result.DENY);
-                }
-                if (entity.getType() == EntityType.SALMON && SLCommonConfig.REPLACE_SALMON.get()) {
-                    Salmon salmon = (Salmon) entity;
-                    SLSalmon slSalmon = SLEntities.SALMON.get().create((Level) level);
-                    if (slSalmon != null) {
-                        slSalmon.copyPosition(salmon);
-                        slSalmon.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
-                        level.addFreshEntity(slSalmon);
                     }
                     event.setSpawnCancelled(true);
                     event.setResult(Result.DENY);
