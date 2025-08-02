@@ -25,6 +25,7 @@ public class SLCreativeTab {
                         tabOutput.accept(Items.GHAST_SPAWN_EGG);
                         tabOutput.accept(Items.GUARDIAN_SPAWN_EGG);
                         tabOutput.accept(Items.SALMON_SPAWN_EGG);
+                        tabOutput.accept(SQUILL_SPAWN_EGG.get());
                         tabOutput.accept(Items.TROPICAL_FISH_SPAWN_EGG);
 
                         tabOutput.accept(Items.FIRE_CHARGE);

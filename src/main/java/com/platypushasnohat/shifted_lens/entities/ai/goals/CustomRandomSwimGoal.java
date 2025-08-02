@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 
 public class CustomRandomSwimGoal extends RandomStrollGoal {
 
-    PathfinderMob fish;
+    protected PathfinderMob fish;
     Vec3 wantedPos;
 
     int radius;

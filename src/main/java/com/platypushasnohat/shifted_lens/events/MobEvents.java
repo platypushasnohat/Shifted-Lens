@@ -17,5 +17,6 @@ public class MobEvents {
         event.put(SLEntities.GUARDIAN.get(), SLGuardian.createAttributes().build());
         event.put(SLEntities.ELDER_GUARDIAN.get(), SLElderGuardian.createAttributes().build());
         event.put(SLEntities.ANCHOVY.get(), Anchovy.createAttributes().build());
+        event.put(SLEntities.SQUILL.get(), Squill.createAttributes().build());
     }
 }

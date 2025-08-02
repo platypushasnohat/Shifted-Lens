@@ -23,8 +23,8 @@ public final class ClientEvents {
 
         event.registerEntityRenderer(SLEntities.GUARDIAN.get(), SLGuardianRenderer::new);
         event.registerEntityRenderer(SLEntities.ELDER_GUARDIAN.get(), SLElderGuardianRenderer::new);
-//        event.registerEntityRenderer(SLEntities.SALMON.get(), SLSalmonRenderer::new);
         event.registerEntityRenderer(SLEntities.ANCHOVY.get(), AnchovyRenderer::new);
+        event.registerEntityRenderer(SLEntities.SQUILL.get(), SquillRenderer::new);
     }
 
     @SubscribeEvent
@@ -33,7 +33,7 @@ public final class ClientEvents {
 
         event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.ELDER_GUARDIAN, SLElderGuardianModel::createBodyLayer);
-//        event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.ANCHOVY, AnchovyModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);
     }
 }

@@ -15,6 +15,7 @@ public class SLModelLayers {
     public static final ModelLayerLocation ELDER_GUARDIAN = main("elder_guardian");
     public static final ModelLayerLocation SALMON = main("salmon");
     public static final ModelLayerLocation ANCHOVY = main("anchovy");
+    public static final ModelLayerLocation SQUILL = main("squill");
 
     private static ModelLayerLocation register(String id, String name) {
         return new ModelLayerLocation(new ResourceLocation(ShiftedLens.MOD_ID, id), name);

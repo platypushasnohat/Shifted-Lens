@@ -57,4 +57,12 @@ public class SLEntities {
                     .clientTrackingRange(4)
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "anchovy").toString())
     );
+
+    public static final RegistryObject<EntityType<Squill>> SQUILL = ENTITY_TYPES.register(
+            "squill", () ->
+            EntityType.Builder.of(Squill::new, MobCategory.AMBIENT)
+                    .sized(0.8F, 0.8F)
+                    .clientTrackingRange(8)
+                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "squill").toString())
+    );
 }
