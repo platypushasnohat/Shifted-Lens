@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -37,6 +38,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(Squill.class, EntityDataSerializers.BOOLEAN);
 
     private Vec3 prevPull = Vec3.ZERO, pull = Vec3.ZERO;
+    private float alphaProgress;
+    private float prevAlphaProgress;
 
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState aggroAnimationState = new AnimationState();
@@ -61,7 +64,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         this.goalSelector.addGoal(1, new SquillAttackGoal(this));
         this.goalSelector.addGoal(2, new SquillSchoolGoal(this));
         this.goalSelector.addGoal(3, new AirSwimGoal(this));
-        this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
     }
 
     @Override
@@ -127,6 +130,15 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     public void tick() {
         super.tick();
 
+        prevAlphaProgress = alphaProgress;
+
+        if (this.isAlive() && alphaProgress < 20F) {
+            alphaProgress++;
+        }
+        if (!this.isAlive() && alphaProgress > 0F) {
+            alphaProgress--;
+        }
+
         if (this.level().isClientSide()) {
             setupAnimationStates();
 
@@ -139,6 +151,10 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     public void setupAnimationStates() {
         this.idleAnimationState.animateWhen(this.isAlive() && !this.isAttacking(), this.tickCount);
         this.aggroAnimationState.animateWhen(this.isAlive() && this.isAttacking(), this.tickCount);
+    }
+
+    public float getAlphaProgress(float partialTicks) {
+        return (prevAlphaProgress + (alphaProgress - prevAlphaProgress) * partialTicks) * 0.05F;
     }
 
     @Override
@@ -250,9 +266,42 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         }
 
         @Override
+        public void start() {
+            orbitTime = 0;
+            maxOrbitTime = 80;
+            startOrbitFrom = null;
+            squill.setAttacking(false);
+        }
+
+        @Override
+        public void stop() {
+            LivingEntity target = squill.getTarget();
+            if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) {
+                squill.setTarget(null);
+            }
+            squill.setAggressive(false);
+            squill.setAttacking(false);
+            squill.getNavigation().stop();
+        }
+
+        @Override
         public boolean canUse() {
             LivingEntity target = squill.getTarget();
             return target != null && target.isAlive() && !squill.isPassenger();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            LivingEntity target = squill.getTarget();
+            if (target == null) {
+                return false;
+            } else if (!target.isAlive()) {
+                return false;
+            } else if (!squill.isWithinRestriction(target.blockPosition())) {
+                return false;
+            } else {
+                return !(target instanceof Player) || !target.isSpectator() && !((Player) target).isCreative() || !squill.getNavigation().isDone();
+            }
         }
 
         public void tick() {
@@ -260,13 +309,13 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
             if (target != null && target.isAlive()) {
                 double distance = squill.distanceTo(target);
                 if (startOrbitFrom == null) {
-                    squill.getNavigation().moveTo(target, 6.5D);
+                    squill.getNavigation().moveTo(target, 4D);
                     squill.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
                 } else if (orbitTime < maxOrbitTime) {
                     orbitTime++;
                     float zoomIn = 1F - orbitTime / (float) maxOrbitTime;
                     Vec3 orbitPos = orbitAroundPos(10.0F + zoomIn * 5.0F).add(0, 4 + zoomIn * 3, 0);
-                    squill.getNavigation().moveTo(orbitPos.x, orbitPos.y, orbitPos.z, 5D);
+                    squill.getNavigation().moveTo(orbitPos.x, orbitPos.y, orbitPos.z, 3D);
                     squill.lookAt(EntityAnchorArgument.Anchor.EYES, orbitPos);
                 } else {
                     orbitTime = 0;
@@ -306,21 +355,6 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
                 attackTime = 0;
                 squill.setAttacking(false);
             }
-        }
-
-        @Override
-        public void start() {
-            orbitTime = 0;
-            maxOrbitTime = 80;
-            startOrbitFrom = null;
-            squill.setAggressive(true);
-            squill.setAttacking(false);
-        }
-
-        @Override
-        public void stop() {
-            squill.setAggressive(false);
-            squill.setAttacking(false);
         }
 
         public Vec3 orbitAroundPos(float circleDistance) {

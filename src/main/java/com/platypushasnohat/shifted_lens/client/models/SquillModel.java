@@ -15,6 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @SuppressWarnings("FieldCanBeLocal, unused")
 public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
 
+	private float alpha = 1.0F;
+
 	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart openjaw;
@@ -90,11 +92,17 @@ public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		poseStack.pushPose();
+		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha * this.alpha);
+		poseStack.popPose();
 	}
 
 	@Override
 	public ModelPart root() {
 		return this.root;
+	}
+
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
 	}
 }

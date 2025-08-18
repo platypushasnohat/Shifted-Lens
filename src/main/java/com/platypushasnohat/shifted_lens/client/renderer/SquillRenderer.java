@@ -31,13 +31,18 @@ public class SquillRenderer extends MobRenderer<Squill, SquillModel<Squill>> {
 
     @Override
     public ResourceLocation getTextureLocation(Squill entity) {
-        if (entity.isAggressive()) return TEXTURE_AGGRO;
+        if (entity.isAttacking()) return TEXTURE_AGGRO;
         else return TEXTURE;
     }
 
     @Override
     protected @Nullable RenderType getRenderType(Squill entity, boolean bodyVisible, boolean translucent, boolean glowing) {
-        return RenderType.entityCutoutNoCull(getTextureLocation(entity));
+        return RenderType.entityTranslucent(getTextureLocation(entity));
+    }
+
+    protected void scale(Squill entity, PoseStack poseStack, float partialTicks) {
+        float alpha = 1.0F - (0.25F + 0.25F * (float) Math.sin(entity.tickCount * 0.02F)) * entity.getAlphaProgress(partialTicks);
+        this.model.setAlpha(alpha);
     }
 
     @Override

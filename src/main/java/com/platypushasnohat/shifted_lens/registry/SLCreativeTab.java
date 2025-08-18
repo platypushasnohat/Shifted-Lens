@@ -21,15 +21,19 @@ public class SLCreativeTab {
                     .displayItems((pParameters, tabOutput) -> {
 
                         tabOutput.accept(ANCHOVY_SPAWN_EGG.get());
-                        tabOutput.accept(Items.ELDER_GUARDIAN_SPAWN_EGG);
-                        tabOutput.accept(Items.GHAST_SPAWN_EGG);
-                        tabOutput.accept(Items.GUARDIAN_SPAWN_EGG);
                         tabOutput.accept(Items.SALMON_SPAWN_EGG);
-                        tabOutput.accept(SQUILL_SPAWN_EGG.get());
                         tabOutput.accept(Items.TROPICAL_FISH_SPAWN_EGG);
 
-                        tabOutput.accept(Items.FIRE_CHARGE);
+                        tabOutput.accept(Items.GHAST_SPAWN_EGG);
                         tabOutput.accept(INFERNO_CHARGE.get());
+                        tabOutput.accept(Items.FIRE_CHARGE);
+
+                        tabOutput.accept(Items.GUARDIAN_SPAWN_EGG);
+                        tabOutput.accept(Items.ELDER_GUARDIAN_SPAWN_EGG);
+
+                        tabOutput.accept(Items.SQUID_SPAWN_EGG);
+                        tabOutput.accept(SQUILL_SPAWN_EGG.get());
+                        tabOutput.accept(WHIRLIGIG.get());
 
                     }).build());
 }
