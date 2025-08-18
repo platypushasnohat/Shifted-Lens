@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.platypushasnohat.shifted_lens.client.animations.SquillAnimations;
 import com.platypushasnohat.shifted_lens.entities.Squill;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -14,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @SuppressWarnings("FieldCanBeLocal, unused")
 public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
 
-	private final ModelPart squill;
+	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart openjaw;
 	private final ModelPart closedjaw;
@@ -29,8 +30,8 @@ public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
 	private final ModelPart propeller;
 
 	public SquillModel(ModelPart root) {
-		this.squill = root.getChild("squill");
-		this.body = this.squill.getChild("body");
+		this.root = root.getChild("root");
+		this.body = this.root.getChild("body");
 		this.openjaw = this.body.getChild("openjaw");
 		this.closedjaw = this.body.getChild("closedjaw");
 		this.tentacle1 = this.body.getChild("tentacle1");
@@ -48,9 +49,9 @@ public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition squill = partdefinition.addOrReplaceChild("squill", CubeListBuilder.create(), PartPose.offset(0.0F, 22.0F, 0.0F));
+		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 41.0F, 0.0F));
 
-		PartDefinition body = squill.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -8.0F, -6.0F, 12.0F, 16.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, 0.0F));
+		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -8.0F, -6.0F, 12.0F, 16.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -25.0F, 0.0F));
 
 		PartDefinition openjaw = body.addOrReplaceChild("openjaw", CubeListBuilder.create().texOffs(-10, 46).addBox(-5.0F, 0.0F, -5.0F, 10.0F, 0.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 7.0F, 0.0F));
 
@@ -82,18 +83,18 @@ public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
 	@Override
 	public void setupAnim(Squill entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-
-//		this.squill.xRot = headPitch * (Mth.DEG_TO_RAD);
-//		this.squill.zRot = netHeadYaw * ((Mth.DEG_TO_RAD) / 2);
+		this.animateWalk(SquillAnimations.PROPELLAR_OVERLAY, limbSwing, limbSwingAmount, 4, 8);
+		this.animate(entity.idleAnimationState, SquillAnimations.PUSH, ageInTicks);
+		this.animate(entity.aggroAnimationState, SquillAnimations.AGGRO, ageInTicks);
 	}
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		this.squill.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 	@Override
 	public ModelPart root() {
-		return this.squill;
+		return this.root;
 	}
 }

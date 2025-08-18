@@ -7,11 +7,15 @@ import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.TropicalFish;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.Event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -62,6 +66,21 @@ public class ServerEvents {
                     event.setSpawnCancelled(true);
                     event.setResult(Result.DENY);
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
+        Entity entity = event.getEntity();
+        if (entity.level().isClientSide && entity instanceof Squill squill) {
+            squill.updatePull(entity.position());
+        }
+
+        if (entity instanceof Mob mob) {
+            if (mob instanceof TropicalFish) {
+                AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (movementSpeed != null) movementSpeed.setBaseValue(1.0F);
             }
         }
     }
