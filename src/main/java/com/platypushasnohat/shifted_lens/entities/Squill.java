@@ -1,9 +1,11 @@
 package com.platypushasnohat.shifted_lens.entities;
 
-import net.minecraft.Util;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -16,26 +18,23 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
-import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 public class Squill extends PathfinderMob implements FlyingAnimal {
+
+    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(Squill.class, EntityDataSerializers.BOOLEAN);
 
     private Vec3 prevPull = Vec3.ZERO, pull = Vec3.ZERO;
 
@@ -51,8 +50,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.25F)
-                .add(Attributes.FLYING_SPEED, 0.25F)
+                .add(Attributes.MOVEMENT_SPEED, 0.18F)
+                .add(Attributes.FLYING_SPEED, 0.18F)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
@@ -84,8 +83,15 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     }
 
     @Override
-    protected PathNavigation createNavigation(Level level) {
-        SquillPathNavigation navigation = new SquillPathNavigation(this, level);
+    protected @NotNull PathNavigation createNavigation(Level pLevel) {
+        FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel) {
+            public boolean isStableDestination(BlockPos pos) {
+                return !level().getBlockState(pos.below(100)).isAir();
+            }
+        };
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(false);
+        navigation.setCanPassDoors(true);
         return navigation;
     }
 
@@ -131,8 +137,34 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     }
 
     public void setupAnimationStates() {
-        this.idleAnimationState.animateWhen(this.isAlive() && !this.isAggressive(), this.tickCount);
-        this.aggroAnimationState.animateWhen(this.isAlive() && this.isAggressive(), this.tickCount);
+        this.idleAnimationState.animateWhen(this.isAlive() && !this.isAttacking(), this.tickCount);
+        this.aggroAnimationState.animateWhen(this.isAlive() && this.isAttacking(), this.tickCount);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING, false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putBoolean("Attacking", this.isAttacking());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.setAttacking(compoundTag.getBoolean("Attacking"));
+    }
+
+    public boolean isAttacking() {
+        return this.entityData.get(ATTACKING);
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.entityData.set(ATTACKING, attacking);
     }
 
     @Override
@@ -205,97 +237,97 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
 
     static class SquillAttackGoal extends Goal {
 
-        private final Squill squill;
-        @Nullable
-        private Path path;
-        private int delayCounter;
+        private Squill squill;
 
-        public SquillAttackGoal(Squill squill) {
-            this.squill = squill;
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        private Vec3 startOrbitFrom;
+        private int orbitTime;
+        private int maxOrbitTime;
+        private int attackTime;
+
+        public SquillAttackGoal(Squill entity) {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+            this.squill = entity;
         }
 
         @Override
         public boolean canUse() {
-            if (shouldFollowTarget(squill)) {
-                this.path = squill.getNavigation().createPath(squill.getTarget(), 0);
-                return this.path != null;
+            LivingEntity target = squill.getTarget();
+            return target != null && target.isAlive() && !squill.isPassenger();
+        }
+
+        public void tick() {
+            LivingEntity target = squill.getTarget();
+            if (target != null && target.isAlive()) {
+                double distance = squill.distanceTo(target);
+                if (startOrbitFrom == null) {
+                    squill.getNavigation().moveTo(target, 6.5D);
+                    squill.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+                } else if (orbitTime < maxOrbitTime) {
+                    orbitTime++;
+                    float zoomIn = 1F - orbitTime / (float) maxOrbitTime;
+                    Vec3 orbitPos = orbitAroundPos(10.0F + zoomIn * 5.0F).add(0, 4 + zoomIn * 3, 0);
+                    squill.getNavigation().moveTo(orbitPos.x, orbitPos.y, orbitPos.z, 5D);
+                    squill.lookAt(EntityAnchorArgument.Anchor.EYES, orbitPos);
+                } else {
+                    orbitTime = 0;
+                    startOrbitFrom = null;
+                }
+                if (distance <= 16.0D && orbitTime <= 0) {
+                    tickAttack();
+                }
             }
-            return false;
+        }
+
+        protected void tickAttack() {
+            attackTime++;
+            LivingEntity target = squill.getTarget();
+            double distance = squill.distanceTo(target);
+            float attackReach = squill.getBbWidth() + target.getBbWidth();
+            squill.setAttacking(true);
+
+            if (attackTime <= 4) {
+                squill.getNavigation().stop();
+                squill.lookAt(Objects.requireNonNull(target), 360F, 360F);
+                squill.getLookControl().setLookAt(target, 360F, 360F);
+            }
+
+            if (attackTime > 8 && attackTime <= 24) {
+                if (distance < attackReach + 0.5D) {
+                    squill.doHurtTarget(target);
+                    squill.swing(InteractionHand.MAIN_HAND);
+                    maxOrbitTime = 40 + squill.getRandom().nextInt(60);
+                    startOrbitFrom = target.getEyePosition();
+                    attackTime = 0;
+                    squill.setAttacking(false);
+                }
+            } else if (attackTime > 24) {
+                maxOrbitTime = 40 + squill.getRandom().nextInt(60);
+                startOrbitFrom = target.getEyePosition();
+                attackTime = 0;
+                squill.setAttacking(false);
+            }
         }
 
         @Override
         public void start() {
-            squill.getNavigation().moveTo(this.path, 2F);
+            orbitTime = 0;
+            maxOrbitTime = 80;
+            startOrbitFrom = null;
             squill.setAggressive(true);
-            this.delayCounter = 0;
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return shouldFollowTarget(squill) && squill.getNavigation().isInProgress();
-        }
-
-        @Override
-        public void tick() {
-            this.delayCounter = Math.max(this.delayCounter - 1, 0);
-            LivingEntity target = squill.getTarget();
-            double distanceToTargetSq = squill.distanceToSqr(target);
-            RandomSource random = squill.getRandom();
-            if (this.delayCounter <= 0 && random.nextFloat() <= 0.05F) {
-                this.delayCounter = 20 + random.nextInt(10);
-                PathNavigation pathNavigator = squill.getNavigation();
-                if (distanceToTargetSq >= 5.0F) {
-                    Path path = pathNavigator.createPath(findAirPosAboveTarget(squill.level(), target), 0);
-                    if (path == null || !pathNavigator.moveTo(path, 5F)) {
-                        this.delayCounter += 60;
-                    }
-                } else {
-                    squill.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 5F);
-                }
-            }
-
-            if (distanceToTargetSq <= getAttackReachSqr(target)) {
-                squill.doHurtTarget(target);
-                squill.swing(InteractionHand.MAIN_HAND);
-            }
-        }
-
-        protected double getAttackReachSqr(LivingEntity target) {
-            return squill.getBbWidth() * 1.9F * squill.getBbWidth() * 1.9F + target.getBbWidth();
+            squill.setAttacking(false);
         }
 
         @Override
         public void stop() {
-            LivingEntity livingentity = squill.getTarget();
-            if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingentity)) {
-                squill.setTarget(null);
-            }
             squill.setAggressive(false);
-            squill.getNavigation().stop();
+            squill.setAttacking(false);
         }
 
-        public static boolean shouldFollowTarget(Squill squill) {
-            LivingEntity attackTarget = squill.getTarget();
-            return attackTarget != null && attackTarget.isAlive() && (!(attackTarget instanceof Player) || !attackTarget.isSpectator() && !((Player) attackTarget).isCreative());
-        }
-
-        public static BlockPos findAirPosAboveTarget(Level world, LivingEntity target) {
-            BlockPos.MutableBlockPos mutable = target.blockPosition().mutable();
-            int maxHeight = target.getRandom().nextInt(3) + 5;
-            for (int y = 0; y < maxHeight; y++) {
-                mutable.move(0, 1, 0);
-                if (!world.isEmptyBlock(mutable)) {
-                    mutable.move(0, -1, 0);
-                    break;
-                }
-            }
-            return mutable;
-        }
-
-        @Override
-        public boolean requiresUpdateEveryTick() {
-            return true;
+        public Vec3 orbitAroundPos(float circleDistance) {
+            final float angle = 3 * (float) (Math.toRadians(orbitTime * 3F));
+            final double extraX = circleDistance * Mth.sin((angle));
+            final double extraZ = circleDistance * Mth.cos(angle);
+            return startOrbitFrom.add(extraX, 0, extraZ);
         }
     }
 
@@ -419,126 +451,6 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
                 squill.setDeltaMovement(squill.getDeltaMovement().add(0.0F, 0.01F, 0.0F));
             }
             this.prevPos = squill.position();
-        }
-    }
-
-    static class SquillPathNavigation extends PathNavigation {
-
-        public SquillPathNavigation(Mob mob, Level worldIn) {
-            super(mob, worldIn);
-        }
-
-        @Override
-        protected PathFinder createPathFinder(int idleTime) {
-            this.nodeEvaluator = new FlyNodeEvaluator();
-            this.nodeEvaluator.setCanPassDoors(true);
-            return new PathFinder(this.nodeEvaluator, idleTime);
-        }
-
-        @Override
-        protected boolean canUpdatePath() {
-            return !this.isInLiquid();
-        }
-
-        @Override
-        protected Vec3 getTempMobPos() {
-            return new Vec3(this.mob.getX(), this.mob.getY() + (double) this.mob.getBbHeight() * 0.5D, this.mob.getZ());
-        }
-
-        @Override
-        public void tick() {
-            this.tick++;
-            if (this.hasDelayedRecomputation) {
-                this.recomputePath();
-            }
-
-            if (!this.isDone()) {
-                if (this.canUpdatePath()) {
-                    this.followThePath();
-                } else if (this.path != null && this.path.getNextNodeIndex() < this.path.getNodeCount()) {
-                    Vec3 Vector3d = this.path.getEntityPosAtNode(this.mob, this.path.getNextNodeIndex());
-                    if (Mth.floor(this.mob.getX()) == Mth.floor(Vector3d.x) && Mth.floor(this.mob.getY()) == Mth.floor(Vector3d.y) && Mth.floor(this.mob.getZ()) == Mth.floor(Vector3d.z)) {
-                        this.path.setNextNodeIndex(this.path.getNextNodeIndex() + 1);
-                    }
-                }
-
-                DebugPackets.sendPathFindingPacket(this.level, this.mob, this.path, this.maxDistanceToWaypoint);
-
-                if (!this.isDone()) {
-                    Vec3 Vector3d1 = this.path.getNextEntityPos(this.mob);
-                    this.mob.getMoveControl().setWantedPosition(Vector3d1.x, Vector3d1.y, Vector3d1.z, this.speedModifier);
-                }
-            }
-        }
-
-        @Override
-        protected void followThePath() {
-            if (this.path != null) {
-                Vec3 entityPos = this.getTempMobPos();
-                float f = this.mob.getBbWidth();
-                float f1 = f > 0.75F ? f / 2.0F : 0.75F - f / 2.0F;
-                Vec3 Vector3d1 = this.mob.getDeltaMovement();
-                if (Math.abs(Vector3d1.x) > 0.2D || Math.abs(Vector3d1.z) > 0.2D) {
-                    f1 = (float) ((double) f1 * Vector3d1.length() * 6.0D);
-                }
-
-                Vec3 Vector3d2 = Vec3.atBottomCenterOf(this.path.getNextNodePos());
-                if (Math.abs(this.mob.getX() - (Vector3d2.x + 0.5D)) < (double) f1 && Math.abs(this.mob.getZ() - (Vector3d2.z + 0.5D)) < (double) f1 && Math.abs(this.mob.getY() - Vector3d2.y) < (double) (f1 * 2.0F)) {
-                    this.path.advance();
-                }
-
-                for (int j = Math.min(this.path.getNextNodeIndex() + 6, this.path.getNodeCount() - 1); j > this.path.getNextNodeIndex(); --j) {
-                    Vector3d2 = this.path.getEntityPosAtNode(this.mob, j);
-                    if (!(Vector3d2.distanceToSqr(entityPos) > 36.0D) && this.canMoveDirectly(entityPos, Vector3d2)) {
-                        this.path.setNextNodeIndex(j);
-                        break;
-                    }
-                }
-
-                this.doStuckDetection(entityPos);
-            }
-        }
-
-        @Override
-        protected void doStuckDetection(Vec3 positionVec3) {
-            if (this.tick - this.lastStuckCheck > 100) {
-                if (positionVec3.distanceToSqr(this.lastStuckCheckPos) < 2.25D) {
-                    this.stop();
-                }
-                this.lastStuckCheck = this.tick;
-                this.lastStuckCheckPos = positionVec3;
-            }
-
-            if (this.path != null && !this.path.isDone()) {
-                Vec3i vector3i = this.path.getNextNodePos();
-                if (vector3i.equals(this.timeoutCachedNode)) {
-                    this.timeoutTimer += Util.getMillis() - this.lastTimeoutCheck;
-                } else {
-                    this.timeoutCachedNode = vector3i;
-                    double d0 = positionVec3.distanceTo(Vec3.atCenterOf(this.timeoutCachedNode));
-                    this.timeoutLimit = this.mob.getSpeed() > 0.0F ? d0 / this.mob.getSpeed() * 100.0D : 0.0D;
-                }
-
-                if (this.timeoutLimit > 0.0D && this.timeoutTimer > this.timeoutLimit * 2.0D) {
-                    this.timeoutCachedNode = Vec3i.ZERO;
-                    this.timeoutTimer = 0L;
-                    this.timeoutLimit = 0.0D;
-                    this.stop();
-                }
-
-                this.lastTimeoutCheck = Util.getMillis();
-            }
-        }
-
-        @Override
-        protected boolean canMoveDirectly(Vec3 posVec31, Vec3 posVec32) {
-            Vec3 Vector3d = new Vec3(posVec32.x, posVec32.y + (double) this.mob.getBbHeight() * 0.5D, posVec32.z);
-            return this.level.clip(new ClipContext(posVec31, Vector3d, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.mob)).getType() == HitResult.Type.MISS;
-        }
-
-        @Override
-        public boolean isStableDestination(BlockPos pos) {
-            return this.level.isEmptyBlock(pos);
         }
     }
 }

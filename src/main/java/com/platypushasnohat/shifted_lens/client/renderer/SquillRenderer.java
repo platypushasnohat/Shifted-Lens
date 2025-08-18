@@ -37,12 +37,11 @@ public class SquillRenderer extends MobRenderer<Squill, SquillModel<Squill>> {
 
     @Override
     protected @Nullable RenderType getRenderType(Squill entity, boolean bodyVisible, boolean translucent, boolean glowing) {
-        return RenderType.entityCutout(getTextureLocation(entity));
+        return RenderType.entityCutoutNoCull(getTextureLocation(entity));
     }
 
     @Override
     protected void setupRotations(Squill entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-
         Vec3 pull = entity.getPull(partialTicks);
         double pulledX = Mth.lerp(partialTicks, entity.xo, entity.getX()) - pull.x();
         double pulledY = Mth.lerp(partialTicks, entity.yo, entity.getY()) - pull.y();
@@ -73,7 +72,7 @@ public class SquillRenderer extends MobRenderer<Squill, SquillModel<Squill>> {
             }
         }
 
-        if (entity.isAggressive()) {
+        if (entity.isAttacking()) {
             poseStack.translate(0.0D, entity.getBbHeight() + 0.1D, 0.0D);
             poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
         }
