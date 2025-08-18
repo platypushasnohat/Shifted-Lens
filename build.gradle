@@ -82,6 +82,9 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge-api:${project.jei}")
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge:${project.jei}")
 
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras}"))
+    implementation("io.github.llamalad7:mixinextras-forge:${project.mixin_extras}")
+
     runtimeOnly fg.deobf("curse.maven:cyanide-541676:5778405")
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
