@@ -13,6 +13,7 @@ import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Salmon;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
@@ -26,6 +27,8 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 	private final ModelPart fin1;
 	private final ModelPart fin2;
 	private final ModelPart right_fin;
+
+	private float smoothedXRot;
 
 	public SLSalmonModel(ModelPart root) {
 		this.root = root.getChild("root");
@@ -78,17 +81,30 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 			this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
 		}
 
-		this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
+		final double dx = entity.getDeltaMovement().x;
+		final double dy = entity.getDeltaMovement().y;
+		final double dz = entity.getDeltaMovement().z;
+		final float horizontalSpeed = Mth.sqrt((float) (dx * dx + dz * dz));
+		final float maxHorizontal = Math.max(horizontalSpeed, 0.05F); // avoids weird spikes
+		float targetXRot = (float) -Mth.atan2((float) dy, maxHorizontal) * 2.0F;
+		targetXRot = Mth.clamp(targetXRot, -0.8F, 0.8F); // should cap around ~45*
+
+		float deltaPitch = Math.abs(targetXRot - this.smoothedXRot);
+		float smoothing = Mth.clamp(0.02F + deltaPitch * 0.12F, 0.01F, 0.07F); // helps prevent weird jittering from model rotation (idk why this happens)
+		this.smoothedXRot = Mth.lerp(smoothing, this.smoothedXRot, targetXRot);
+		float clampedHeadPitch = Mth.clamp(headPitch, -30.0F, 30.0F) * (Mth.DEG_TO_RAD); // limits head pitch to 30*
+		this.root.xRot = this.smoothedXRot + clampedHeadPitch;
+
 		this.root.zRot = netHeadYaw * (Mth.DEG_TO_RAD) / 2;
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 	@Override
-	public ModelPart root() {
+	public @NotNull ModelPart root() {
 		return this.root;
 	}
 }
