@@ -9,6 +9,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Salmon;
 import net.minecraft.world.entity.animal.TropicalFish;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Ghast;
@@ -78,6 +79,10 @@ public class ServerEvents {
         }
 
         if (entity instanceof Mob mob) {
+            if (mob instanceof Salmon) {
+                AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (movementSpeed != null) movementSpeed.setBaseValue(0.9F);
+            }
             if (mob instanceof TropicalFish) {
                 AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
                 if (movementSpeed != null) movementSpeed.setBaseValue(1.0F);

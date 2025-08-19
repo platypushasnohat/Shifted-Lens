@@ -7,9 +7,11 @@
   "mixins": [
     "ItemMixin",
     "PoseMixin",
+    "SalmonMixin",
     "TropicalFishMixin"
   ],
   "client": [
+    "client.SalmonRendererMixin",
     "client.TropicalFishModelAMixin",
     "client.TropicalFishModelBMixin"
   ],
