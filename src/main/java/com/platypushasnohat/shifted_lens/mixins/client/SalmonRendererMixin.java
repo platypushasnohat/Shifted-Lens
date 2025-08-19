@@ -5,7 +5,6 @@ import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLSalmonModel;
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
-import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,7 +13,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.SalmonRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Salmon;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -44,7 +42,7 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
         super(context, entityModel, f);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;)V", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("TAIL"))
     private void SalmonRenderer(EntityRendererProvider.Context context, CallbackInfo callbackInfo) {
         this.shiftedLens$remodel = new SLSalmonModel<>(context.bakeLayer(SLModelLayers.SALMON));
     }
@@ -59,8 +57,8 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
     public ResourceLocation getTextureLocation(Salmon salmon) {
         int variant = ((VariantAccess) salmon).getVariant();
         if (SLCommonConfig.REPLACE_SALMON.get()) {
-            if (variant == 1) return RIVER_SALMON;
-            else return OCEAN_SALMON;
+            if (variant == 1) return OCEAN_SALMON;
+            else return RIVER_SALMON;
         } else {
             return SALMON_LOCATION;
         }

@@ -1,10 +1,7 @@
 package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
-import com.platypushasnohat.shifted_lens.data.SLEntityTagProvider;
-import com.platypushasnohat.shifted_lens.data.SLItemModelProvider;
-import com.platypushasnohat.shifted_lens.data.SLLanguageProvider;
-import com.platypushasnohat.shifted_lens.data.SLRecipeProvider;
+import com.platypushasnohat.shifted_lens.data.*;
 import com.platypushasnohat.shifted_lens.registry.SLCreativeTab;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
@@ -64,6 +61,7 @@ public class ShiftedLens {
 
         boolean server = data.includeServer();
         generator.addProvider(server, new SLEntityTagProvider(output, provider, helper));
+        generator.addProvider(server, new SLBiomeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLRecipeProvider(output));
 
         boolean client = data.includeClient();

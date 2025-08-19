@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.animal.AbstractSchoolingFish;
-import net.minecraft.world.entity.animal.Salmon;
+import net.minecraft.world.entity.animal.Cod;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -28,11 +28,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-@Mixin(Salmon.class)
-public abstract class SalmonMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
+@Mixin(Cod.class)
+public abstract class CodMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
 
     @Unique
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Salmon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Cod.class, EntityDataSerializers.INT);
 
     @Unique
     public final AnimationState shiftedLens$flopAnimationState = new AnimationState();
@@ -42,7 +42,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Anima
         return shiftedLens$flopAnimationState;
     }
 
-    protected SalmonMixin(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
+    protected CodMixin(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -62,7 +62,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Anima
 
     @Override
     public int getMaxSchoolSize() {
-        return 16;
+        return 20;
     }
 
     @Override
@@ -108,7 +108,8 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Anima
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.setVariant(1);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.setVariant(1);
+        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.setVariant(2);
         else this.setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
