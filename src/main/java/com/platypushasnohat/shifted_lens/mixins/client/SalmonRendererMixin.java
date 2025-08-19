@@ -5,6 +5,8 @@ import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLSalmonModel;
 import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.SalmonRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Salmon;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,13 +27,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(SalmonRenderer.class)
-public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonModel<Salmon>> {
+public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonModel<Salmon>> implements VariantAccess {
 
     @Shadow
     private static final ResourceLocation SALMON_LOCATION = new ResourceLocation("textures/entity/fish/salmon.png");
 
     @Unique
     private static final ResourceLocation RIVER_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/river_salmon.png");
+    @Unique
+    private static final ResourceLocation OCEAN_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/ocean_salmon.png");
 
     @Unique
     private SLSalmonModel<Salmon> shiftedLens$remodel;
@@ -52,22 +57,30 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
 
     @Override
     public ResourceLocation getTextureLocation(Salmon salmon) {
+        int variant = ((VariantAccess) salmon).getVariant();
         if (SLCommonConfig.REPLACE_SALMON.get()) {
-            return RIVER_SALMON;
+            if (variant == 1) return RIVER_SALMON;
+            else return OCEAN_SALMON;
         } else {
             return SALMON_LOCATION;
         }
     }
 
     @Override
-    protected void setupRotations(Salmon salmon, PoseStack poseStack, float i, float g, float h) {
+    protected void setupRotations(Salmon fish, PoseStack poseStack, float i, float g, float h) {
         if (SLCommonConfig.REPLACE_SALMON.get()) {
-            super.setupRotations(salmon, poseStack, i, g, h);
+            super.setupRotations(fish, poseStack, i, g, h);
+            poseStack.scale(0.75F, 0.75F, 0.75F);
+
+            if (!fish.isInWater()) {
+                poseStack.translate(0.2F, 0.1F, 0);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+            }
         } else {
-            super.setupRotations(salmon, poseStack, i, g, h);
+            super.setupRotations(fish, poseStack, i, g, h);
             float f = 1.0F;
             float f1 = 1.0F;
-            if (!salmon.isInWater()) {
+            if (!fish.isInWater()) {
                 f = 1.3F;
                 f1 = 1.7F;
             }
@@ -75,7 +88,7 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
             float f2 = f * 4.3F * Mth.sin(f1 * 0.6F * i);
             poseStack.mulPose(Axis.YP.rotationDegrees(f2));
             poseStack.translate(0.0F, 0.0F, -0.4F);
-            if (!salmon.isInWater()) {
+            if (!fish.isInWater()) {
                 poseStack.translate(0.2F, 0.1F, 0.0F);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             }

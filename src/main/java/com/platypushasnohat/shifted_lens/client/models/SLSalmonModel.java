@@ -3,10 +3,13 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLSalmonAnimations;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Salmon;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -66,11 +69,17 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 
 	@Override
 	public void setupAnim(Salmon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.root().getAllParts().forEach(ModelPart::resetPose);
+		AnimationState flopAnimationState = ((AnimationStateAccess) entity).getFlopAnimationState();
+
 		if (entity.isInWater()) {
-			this.animateWalk(SLSalmonAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
+			this.animateWalk(SLSalmonAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);
+		} else {
+			this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
 		}
 
-//		this.animate(entity.shiftedLens$flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
+		this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
+		this.root.zRot = netHeadYaw * (Mth.DEG_TO_RAD) / 2;
 	}
 
 	@Override
