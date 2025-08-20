@@ -89,7 +89,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     protected @NotNull PathNavigation createNavigation(Level pLevel) {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel) {
             public boolean isStableDestination(BlockPos pos) {
-                return !level().getBlockState(pos.below(100)).isAir();
+                return !level().getBlockState(pos.below(196)).isAir();
             }
         };
         navigation.setCanOpenDoors(false);
