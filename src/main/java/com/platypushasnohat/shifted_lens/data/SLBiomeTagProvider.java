@@ -22,6 +22,8 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
     @Override
     public void addTags(HolderLookup.Provider provider) {
 
+        this.tag(HAS_SQUILL).addTag(BiomeTags.IS_OVERWORLD);
+
         this.tag(SPAWNS_OCEAN_SALMON).addTag(BiomeTags.IS_OCEAN);
 
         this.tag(SPAWNS_WARM_COD).add(

@@ -8,6 +8,7 @@
     "CodMixin",
     "ElderGuardianMixin",
     "GuardianMixin",
+    "GuardianMixin$GuardianAttackGoal",
     "ItemMixin",
     "PoseMixin",
     "SalmonMixin",

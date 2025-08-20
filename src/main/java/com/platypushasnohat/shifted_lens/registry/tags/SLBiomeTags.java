@@ -14,6 +14,8 @@ public class SLBiomeTags {
 
     public static final TagKey<Biome> SPAWNS_COLD_SQUID = modBiomeTag("spawns_cold_squid");
 
+    public static final TagKey<Biome> HAS_SQUILL = modBiomeTag("has_mob/squill");
+
     private static TagKey<Biome> modBiomeTag(String name) {
         return biomeTag(ShiftedLens.MOD_ID, name);
     }

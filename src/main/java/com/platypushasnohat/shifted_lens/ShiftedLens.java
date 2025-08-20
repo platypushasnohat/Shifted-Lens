@@ -60,6 +60,11 @@ public class ShiftedLens {
         ExistingFileHelper helper = data.getExistingFileHelper();
 
         boolean server = data.includeServer();
+
+        SLDatapackBuiltinEntriesProvider datapackEntries = new SLDatapackBuiltinEntriesProvider(output, provider);
+        generator.addProvider(server, datapackEntries);
+        provider = datapackEntries.getRegistryProvider();
+
         generator.addProvider(server, new SLEntityTagProvider(output, provider, helper));
         generator.addProvider(server, new SLBiomeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLRecipeProvider(output));

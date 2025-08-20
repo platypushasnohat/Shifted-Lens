@@ -1,23 +1,23 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
-import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGuardianAttackSelector;
 import com.platypushasnohat.shifted_lens.entities.utils.SLPoses;
 import com.platypushasnohat.shifted_lens.mixin_utils.GuardianAnimationAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.Squid;
-import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +27,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.Nullable;
+
 @Mixin(Guardian.class)
 public abstract class GuardianMixin extends Monster implements GuardianAnimationAccess {
 
@@ -34,67 +36,61 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
     private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET = SynchedEntityData.defineId(Guardian.class, EntityDataSerializers.INT);
 
     @Shadow
+    @Nullable
+    protected RandomStrollGoal randomStrollGoal;
+
+    @Shadow
     public boolean hasActiveAttackTarget() {
         return this.entityData.get(DATA_ID_ATTACK_TARGET) != 0;
     }
 
-    @Unique
-    private final AnimationState idleAnimationState = new AnimationState();
-    @Unique
-    private final AnimationState eyeAnimationState = new AnimationState();
-    @Unique
-    private final AnimationState beamStartAnimationState = new AnimationState();
-    @Unique
-    private final AnimationState beamAnimationState = new AnimationState();
-    @Unique
-    private final AnimationState beamEndAnimationState = new AnimationState();
+    private @Unique final AnimationState idleAnimationState = new AnimationState();
+    private @Unique final AnimationState eyeAnimationState = new AnimationState();
+    private @Unique final AnimationState beamStartAnimationState = new AnimationState();
+    private @Unique final AnimationState beamAnimationState = new AnimationState();
+    private @Unique final AnimationState beamEndAnimationState = new AnimationState();
 
-    @Unique
+    @Override
     public AnimationState getIdleAnimationState() {
         return idleAnimationState;
     }
-    @Unique
+    @Override
     public AnimationState getEyeAnimationState() {
         return eyeAnimationState;
     }
-    @Unique
+    @Override
     public AnimationState getBeamStartAnimationState() {
         return beamStartAnimationState;
     }
-    @Unique
+    @Override
     public AnimationState getBeamAnimationState() {
         return beamAnimationState;
     }
-    @Unique
+    @Override
     public AnimationState getBeamEndAnimationState() {
         return beamEndAnimationState;
     }
 
-    @Unique
-    private int idleAnimationTimeout = 0;
+    private @Unique int idleAnimationTimeout = 0;
 
     protected GuardianMixin(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1.0, 80));
-        this.goalSelector.addGoal(4, new MoveTowardsRestrictionGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Guardian.class, 12.0F, 0.01F));
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, new SLGuardianAttackSelector(this)));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Squid.class, 20, true, false, new SLGuardianAttackSelector(this)));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Axolotl.class, 20, true, false, new SLGuardianAttackSelector(this)));
-    }
-
-    @Inject(method = "<init>", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends Guardian> entityType, Level level, CallbackInfo callbackInfo) {
-        callbackInfo.cancel();
         this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
-        this.xpReward = 10;
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+    }
+
+    @Inject(method = "registerGoals()V", at = @At("TAIL"))
+    private void registerGoals(CallbackInfo ci) {
+        this.randomStrollGoal = new RandomSwimmingGoal(this, 1.0D, 80);
+    }
+
+    @Inject(method = "aiStep()V", at = @At("TAIL"))
+    public void aiStep(CallbackInfo ci) {
+
     }
 
     @Override
@@ -110,8 +106,8 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
     }
 
     @Override
-    public int getMaxHeadXRot() {
-        return 500;
+    public float getWalkTargetValue(BlockPos pos, LevelReader level) {
+        return 0;
     }
 
     @Override
@@ -120,6 +116,13 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
 
         if (this.level().isClientSide()) {
             this.setupAnimationStates();
+            if (this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.003D) {
+                Vec3 vec31 = this.getViewVector(0.0F);
+
+                for (int i = 0; i < 2; ++i) {
+                    this.level().addParticle(ParticleTypes.BUBBLE, this.getRandomX(0.5D) - vec31.x * 1.5D, this.getRandomY() - vec31.y * 1.5D, this.getRandomZ(0.5D) - vec31.z * 1.5D, 0.0D, 0.0D, 0.0D);
+                }
+            }
         }
     }
 
@@ -134,9 +137,8 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
         this.eyeAnimationState.animateWhen(this.isAlive() && this.getTarget() == null && !this.hasActiveAttackTarget(), this.tickCount);
     }
 
-    @Override
-    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> accessor) {
-        super.onSyncedDataUpdated(accessor);
+    @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("TAIL"))
+    public void onSyncedDataUpdated(EntityDataAccessor<?> accessor, CallbackInfo ci) {
         if (this.getPose() == SLPoses.BEAM_START.get()) {
             this.beamStartAnimationState.start(this.tickCount);
         }
@@ -153,6 +155,35 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
             this.beamStartAnimationState.stop();
             this.beamAnimationState.stop();
             this.beamEndAnimationState.stop();
+        }
+    }
+
+    @Mixin(targets = "net.minecraft.world.entity.monster.Guardian.GuardianAttackGoal")
+    public abstract static class GuardianAttackGoal extends Goal {
+
+        @Override
+        public void start() {
+            super.tick();
+        }
+
+        @Override
+        public void stop() {
+            super.tick();
+        }
+
+        @Override
+        public boolean canUse() {
+            return false;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return false;
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
         }
     }
 }

@@ -44,7 +44,7 @@ public class SLEntities {
 
     public static final RegistryObject<EntityType<Squill>> SQUILL = ENTITY_TYPES.register(
             "squill", () ->
-            EntityType.Builder.of(Squill::new, MobCategory.AMBIENT)
+            EntityType.Builder.of(Squill::new, MobCategory.CREATURE)
                     .sized(0.8F, 0.8F)
                     .clientTrackingRange(8)
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "squill").toString())

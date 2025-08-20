@@ -46,7 +46,7 @@ public class SLGuardianAttackGoal extends Goal {
     public void stop() {
         this.guardian.setActiveAttackTarget(0);
         this.guardian.setTarget(null);
-        this.guardian.getNavigation().stop();
+        this.guardian.randomStrollGoal.trigger();
         this.guardian.setPose(Pose.SWIMMING);
     }
 
@@ -58,7 +58,7 @@ public class SLGuardianAttackGoal extends Goal {
         LivingEntity target = this.guardian.getTarget();
         if (target != null) {
             this.guardian.getNavigation().stop();
-            this.guardian.getLookControl().setLookAt(target, 360.0F, 360.0F);
+            this.guardian.getLookControl().setLookAt(target, 90.0F, 90.0F);
             if (!this.guardian.hasLineOfSight(target)) {
                 this.guardian.setTarget(null);
             } else {

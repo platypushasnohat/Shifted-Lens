@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.entities.utils.SLPoses;
 import com.platypushasnohat.shifted_lens.mixin_utils.GuardianAnimationAccess;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -61,6 +63,13 @@ public abstract class ElderGuardianMixin extends Guardian implements GuardianAni
 
         if (this.level().isClientSide()) {
             this.setupAnimationStates();
+            if (this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.003D) {
+                Vec3 vec31 = this.getViewVector(0.0F);
+
+                for (int i = 0; i < 2; ++i) {
+                    this.level().addParticle(ParticleTypes.BUBBLE, this.getRandomX(0.5D) - vec31.x * 1.5D, this.getRandomY() - vec31.y * 1.5D, this.getRandomZ(0.5D) - vec31.z * 1.5D, 0.0D, 0.0D, 0.0D);
+                }
+            }
         }
     }
 

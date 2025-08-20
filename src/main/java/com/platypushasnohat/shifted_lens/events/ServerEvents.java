@@ -30,13 +30,19 @@ public class ServerEvents {
                 AttributeInstance movementSpeed = guardian.getAttribute(Attributes.MOVEMENT_SPEED);
                 if (movementSpeed != null) movementSpeed.setBaseValue(1.0F);
 
-                guardian.goalSelector.addGoal(0, new SLGuardianAttackGoal(guardian));
+                AttributeInstance followRange = guardian.getAttribute(Attributes.FOLLOW_RANGE);
+                if (followRange != null) followRange.setBaseValue(24.0D);
+
+                guardian.goalSelector.addGoal(2, new SLGuardianAttackGoal(guardian));
             }
             if (mob instanceof ElderGuardian guardian) {
                 AttributeInstance movementSpeed = guardian.getAttribute(Attributes.MOVEMENT_SPEED);
                 if (movementSpeed != null) movementSpeed.setBaseValue(0.8F);
 
-                guardian.goalSelector.addGoal(0, new SLGuardianAttackGoal(guardian));
+                AttributeInstance followRange = guardian.getAttribute(Attributes.FOLLOW_RANGE);
+                if (followRange != null) followRange.setBaseValue(24.0D);
+
+                guardian.goalSelector.addGoal(2, new SLGuardianAttackGoal(guardian));
             }
 
             if (mob instanceof Cod cod) {

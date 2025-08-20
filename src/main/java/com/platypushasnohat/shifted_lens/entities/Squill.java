@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.entities;
 
+import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -8,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -24,6 +26,8 @@ import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -53,8 +57,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.18F)
-                .add(Attributes.FLYING_SPEED, 0.18F)
+                .add(Attributes.MOVEMENT_SPEED, 0.16F)
+                .add(Attributes.FLYING_SPEED, 0.16F)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
@@ -62,8 +66,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SquillAttackGoal(this));
-        this.goalSelector.addGoal(2, new SquillSchoolGoal(this));
-        this.goalSelector.addGoal(3, new AirSwimGoal(this));
+        this.goalSelector.addGoal(2, new AirSwimGoal(this));
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
     }
 
@@ -89,7 +92,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     protected @NotNull PathNavigation createNavigation(Level pLevel) {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel) {
             public boolean isStableDestination(BlockPos pos) {
-                return !level().getBlockState(pos.below(196)).isAir();
+                return !level().getBlockState(pos.below(128)).isAir();
             }
         };
         navigation.setCanOpenDoors(false);
@@ -109,9 +112,36 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         }
     }
 
+    public static boolean canSpawn(EntityType<? extends Mob> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+        return checkMobSpawnRules(entityType, level, spawnType, pos, random) && wholeHitboxCanSeeSky(level, pos, 2);
+    }
+
+    public static boolean wholeHitboxCanSeeSky(LevelAccessor level, BlockPos pos, int hitboxRadius) {
+        boolean flag = true;
+        for (int xOffset = -hitboxRadius; xOffset <= hitboxRadius; xOffset++) {
+            for (int zOffset = -hitboxRadius; zOffset <= hitboxRadius; zOffset++) {
+                flag = flag && level.canSeeSky(pos.offset(xOffset, 0, zOffset));
+            }
+        }
+        return flag;
+    }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
+        int spawnHeight = Math.min((this.blockPosition().getY() + SLCommonConfig.SQUILL_SPAWN_HEIGHT.get()), this.level().getMaxBuildHeight());
+        this.moveTo(this.getX(), spawnHeight, this.getZ(), this.getYRot(), this.getXRot());
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
+    }
+
     @Override
     public boolean isFlying() {
-        return !this.onGround();
+        return true;
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return true;
     }
 
     public void updatePull(Vec3 pos) {
@@ -124,6 +154,11 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
 
     public Vec3 getPull(float partialTicks) {
         return lerp(this.prevPull, this.pull, partialTicks);
+    }
+
+    @Override
+    public int getMaxSpawnClusterSize() {
+        return 100;
     }
 
     @Override
@@ -237,7 +272,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         @Override
         public void start() {
             squill.getMoveControl().setWantedPosition(this.x, this.y, this.z, 1.0F);
-            this.cooldown = squill.getRandom().nextInt(40) + 20;
+            this.cooldown = squill.getRandom().nextInt(60) + 40;
         }
 
         @Override
@@ -362,62 +397,6 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
             final double extraX = circleDistance * Mth.sin((angle));
             final double extraZ = circleDistance * Mth.cos(angle);
             return startOrbitFrom.add(extraX, 0, extraZ);
-        }
-    }
-
-    static class SquillSchoolGoal extends Goal {
-        private final Squill squill;
-        @Nullable
-        public Squill leader;
-        private int timeToRecalcPath;
-
-        public SquillSchoolGoal(Squill purp) {
-            this.squill = purp;
-            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        }
-
-        @Override
-        public boolean canUse() {
-            List<? extends Squill> list = squill.level().getEntitiesOfClass(Squill.class, squill.getBoundingBox().inflate(12.0D, 12.0D, 12.0D));
-            Squill newLeader = null;
-            double smallestDistance = Double.MAX_VALUE;
-            for (Squill squills : list) {
-                double distance = squill.distanceToSqr(squills);
-                if (distance < smallestDistance) {
-                    smallestDistance = distance;
-                    newLeader = squills;
-                }
-            }
-
-            if (newLeader == null || smallestDistance < 9.0D) return false;
-            this.leader = newLeader;
-            return true;
-        }
-
-        @Override
-        public void start() {
-            this.timeToRecalcPath = 0;
-        }
-
-        @Override
-        public void tick() {
-            if (--this.timeToRecalcPath <= 0) {
-                this.timeToRecalcPath = this.adjustedTickDelay(10);
-                this.squill.getNavigation().moveTo(this.leader, 1.0F);
-            }
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            if (!squill.isBaby() || leader == null || !leader.isAlive()) return false;
-            double distanceToLeader = squill.distanceToSqr(leader);
-            return distanceToLeader >= 9.0D && distanceToLeader <= 256.0D;
-        }
-
-        @Override
-        public void stop() {
-            this.leader = null;
-            this.squill.getNavigation().stop();
         }
     }
 

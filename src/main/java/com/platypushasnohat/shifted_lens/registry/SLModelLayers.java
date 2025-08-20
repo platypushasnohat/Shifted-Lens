@@ -12,7 +12,6 @@ public class SLModelLayers {
     public static final ModelLayerLocation GHAST = main("ghast");
 
     public static final ModelLayerLocation GUARDIAN = main("guardian");
-    public static final ModelLayerLocation ELDER_GUARDIAN = main("elder_guardian");
 
     public static final ModelLayerLocation ANCHOVY = main("anchovy");
     public static final ModelLayerLocation COD = main("cod");

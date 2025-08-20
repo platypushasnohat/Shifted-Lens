@@ -15,6 +15,8 @@ public class SLCommonConfig {
 
     public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_SQUID;
 
+    public static ForgeConfigSpec.ConfigValue<Integer> SQUILL_SPAWN_HEIGHT;
+
     public static final ForgeConfigSpec COMMON;
 
     static {
@@ -31,6 +33,8 @@ public class SLCommonConfig {
         REPLACE_TROPICAL_FISH = builder.comment("Replace Vanilla Tropical Fish").define("replace-tropical-fish", true);
 
         REPLACE_SQUID = builder.comment("Replace Vanilla Squid").define("replace-squid", true);
+
+        SQUILL_SPAWN_HEIGHT = builder.comment("Height for Squill to spawn at").define("squill-spawn-height", 128);
         builder.pop();
 
         COMMON = builder.build();

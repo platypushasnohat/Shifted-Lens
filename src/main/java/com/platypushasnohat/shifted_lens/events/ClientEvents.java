@@ -31,7 +31,6 @@ public final class ClientEvents {
         event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
 
         event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
-        event.registerLayerDefinition(SLModelLayers.ELDER_GUARDIAN, SLElderGuardianModel::createBodyLayer);
 
         event.registerLayerDefinition(SLModelLayers.ANCHOVY, AnchovyModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.COD, SLCodModel::createBodyLayer);
