@@ -6,14 +6,21 @@
   "refmap": "shifted_lens.refmap.json",
   "mixins": [
     "CodMixin",
+    "ElderGuardianMixin",
+    "GuardianMixin",
     "ItemMixin",
     "PoseMixin",
     "SalmonMixin",
+    "SquidMixin",
+    "SquidMixin$SquidRandomMovementGoal",
     "TropicalFishMixin"
   ],
   "client": [
     "client.CodRendererMixin",
+    "client.ElderGuardianRendererMixin",
+    "client.GuardianRendererMixin",
     "client.SalmonRendererMixin",
+    "client.SquidRendererMixin",
     "client.TropicalFishModelAMixin",
     "client.TropicalFishModelBMixin"
   ],

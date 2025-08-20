@@ -31,11 +31,11 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
     private static final ResourceLocation COD_LOCATION = new ResourceLocation("textures/entity/fish/cod.png");
 
     @Unique
-    private static final ResourceLocation COD = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/cod.png");
+    private static final ResourceLocation COD_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/cod.png");
     @Unique
-    private static final ResourceLocation COLD_COD = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/cold_cod.png");
+    private static final ResourceLocation COLD_COD_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/cold_cod.png");
     @Unique
-    private static final ResourceLocation WARM_COD = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/warm_cod.png");
+    private static final ResourceLocation WARM_COD_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/warm_cod.png");
 
     @Unique
     private SLCodModel<Cod> shiftedLens$remodel;
@@ -52,16 +52,16 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
     @Override
     public void render(Cod fish, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         if (SLCommonConfig.REPLACE_COD.get()) this.model = this.shiftedLens$remodel;
-        else super.render(fish, f, g, poseStack, multiBufferSource, i);
+        super.render(fish, f, g, poseStack, multiBufferSource, i);
     }
 
     @Override
     public ResourceLocation getTextureLocation(Cod fish) {
         int variant = ((VariantAccess) fish).getVariant();
         if (SLCommonConfig.REPLACE_COD.get()) {
-            if (variant == 1) return WARM_COD;
-            else if (variant == 2) return COLD_COD;
-            else return COD;
+            if (variant == 1) return COLD_COD_TEXTURE;
+            if (variant == 2) return WARM_COD_TEXTURE;
+            else return COD_TEXTURE;
         } else {
             return COD_LOCATION;
         }
@@ -74,7 +74,7 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
             poseStack.scale(0.75F, 0.75F, 0.75F);
 
             if (!fish.isInWater()) {
-                poseStack.translate(0.2F, 0.1F, 0);
+                poseStack.translate(0.1F, 0.1F, -0.1F);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             }
         } else {

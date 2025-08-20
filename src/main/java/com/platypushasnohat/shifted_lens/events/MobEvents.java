@@ -14,8 +14,6 @@ public class MobEvents {
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(SLEntities.GHAST.get(), SLGhast.createAttributes().build());
 
-        event.put(SLEntities.GUARDIAN.get(), SLGuardian.createAttributes().build());
-        event.put(SLEntities.ELDER_GUARDIAN.get(), SLElderGuardian.createAttributes().build());
         event.put(SLEntities.ANCHOVY.get(), Anchovy.createAttributes().build());
         event.put(SLEntities.SQUILL.get(), Squill.createAttributes().build());
     }

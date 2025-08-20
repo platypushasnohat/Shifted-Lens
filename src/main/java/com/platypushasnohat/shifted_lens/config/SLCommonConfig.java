@@ -13,6 +13,8 @@ public class SLCommonConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_SALMON;
     public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_TROPICAL_FISH;
 
+    public static ForgeConfigSpec.ConfigValue<Boolean> REPLACE_SQUID;
+
     public static final ForgeConfigSpec COMMON;
 
     static {
@@ -27,6 +29,8 @@ public class SLCommonConfig {
         REPLACE_COD = builder.comment("Replace Vanilla Cod").define("replace-cod", true);
         REPLACE_SALMON = builder.comment("Replace Vanilla Salmon").define("replace-salmon", true);
         REPLACE_TROPICAL_FISH = builder.comment("Replace Vanilla Tropical Fish").define("replace-tropical-fish", true);
+
+        REPLACE_SQUID = builder.comment("Replace Vanilla Squid").define("replace-squid", true);
         builder.pop();
 
         COMMON = builder.build();

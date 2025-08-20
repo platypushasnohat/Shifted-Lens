@@ -21,9 +21,6 @@ public final class ClientEvents {
         event.registerEntityRenderer(SLEntities.GHAST.get(), SLGhastRenderer::new);
         event.registerEntityRenderer(SLEntities.GHAST_FIREBALL.get(), (context) -> new ThrownItemRenderer<>(context, 3.0F, true));
 
-        event.registerEntityRenderer(SLEntities.GUARDIAN.get(), SLGuardianRenderer::new);
-        event.registerEntityRenderer(SLEntities.ELDER_GUARDIAN.get(), SLElderGuardianRenderer::new);
-
         event.registerEntityRenderer(SLEntities.ANCHOVY.get(), AnchovyRenderer::new);
 
         event.registerEntityRenderer(SLEntities.SQUILL.get(), SquillRenderer::new);

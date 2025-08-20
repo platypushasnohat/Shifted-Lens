@@ -17,6 +17,7 @@ public class SLModelLayers {
     public static final ModelLayerLocation ANCHOVY = main("anchovy");
     public static final ModelLayerLocation COD = main("cod");
     public static final ModelLayerLocation SALMON = main("salmon");
+
     public static final ModelLayerLocation SQUILL = main("squill");
 
     private static ModelLayerLocation register(String id, String name) {

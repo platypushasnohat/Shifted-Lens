@@ -37,5 +37,13 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
                 Biomes.DEEP_FROZEN_OCEAN,
                 Biomes.FROZEN_RIVER
         );
+
+        this.tag(SPAWNS_COLD_SQUID).add(
+                Biomes.COLD_OCEAN,
+                Biomes.DEEP_COLD_OCEAN,
+                Biomes.FROZEN_OCEAN,
+                Biomes.DEEP_FROZEN_OCEAN,
+                Biomes.FROZEN_RIVER
+        );
     }
 }

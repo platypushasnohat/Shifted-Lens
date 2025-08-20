@@ -3,7 +3,7 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLSalmonAnimations;
-import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -73,7 +73,7 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 	@Override
 	public void setupAnim(Salmon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState flopAnimationState = ((AnimationStateAccess) entity).getFlopAnimationState();
+		AnimationState flopAnimationState = ((FishAnimationAccess) entity).getFlopAnimationState();
 
 		if (entity.isInWater()) {
 			this.animateWalk(SLSalmonAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);

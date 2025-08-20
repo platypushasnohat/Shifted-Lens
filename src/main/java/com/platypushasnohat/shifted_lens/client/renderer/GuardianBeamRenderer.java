@@ -3,8 +3,7 @@ package com.platypushasnohat.shifted_lens.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.platypushasnohat.shifted_lens.entities.SLElderGuardian;
-import com.platypushasnohat.shifted_lens.entities.SLGuardian;
+import com.platypushasnohat.shifted_lens.ShiftedLens;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -18,16 +17,14 @@ import org.joml.Matrix4f;
 
 public class GuardianBeamRenderer {
 
-    public static final RenderType BEAM_TEXTURE = RenderType.entityCutoutNoCull(new ResourceLocation("textures/entity/guardian_beam.png"));
+    public static final RenderType BEAM_TEXTURE = SLRenderTypes.guardianBeam(new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/beam.png"));
 
     private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
         consumer.vertex(matrix4f, p_229108_3_, p_229108_4_, p_229108_5_).color(p_229108_6_, p_229108_7_, p_229108_8_, 255).uv(p_229108_9_, p_229108_10_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
     public static void render(Entity entity, Entity target, PoseStack poseStack, MultiBufferSource buffer, float partialTicks) {
-        float scale = 1;
-
-        if (entity instanceof SLElderGuardian || entity instanceof SLGuardian) scale = (((Guardian) entity).getAttackAnimationScale(partialTicks));
+        float scale = (((Guardian) entity).getAttackAnimationScale(partialTicks));
 
         float f1 = (float) entity.level().getGameTime() + partialTicks;
         float f2 = f1 * 0.5F % 1.0F;

@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
-import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 @Mixin(Salmon.class)
-public abstract class SalmonMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
+public abstract class SalmonMixin extends AbstractSchoolingFish implements FishAnimationAccess, VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Salmon.class, EntityDataSerializers.INT);

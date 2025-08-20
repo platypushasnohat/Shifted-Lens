@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
-import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.nbt.CompoundTag;
@@ -29,13 +29,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 @Mixin(Cod.class)
-public abstract class CodMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
+public abstract class CodMixin extends AbstractSchoolingFish implements FishAnimationAccess, VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Cod.class, EntityDataSerializers.INT);
 
     @Unique
-    public final AnimationState shiftedLens$flopAnimationState = new AnimationState();
+    private final AnimationState shiftedLens$flopAnimationState = new AnimationState();
 
     @Unique
     public AnimationState getFlopAnimationState() {
@@ -108,8 +108,8 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.setVariant(1);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.setVariant(2);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.setVariant(1);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.setVariant(2);
         else this.setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }

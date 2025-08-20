@@ -32,11 +32,6 @@ public class SLLanguageProvider extends LanguageProvider {
 
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
 
-        this.forEntity(SLEntities.GHAST);
-        this.forEntity(SLEntities.GHAST_FIREBALL);
-
-        this.forEntity(SLEntities.GUARDIAN);
-        this.forEntity(SLEntities.ELDER_GUARDIAN);
         this.forEntity(SLEntities.ANCHOVY);
         this.forEntity(SLEntities.SQUILL);
     }

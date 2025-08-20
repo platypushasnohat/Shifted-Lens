@@ -71,7 +71,7 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
             poseStack.scale(0.75F, 0.75F, 0.75F);
 
             if (!fish.isInWater()) {
-                poseStack.translate(0.2F, 0.1F, 0);
+                poseStack.translate(0.2F, 0.1F, -0.1F);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             }
         } else {

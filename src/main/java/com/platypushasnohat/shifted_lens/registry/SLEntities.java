@@ -34,22 +34,6 @@ public class SLEntities {
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "ghast_fireball").toString())
     );
 
-    public static final RegistryObject<EntityType<SLGuardian>> GUARDIAN = ENTITY_TYPES.register(
-            "guardian", () ->
-            EntityType.Builder.of(SLGuardian::new, MobCategory.MONSTER)
-                    .sized(0.85F, 0.85F)
-                    .clientTrackingRange(10)
-                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "guardian").toString())
-    );
-
-    public static final RegistryObject<EntityType<SLElderGuardian>> ELDER_GUARDIAN = ENTITY_TYPES.register(
-            "elder_guardian", () ->
-            EntityType.Builder.of(SLElderGuardian::new, MobCategory.MONSTER)
-                    .sized(1.9975F, 1.9975F)
-                    .clientTrackingRange(10)
-                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "elder_guardian").toString())
-    );
-
     public static final RegistryObject<EntityType<Anchovy>> ANCHOVY = ENTITY_TYPES.register(
             "anchovy", () ->
             EntityType.Builder.of(Anchovy::new, MobCategory.WATER_AMBIENT)

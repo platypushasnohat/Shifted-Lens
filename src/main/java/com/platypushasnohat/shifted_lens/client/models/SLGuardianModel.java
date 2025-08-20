@@ -3,20 +3,22 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLGuardianAnimations;
-import com.platypushasnohat.shifted_lens.entities.SLGuardian;
+import com.platypushasnohat.shifted_lens.mixin_utils.GuardianAnimationAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.monster.Guardian;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLGuardianModel<T extends SLGuardian> extends HierarchicalModel<T> {
+public class SLGuardianModel<T extends Guardian> extends HierarchicalModel<T> {
 
-	private final ModelPart guardian;
+	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart body_flipped;
 	private final ModelPart body_sub_1;
@@ -50,8 +52,8 @@ public class SLGuardianModel<T extends SLGuardian> extends HierarchicalModel<T> 
 	private final ModelPart tail3;
 
 	public SLGuardianModel(ModelPart root) {
-		this.guardian = root.getChild("guardian");
-		this.body = this.guardian.getChild("body");
+		this.root = root.getChild("root");
+		this.body = this.root.getChild("body");
 		this.body_flipped = this.body.getChild("body_flipped");
 		this.body_sub_1 = this.body_flipped.getChild("body_sub_1");
 		this.eye = this.body.getChild("eye");
@@ -88,14 +90,14 @@ public class SLGuardianModel<T extends SLGuardian> extends HierarchicalModel<T> 
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition guardian = partdefinition.addOrReplaceChild("guardian", CubeListBuilder.create(), PartPose.offset(0.0F, 16.5F, 0.0F));
+		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 16.5F, 0.0F));
 
-		PartDefinition body = guardian.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -6.5F, -8.0F, 12.0F, 12.0F, 16.0F, new CubeDeformation(0.0F))
-		.texOffs(50, 60).addBox(-3.0F, -1.5F, -8.0F, 6.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(31, 59).addBox(-3.0F, -1.5F, -7.0F, 6.0F, 3.0F, 0.0F, new CubeDeformation(0.0F))
-		.texOffs(16, 40).addBox(-6.0F, -8.5F, -6.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.0F))
-		.texOffs(16, 40).addBox(-6.0F, 5.5F, -6.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 28).addBox(-8.0F, -6.5F, -6.0F, 2.0F, 12.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -6.5F, -8.0F, 12.0F, 12.0F, 16.0F, new CubeDeformation(0.0F))
+				.texOffs(50, 60).addBox(-3.0F, -1.5F, -8.0F, 6.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(31, 59).addBox(-3.0F, -1.5F, -7.0F, 6.0F, 3.0F, 0.0F, new CubeDeformation(0.0F))
+				.texOffs(16, 40).addBox(-6.0F, -8.5F, -6.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.0F))
+				.texOffs(16, 40).addBox(-6.0F, 5.5F, -6.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 28).addBox(-8.0F, -6.5F, -6.0F, 2.0F, 12.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition body_flipped = body.addOrReplaceChild("body_flipped", CubeListBuilder.create(), PartPose.offset(0.0F, 7.5F, 0.0F));
 
@@ -156,36 +158,40 @@ public class SLGuardianModel<T extends SLGuardian> extends HierarchicalModel<T> 
 		PartDefinition tail2 = tail1.addOrReplaceChild("tail2", CubeListBuilder.create().texOffs(0, 54).addBox(-1.5F, -1.5F, -1.0F, 3.0F, 3.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 6.0F));
 
 		PartDefinition tail3 = tail2.addOrReplaceChild("tail3", CubeListBuilder.create().texOffs(41, 32).addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(25, 19).addBox(0.0F, -4.5F, 1.0F, 0.0F, 9.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 7.0F));
+				.texOffs(25, 19).addBox(0.0F, -4.5F, 1.0F, 0.0F, 9.0F, 9.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, 0.0F, 7.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
 	@Override
-	public void setupAnim(SLGuardian entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Guardian entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
+		AnimationState idleAnimationState = ((GuardianAnimationAccess) entity).getIdleAnimationState();
+		AnimationState eyeAnimationState = ((GuardianAnimationAccess) entity).getEyeAnimationState();
+		AnimationState beamStartAnimationState = ((GuardianAnimationAccess) entity).getBeamStartAnimationState();
+		AnimationState beamAnimationState = ((GuardianAnimationAccess) entity).getBeamAnimationState();
+		AnimationState beamEndAnimationState = ((GuardianAnimationAccess) entity).getBeamEndAnimationState();
 
 		this.animateWalk(SLGuardianAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
-		this.animate(entity.idleAnimationState, SLGuardianAnimations.IDLE, ageInTicks);
-		this.animate(entity.eyeAnimationState, SLGuardianAnimations.EYE, ageInTicks);
+		this.animate(idleAnimationState, SLGuardianAnimations.IDLE, ageInTicks);
+		this.animate(eyeAnimationState, SLGuardianAnimations.EYE, ageInTicks);
 
-		this.animate(entity.beamStartAnimationState, SLGuardianAnimations.BEAM_START, ageInTicks);
-		this.animate(entity.beamAnimationState, SLGuardianAnimations.BEAM, ageInTicks);
-		this.animate(entity.beamEndAnimationState, SLGuardianAnimations.BEAM_STOP, ageInTicks);
+		this.animate(beamStartAnimationState, SLGuardianAnimations.BEAM_START, ageInTicks);
+		this.animate(beamAnimationState, SLGuardianAnimations.BEAM, ageInTicks);
+		this.animate(beamEndAnimationState, SLGuardianAnimations.BEAM_STOP, ageInTicks);
 
 		if (entity.isInWaterOrBubble()) {
-			this.guardian.xRot = headPitch * (Mth.DEG_TO_RAD);
-			this.guardian.zRot = netHeadYaw * ((Mth.DEG_TO_RAD) / 2);
+			this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
 		}
 	}
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		this.guardian.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 	@Override
 	public ModelPart root() {
-		return this.guardian;
+		return this.root;
 	}
 }
