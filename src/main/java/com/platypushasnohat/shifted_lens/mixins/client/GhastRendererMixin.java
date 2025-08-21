@@ -14,12 +14,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(GhastRenderer.class)
@@ -49,15 +51,15 @@ public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel
     }
 
     @Override
-    public void render(Ghast ghast, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
+    public void render(Ghast ghast, float f, float g, @NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i) {
         if (SLConfig.REPLACE_GHAST.get()) this.model = this.shiftedLens$remodel;
         super.render(ghast, f, g, poseStack, multiBufferSource, i);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(Ghast ghast) {
-        if (SLConfig.REPLACE_GHAST.get()) return GHAST_TEXTURE;
-        else return ghast.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
+    @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Ghast;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
+    private void getTextureLocation(Ghast ghast, CallbackInfoReturnable<ResourceLocation> cir) {
+        ResourceLocation texture = ghast.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
+        cir.setReturnValue(SLConfig.REPLACE_GHAST.get() ? GHAST_TEXTURE : texture);
     }
 
     @Override

@@ -27,7 +27,6 @@
     "client.ElderGuardianRendererMixin",
     "client.GhastRendererMixin",
     "client.GuardianRendererMixin",
-    "client.LargeFireballRendererMixin",
     "client.SalmonRendererMixin",
     "client.SquidRendererMixin",
     "client.TropicalFishModelAMixin",

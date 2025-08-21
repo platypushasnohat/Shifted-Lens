@@ -16,12 +16,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Cod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(CodRenderer.class)
@@ -50,41 +52,36 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
     }
 
     @Override
-    public void render(Cod fish, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
+    public void render(@NotNull Cod fish, float f, float g, @NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i) {
         if (SLConfig.REPLACE_COD.get()) this.model = this.shiftedLens$remodel;
         super.render(fish, f, g, poseStack, multiBufferSource, i);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(Cod fish) {
-        int variant = ((VariantAccess) fish).getVariant();
-        if (SLConfig.REPLACE_COD.get()) {
-            if (variant == 1) return COLD_COD_TEXTURE;
-            if (variant == 2) return WARM_COD_TEXTURE;
-            else return COD_TEXTURE;
-        } else {
-            return COD_LOCATION;
+    @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Cod;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
+    private void getTextureLocation(Cod cod, CallbackInfoReturnable<ResourceLocation> cir) {
+        int variant = ((VariantAccess) cod).getVariant();
+        ResourceLocation texture = COD_TEXTURE;
+        if (variant == 1) {
+            texture = COLD_COD_TEXTURE;
         }
+        if (variant == 2) {
+            texture = WARM_COD_TEXTURE;
+        }
+        cir.setReturnValue(SLConfig.REPLACE_COD.get() ? texture : COD_LOCATION);
     }
 
     @Override
-    protected void setupRotations(Cod fish, PoseStack poseStack, float i, float g, float h) {
+    protected void setupRotations(@NotNull Cod fish, @NotNull PoseStack poseStack, float i, float g, float h) {
+        super.setupRotations(fish, poseStack, i, g, h);
         if (SLConfig.REPLACE_COD.get()) {
-            super.setupRotations(fish, poseStack, i, g, h);
             poseStack.scale(0.75F, 0.75F, 0.75F);
-
-            if (!fish.isInWater()) {
-                poseStack.translate(0.1F, 0.1F, -0.1F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            }
         } else {
-            super.setupRotations(fish, poseStack, i, g, h);
             float f = 4.3F * Mth.sin(0.6F * i);
             poseStack.mulPose(Axis.YP.rotationDegrees(f));
-            if (!fish.isInWater()) {
-                poseStack.translate(0.1F, 0.1F, -0.1F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            }
+        }
+        if (!fish.isInWater()) {
+            poseStack.translate(0.1F, 0.1F, -0.1F);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
         }
     }
 }

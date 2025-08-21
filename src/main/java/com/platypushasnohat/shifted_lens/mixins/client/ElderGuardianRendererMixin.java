@@ -3,8 +3,6 @@ package com.platypushasnohat.shifted_lens.mixins.client;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import net.minecraft.client.renderer.entity.ElderGuardianRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.GuardianRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(ElderGuardianRenderer.class)
-public abstract class ElderGuardianRendererMixin extends GuardianRenderer {
+public abstract class ElderGuardianRendererMixin {
 
     @Shadow
     public static final ResourceLocation GUARDIAN_ELDER_LOCATION = new ResourceLocation("textures/entity/guardian_elder.png");
@@ -26,16 +24,8 @@ public abstract class ElderGuardianRendererMixin extends GuardianRenderer {
     @Unique
     private static final ResourceLocation ELDER_GUARDIAN_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/elder_guardian.png");
 
-    public ElderGuardianRendererMixin(EntityRendererProvider.Context context) {
-        super(context);
-    }
-
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Guardian;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     public void getTextureLocation(Guardian guardian, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (SLConfig.REPLACE_GUARDIAN.get()) {
-            cir.setReturnValue(ELDER_GUARDIAN_TEXTURE);
-        } else {
-            cir.setReturnValue(GUARDIAN_ELDER_LOCATION);
-        }
+        cir.setReturnValue(SLConfig.REPLACE_GUARDIAN.get() ? ELDER_GUARDIAN_TEXTURE : GUARDIAN_ELDER_LOCATION);
     }
 }

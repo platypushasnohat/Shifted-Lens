@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(SalmonRenderer.class)
@@ -48,20 +49,16 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
     }
 
     @Override
-    public void render(Salmon salmon, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
+    public void render(Salmon fish, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         if (SLConfig.REPLACE_SALMON.get()) this.model = this.shiftedLens$remodel;
-        super.render(salmon, f, g, poseStack, multiBufferSource, i);
+        super.render(fish, f, g, poseStack, multiBufferSource, i);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(Salmon salmon) {
-        int variant = ((VariantAccess) salmon).getVariant();
-        if (SLConfig.REPLACE_SALMON.get()) {
-            if (variant == 1) return OCEAN_SALMON;
-            else return RIVER_SALMON;
-        } else {
-            return SALMON_LOCATION;
-        }
+    @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Salmon;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
+    private void getTextureLocation(Salmon fish, CallbackInfoReturnable<ResourceLocation> cir) {
+        int variant = ((VariantAccess) fish).getVariant();
+        ResourceLocation texture = variant == 1 ? OCEAN_SALMON : RIVER_SALMON;
+        cir.setReturnValue(SLConfig.REPLACE_SALMON.get() ? texture : SALMON_LOCATION);
     }
 
     @Override
