@@ -16,6 +16,8 @@ public class SLModelLayers {
     public static final ModelLayerLocation ANCHOVY = main("anchovy");
     public static final ModelLayerLocation COD = main("cod");
     public static final ModelLayerLocation SALMON = main("salmon");
+    public static final ModelLayerLocation TROPICAL_FISH_B = main("tropical_fish_b");
+    public static final ModelLayerLocation TROPICAL_FISH_B_PATTERN = register("tropical_fish_b", "pattern");
 
     public static final ModelLayerLocation SQUILL = main("squill");
 

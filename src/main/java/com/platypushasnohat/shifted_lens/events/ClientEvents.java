@@ -5,6 +5,7 @@ import com.platypushasnohat.shifted_lens.client.models.*;
 import com.platypushasnohat.shifted_lens.client.renderer.*;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -30,6 +31,8 @@ public final class ClientEvents {
         event.registerLayerDefinition(SLModelLayers.ANCHOVY, AnchovyModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.COD, SLCodModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.TROPICAL_FISH_B, () -> SLTropicalFishModelB.createBodyLayer(CubeDeformation.NONE));
+        event.registerLayerDefinition(SLModelLayers.TROPICAL_FISH_B_PATTERN, () -> SLTropicalFishModelB.createBodyLayer(new CubeDeformation(0.008F)));
 
         event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);
     }

@@ -1,7 +1,6 @@
 package com.platypushasnohat.shifted_lens.entities;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
-import com.platypushasnohat.shifted_lens.entities.ai.goals.FollowSchoolLeaderGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -17,22 +16,25 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal;
 import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
-public class Anchovy extends SchoolingFish {
+public class Anchovy extends AbstractSchoolingFish {
 
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anchovy.class, EntityDataSerializers.INT);
 
     public final AnimationState flopAnimationState = new AnimationState();
 
-    public Anchovy(EntityType<? extends SchoolingFish> entityType, Level level) {
+    public Anchovy(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 5, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 4);
@@ -47,7 +49,7 @@ public class Anchovy extends SchoolingFish {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
         this.goalSelector.addGoal(1, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
-        this.goalSelector.addGoal(2, new FollowSchoolLeaderGoal(this));
+        this.goalSelector.addGoal(2, new FollowFlockLeaderGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -155,5 +157,10 @@ public class Anchovy extends SchoolingFish {
     @Nullable
     protected SoundEvent getFlopSound() {
         return SoundEvents.SALMON_FLOP;
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return ItemStack.EMPTY;
     }
 }

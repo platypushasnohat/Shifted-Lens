@@ -65,12 +65,6 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
     protected void setupRotations(Salmon fish, PoseStack poseStack, float i, float g, float h) {
         if (SLConfig.REPLACE_SALMON.get()) {
             super.setupRotations(fish, poseStack, i, g, h);
-            poseStack.scale(0.75F, 0.75F, 0.75F);
-
-            if (!fish.isInWater()) {
-                poseStack.translate(0.2F, 0.1F, -0.1F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            }
         } else {
             super.setupRotations(fish, poseStack, i, g, h);
             float f = 1.0F;

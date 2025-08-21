@@ -19,6 +19,8 @@ public class SLConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> FIREBALLS_EXTINGUISH;
     public static ForgeConfigSpec.ConfigValue<Boolean> FIREBALL_BURNING;
 
+    public static ForgeConfigSpec.ConfigValue<Boolean> BETTER_FISH_FLOPPING;
+
     public static final ForgeConfigSpec COMMON;
 
     static {
@@ -41,6 +43,8 @@ public class SLConfig {
         builder.push("tweaks");
         FIREBALL_BURNING = builder.comment("Whether or not fireballs visually burn").define("fireball-burning", false);
         FIREBALLS_EXTINGUISH = builder.comment("Whether or not fireballs get removed in water").define("fireballs-extinguish", true);
+
+        BETTER_FISH_FLOPPING = builder.comment("Whether or not fish flopping is more realistic").define("better-fish-flopping", true);
         builder.pop();
 
         COMMON = builder.build();

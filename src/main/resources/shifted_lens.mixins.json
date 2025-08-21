@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "shifted_lens.refmap.json",
   "mixins": [
+    "AbstractFishMixin",
     "AbstractHurtingProjectileMixin",
     "CamelMixin",
     "CodMixin",
@@ -30,7 +31,9 @@
     "client.SalmonRendererMixin",
     "client.SquidRendererMixin",
     "client.TropicalFishModelAMixin",
-    "client.TropicalFishModelBMixin"
+    "client.TropicalFishModelBMixin",
+    "client.TropicalFishPatternLayerMixin",
+    "client.TropicalFishRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

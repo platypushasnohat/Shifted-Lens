@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SalmonLeapGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
 import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
@@ -56,6 +57,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
+        this.goalSelector.addGoal(3, new SalmonLeapGoal(this, 40));
         this.goalSelector.addGoal(4, new CustomRandomSwimGoal(this, 1, 1, 32, 32, 3));
         this.goalSelector.addGoal(5, new FollowFlockLeaderGoal(this));
     }
@@ -68,6 +70,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
     @Override
     public void tick() {
         super.tick();
+
         if (this.level().isClientSide()) {
             shiftedLens$setupAnimationStates();
         }

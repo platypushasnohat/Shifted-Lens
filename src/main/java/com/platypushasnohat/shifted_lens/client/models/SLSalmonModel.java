@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLSalmonAnimations;
 import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -74,6 +75,11 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 	public void setupAnim(Salmon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		AnimationState flopAnimationState = ((FishAnimationAccess) entity).getFlopAnimationState();
+		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
+		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+		float partialTicks = ageInTicks - entity.tickCount;
+
+		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 
 		if (entity.isInWater()) {
 			this.animateWalk(SLSalmonAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);
@@ -97,7 +103,7 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 //		this.root.xRot = this.smoothedXRot + clampedHeadPitch;
 
 		this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
-		this.root.zRot = netHeadYaw * (Mth.DEG_TO_RAD) / 2;
+		this.root.zRot += landProgress * ((float) Math.toRadians(-90) / 5F);
 	}
 
 	@Override

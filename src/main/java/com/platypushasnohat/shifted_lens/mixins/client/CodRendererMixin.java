@@ -72,16 +72,16 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
 
     @Override
     protected void setupRotations(@NotNull Cod fish, @NotNull PoseStack poseStack, float i, float g, float h) {
-        super.setupRotations(fish, poseStack, i, g, h);
         if (SLConfig.REPLACE_COD.get()) {
-            poseStack.scale(0.75F, 0.75F, 0.75F);
+            super.setupRotations(fish, poseStack, i, g, h);
         } else {
+            super.setupRotations(fish, poseStack, i, g, h);
             float f = 4.3F * Mth.sin(0.6F * i);
             poseStack.mulPose(Axis.YP.rotationDegrees(f));
-        }
-        if (!fish.isInWater()) {
-            poseStack.translate(0.1F, 0.1F, -0.1F);
-            poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+            if (!fish.isInWater()) {
+                poseStack.translate(0.1F, 0.1F, -0.1F);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+            }
         }
     }
 }

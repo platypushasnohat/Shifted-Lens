@@ -4,7 +4,6 @@ import com.platypushasnohat.shifted_lens.mixin_utils.GhastAnimationStateAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Ghast;
@@ -39,7 +38,7 @@ public abstract class GhastMixin extends FlyingMob implements Enemy, GhastAnimat
     @Override
     protected void registerGoals() {
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (entity) -> Math.abs(entity.getY() - this.getY()) <= 8.0D));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, (entity) -> Math.abs(entity.getY() - this.getY()) <= 8.0D && entity.getType().is(SLEntityTags.SQUILL_TARGETS)));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, (entity) -> Math.abs(entity.getY() - this.getY()) <= 8.0D && entity.getType().is(SLEntityTags.GHAST_TARGETS)));
     }
 
     @Override
