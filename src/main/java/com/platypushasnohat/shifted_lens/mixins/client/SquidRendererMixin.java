@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.mixins.client;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -34,7 +34,7 @@ public abstract class SquidRendererMixin extends MobRenderer<Squid, SquidModel<S
     @Override
     public ResourceLocation getTextureLocation(Squid squid) {
         int variant = ((VariantAccess) squid).getVariant();
-        if (SLCommonConfig.REPLACE_SQUID.get()) {
+        if (SLConfig.REPLACE_SQUID.get()) {
             if (variant == 1) return COLD_SQUID_TEXTURE;
             else return SQUID_TEXTURE;
         } else {

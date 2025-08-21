@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLGuardianModel;
 import com.platypushasnohat.shifted_lens.client.renderer.GuardianBeamRenderer;
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -79,7 +79,7 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
 
     @Override
     public void render(Guardian guardian, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        if (SLCommonConfig.REPLACE_GUARDIAN.get()) {
+        if (SLConfig.REPLACE_GUARDIAN.get()) {
             this.model = this.shiftedLens$remodel;
         }
 
@@ -93,7 +93,7 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
 
     @Override
     public ResourceLocation getTextureLocation(Guardian guardian) {
-        if (SLCommonConfig.REPLACE_GUARDIAN.get()) {
+        if (SLConfig.REPLACE_GUARDIAN.get()) {
             return GUARDIAN_TEXTURE;
         } else {
             return GUARDIAN_LOCATION;

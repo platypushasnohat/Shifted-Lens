@@ -1,2 +1,4 @@
-// 1.20.1	2025-07-31T22:46:42.8164727	Tags for minecraft:entity_type mod id shifted_lens
-d131ce63d9ce1963c3f16d723dd6bcf450854d76 data/minecraft/tags/entity_types/fall_damage_immune.json
+// 1.20.1	2025-08-20T19:02:15.8867394	Tags for minecraft:entity_type mod id shifted_lens
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/shifted_lens/tags/entity_types/ghast_targets.json
+06c5b062546fe5cf2ec7d8293dc018cd0d1ed528 data/shifted_lens/tags/entity_types/guardian_targets.json
+5bd4a93460d1b11374db58ba8722ea5c95017c90 data/shifted_lens/tags/entity_types/squill_targets.json

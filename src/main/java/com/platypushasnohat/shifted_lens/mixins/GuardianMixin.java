@@ -5,21 +5,18 @@ import com.platypushasnohat.shifted_lens.mixin_utils.GuardianAnimationAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,21 +25,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 @Mixin(Guardian.class)
 public abstract class GuardianMixin extends Monster implements GuardianAnimationAccess {
 
     @Shadow
-    private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET = SynchedEntityData.defineId(Guardian.class, EntityDataSerializers.INT);
-
-    @Shadow
     @Nullable
     protected RandomStrollGoal randomStrollGoal;
 
-    @Shadow
-    public boolean hasActiveAttackTarget() {
-        return this.entityData.get(DATA_ID_ATTACK_TARGET) != 0;
-    }
+    @Shadow public abstract boolean hasActiveAttackTarget();
 
     private @Unique final AnimationState idleAnimationState = new AnimationState();
     private @Unique final AnimationState eyeAnimationState = new AnimationState();
@@ -88,18 +80,13 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
         this.randomStrollGoal = new RandomSwimmingGoal(this, 1.0D, 80);
     }
 
-    @Inject(method = "aiStep()V", at = @At("TAIL"))
-    public void aiStep(CallbackInfo ci) {
-
-    }
-
     @Override
     public void travel(@NotNull Vec3 vec3) {
         if (this.isEffectiveAi() && this.isInWater()) {
             this.moveRelative(this.getSpeed(), vec3);
             this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.005, 0.0));
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
         } else {
             super.travel(vec3);
         }
@@ -158,7 +145,7 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
         }
     }
 
-    @Mixin(targets = "net.minecraft.world.entity.monster.Guardian.GuardianAttackGoal")
+    @Mixin(targets = "net.minecraft.world.entity.monster.Guardian$GuardianAttackGoal")
     public abstract static class GuardianAttackGoal extends Goal {
 
         @Override
@@ -184,6 +171,19 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
         @Override
         public void tick() {
             super.tick();
+        }
+    }
+
+    @Mixin(targets = "net.minecraft.world.entity.monster.Guardian$GuardianAttackSelector")
+    public abstract static class GuardianAttackSelector implements Predicate<LivingEntity> {
+
+        @Shadow
+        @Final
+        private Guardian guardian;
+
+        @Override
+        public boolean test(@Nullable LivingEntity target) {
+            return target instanceof Player && target.distanceToSqr(this.guardian) > 7.0D;
         }
     }
 }

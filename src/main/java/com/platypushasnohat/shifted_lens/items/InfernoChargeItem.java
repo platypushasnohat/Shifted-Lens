@@ -1,12 +1,12 @@
 package com.platypushasnohat.shifted_lens.items;
 
-import com.platypushasnohat.shifted_lens.entities.projectiles.GhastFireball;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,7 +26,7 @@ public class InfernoChargeItem extends Item {
         player.getCooldowns().addCooldown(itemStack.getItem(), 60);
 
         if (!level.isClientSide) {
-            GhastFireball fireball = new GhastFireball(level, player, player.getLookAngle().x(), player.getLookAngle().y(), player.getLookAngle().z());
+            LargeFireball fireball = new LargeFireball(level, player, player.getLookAngle().x(), player.getLookAngle().y(), player.getLookAngle().z(), 1);
             fireball.setItem(itemStack);
             fireball.setPos(player.getX(), player.getEyePosition().y(), player.getZ());
             level.addFreshEntity(fireball);

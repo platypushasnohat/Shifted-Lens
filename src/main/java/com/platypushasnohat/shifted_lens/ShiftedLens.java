@@ -1,6 +1,6 @@
 package com.platypushasnohat.shifted_lens;
 
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.data.*;
 import com.platypushasnohat.shifted_lens.registry.SLCreativeTab;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
@@ -36,7 +36,7 @@ public class ShiftedLens {
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::dataSetup);
 
-        context.registerConfig(ModConfig.Type.COMMON, SLCommonConfig.COMMON);
+        context.registerConfig(ModConfig.Type.COMMON, SLConfig.COMMON);
 
         SLItems.ITEMS.register(modEventBus);
         SLEntities.ENTITY_TYPES.register(modEventBus);
@@ -65,8 +65,11 @@ public class ShiftedLens {
         generator.addProvider(server, datapackEntries);
         provider = datapackEntries.getRegistryProvider();
 
+        SLBlockTagProvider blockTags = new SLBlockTagProvider(output, provider, helper);
+        generator.addProvider(server, blockTags);
         generator.addProvider(server, new SLEntityTagProvider(output, provider, helper));
         generator.addProvider(server, new SLBiomeTagProvider(output, provider, helper));
+        generator.addProvider(server, new SLDamageTypeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLRecipeProvider(output));
 
         boolean client = data.includeClient();

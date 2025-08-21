@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLCodModel;
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -51,14 +51,14 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
 
     @Override
     public void render(Cod fish, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
-        if (SLCommonConfig.REPLACE_COD.get()) this.model = this.shiftedLens$remodel;
+        if (SLConfig.REPLACE_COD.get()) this.model = this.shiftedLens$remodel;
         super.render(fish, f, g, poseStack, multiBufferSource, i);
     }
 
     @Override
     public ResourceLocation getTextureLocation(Cod fish) {
         int variant = ((VariantAccess) fish).getVariant();
-        if (SLCommonConfig.REPLACE_COD.get()) {
+        if (SLConfig.REPLACE_COD.get()) {
             if (variant == 1) return COLD_COD_TEXTURE;
             if (variant == 2) return WARM_COD_TEXTURE;
             else return COD_TEXTURE;
@@ -69,7 +69,7 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
 
     @Override
     protected void setupRotations(Cod fish, PoseStack poseStack, float i, float g, float h) {
-        if (SLCommonConfig.REPLACE_COD.get()) {
+        if (SLConfig.REPLACE_COD.get()) {
             super.setupRotations(fish, poseStack, i, g, h);
             poseStack.scale(0.75F, 0.75F, 0.75F);
 

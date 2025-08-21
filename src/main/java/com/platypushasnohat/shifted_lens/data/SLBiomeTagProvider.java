@@ -6,6 +6,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,15 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
     public void addTags(HolderLookup.Provider provider) {
 
         this.tag(HAS_SQUILL).addTag(BiomeTags.IS_OVERWORLD);
+
+        this.tag(HAS_ANCHOVIES).add(
+                Biomes.OCEAN,
+                Biomes.DEEP_OCEAN,
+                Biomes.LUKEWARM_OCEAN,
+                Biomes.DEEP_LUKEWARM_OCEAN
+        );
+
+        this.tag(HAS_CAMELS).addTag(Tags.Biomes.IS_DESERT);
 
         this.tag(SPAWNS_OCEAN_SALMON).addTag(BiomeTags.IS_OCEAN);
 

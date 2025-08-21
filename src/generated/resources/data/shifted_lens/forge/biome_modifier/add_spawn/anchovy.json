@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#shifted_lens:has_mob/anchovy",
+  "spawners": {
+    "type": "shifted_lens:anchovy",
+    "maxCount": 128,
+    "minCount": 48,
+    "weight": 8
+  }
+}

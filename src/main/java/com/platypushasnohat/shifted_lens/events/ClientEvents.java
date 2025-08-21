@@ -5,7 +5,6 @@ import com.platypushasnohat.shifted_lens.client.models.*;
 import com.platypushasnohat.shifted_lens.client.renderer.*;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -18,11 +17,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(SLEntities.GHAST.get(), SLGhastRenderer::new);
-        event.registerEntityRenderer(SLEntities.GHAST_FIREBALL.get(), (context) -> new ThrownItemRenderer<>(context, 3.0F, true));
-
         event.registerEntityRenderer(SLEntities.ANCHOVY.get(), AnchovyRenderer::new);
-
         event.registerEntityRenderer(SLEntities.SQUILL.get(), SquillRenderer::new);
     }
 

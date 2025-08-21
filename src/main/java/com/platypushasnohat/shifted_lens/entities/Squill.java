@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.entities;
 
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
+import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,10 +21,12 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -68,6 +71,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         this.goalSelector.addGoal(1, new SquillAttackGoal(this));
         this.goalSelector.addGoal(2, new AirSwimGoal(this));
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 20, true, false, entity -> entity.getType().is(SLEntityTags.SQUILL_TARGETS)));
     }
 
     @Override
@@ -112,7 +116,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         }
     }
 
-    public static boolean canSpawn(EntityType<? extends Mob> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+    public static boolean canSpawn(EntityType<Squill> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
         return checkMobSpawnRules(entityType, level, spawnType, pos, random) && wholeHitboxCanSeeSky(level, pos, 2);
     }
 
@@ -129,8 +133,10 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        int spawnHeight = Math.min((this.blockPosition().getY() + SLCommonConfig.SQUILL_SPAWN_HEIGHT.get()), this.level().getMaxBuildHeight());
-        this.moveTo(this.getX(), spawnHeight, this.getZ(), this.getYRot(), this.getXRot());
+        int spawnHeight = Math.min((this.blockPosition().getY() + SLConfig.SQUILL_SPAWN_HEIGHT.get()), this.level().getMaxBuildHeight());
+        if (spawnType == MobSpawnType.NATURAL || spawnType == MobSpawnType.CHUNK_GENERATION) {
+            this.moveTo(this.getX(), spawnHeight, this.getZ(), this.getYRot(), this.getXRot());
+        }
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 

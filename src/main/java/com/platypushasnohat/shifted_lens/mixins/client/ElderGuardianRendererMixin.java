@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.mixins.client;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import net.minecraft.client.renderer.entity.ElderGuardianRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.GuardianRenderer;
@@ -32,7 +32,7 @@ public abstract class ElderGuardianRendererMixin extends GuardianRenderer {
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Guardian;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     public void getTextureLocation(Guardian guardian, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (SLCommonConfig.REPLACE_ELDER_GUARDIAN.get()) {
+        if (SLConfig.REPLACE_GUARDIAN.get()) {
             cir.setReturnValue(ELDER_GUARDIAN_TEXTURE);
         } else {
             cir.setReturnValue(GUARDIAN_ELDER_LOCATION);

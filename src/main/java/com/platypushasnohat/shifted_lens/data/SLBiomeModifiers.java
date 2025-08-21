@@ -2,13 +2,14 @@ package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -30,7 +31,10 @@ import java.util.stream.Stream;
 public class SLBiomeModifiers {
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
-        addSpawn(context, "squill", BiomeTags.IS_OVERWORLD, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 2, 32, 64));
+        addSpawn(context, "anchovy", SLBiomeTags.HAS_ANCHOVIES, new MobSpawnSettings.SpawnerData(SLEntities.ANCHOVY.get(), 8, 48, 128));
+        addSpawn(context, "squill", SLBiomeTags.HAS_SQUILL, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 2, 32, 64));
+
+        addSpawn(context, "camel", SLBiomeTags.HAS_CAMELS, new MobSpawnSettings.SpawnerData(EntityType.CAMEL, 1, 2, 2));
     }
 
     private static void addSpawn(BootstapContext<BiomeModifier> context, String name, TagKey<Biome> biomes, MobSpawnSettings.SpawnerData... spawns) {

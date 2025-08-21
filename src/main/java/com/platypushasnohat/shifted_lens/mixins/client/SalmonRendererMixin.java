@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLSalmonModel;
-import com.platypushasnohat.shifted_lens.config.SLCommonConfig;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -49,14 +49,14 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
 
     @Override
     public void render(Salmon salmon, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
-        if (SLCommonConfig.REPLACE_SALMON.get()) this.model = this.shiftedLens$remodel;
+        if (SLConfig.REPLACE_SALMON.get()) this.model = this.shiftedLens$remodel;
         super.render(salmon, f, g, poseStack, multiBufferSource, i);
     }
 
     @Override
     public ResourceLocation getTextureLocation(Salmon salmon) {
         int variant = ((VariantAccess) salmon).getVariant();
-        if (SLCommonConfig.REPLACE_SALMON.get()) {
+        if (SLConfig.REPLACE_SALMON.get()) {
             if (variant == 1) return OCEAN_SALMON;
             else return RIVER_SALMON;
         } else {
@@ -66,7 +66,7 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
 
     @Override
     protected void setupRotations(Salmon fish, PoseStack poseStack, float i, float g, float h) {
-        if (SLCommonConfig.REPLACE_SALMON.get()) {
+        if (SLConfig.REPLACE_SALMON.get()) {
             super.setupRotations(fish, poseStack, i, g, h);
             poseStack.scale(0.75F, 0.75F, 0.75F);
 

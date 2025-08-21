@@ -29,7 +29,7 @@ public class SLGuardianAttackGoal extends Goal {
     }
 
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && (this.elder || this.guardian.getTarget() != null && this.guardian.distanceToSqr(this.guardian.getTarget()) > 8.0D);
+        return super.canContinueToUse() && (this.elder || this.guardian.getTarget() != null && this.guardian.distanceToSqr(this.guardian.getTarget()) > 7.0D);
     }
 
     public void start() {

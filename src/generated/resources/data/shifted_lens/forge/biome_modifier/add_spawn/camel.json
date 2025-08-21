@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#shifted_lens:has_mob/camel",
+  "spawners": {
+    "type": "minecraft:camel",
+    "maxCount": 2,
+    "minCount": 2,
+    "weight": 1
+  }
+}

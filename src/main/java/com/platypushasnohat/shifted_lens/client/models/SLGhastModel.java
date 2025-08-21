@@ -3,18 +3,20 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLGhastAnimations;
-import com.platypushasnohat.shifted_lens.entities.SLGhast;
+import com.platypushasnohat.shifted_lens.mixin_utils.GhastAnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.monster.Ghast;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLGhastModel<T extends SLGhast> extends HierarchicalModel<T> {
+public class SLGhastModel<T extends Ghast> extends HierarchicalModel<T> {
 
 	private final ModelPart root;
 	private final ModelPart Ghast;
@@ -61,11 +63,13 @@ public class SLGhastModel<T extends SLGhast> extends HierarchicalModel<T> {
 	}
 
 	@Override
-	public void setupAnim(SLGhast entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Ghast entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
+		AnimationState idleAnimationState = ((GhastAnimationStateAccess) entity).getIdleAnimationState();
+		AnimationState shootAnimationState = ((GhastAnimationStateAccess) entity).getShootAnimationState();
 
-		this.animate(entity.idleAnimationState, SLGhastAnimations.IDLE, ageInTicks, 1.75F);
-		this.animate(entity.shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks);
+		this.animate(idleAnimationState, SLGhastAnimations.IDLE, ageInTicks, 1.75F);
+		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks);
 
 		for (int i = 0; i < 8; ++i) {
 			this.tentacles[i].xRot = 0.12F * Mth.sin(limbSwing * 0.2F + i) + 0.4F;

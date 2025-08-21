@@ -1,4 +1,6 @@
-// 1.20.1	2025-08-20T10:39:55.7529522	Tags for minecraft:worldgen/biome mod id shifted_lens
+// 1.20.1	2025-08-20T19:44:16.1934575	Tags for minecraft:worldgen/biome mod id shifted_lens
+49aab029f6fbef15ba880f51f6e5fc2f50baeb4e data/shifted_lens/tags/worldgen/biome/has_mob/anchovy.json
+66231d74902a9f3a4339266335581c57c91784dd data/shifted_lens/tags/worldgen/biome/has_mob/camel.json
 b020f6cdcd2d955793278b2f89a178a1d31e599a data/shifted_lens/tags/worldgen/biome/has_mob/squill.json
 27037cb355ec1418537638b5c05ad5ca47769c13 data/shifted_lens/tags/worldgen/biome/spawns_cold_cod.json
 27037cb355ec1418537638b5c05ad5ca47769c13 data/shifted_lens/tags/worldgen/biome/spawns_cold_squid.json
