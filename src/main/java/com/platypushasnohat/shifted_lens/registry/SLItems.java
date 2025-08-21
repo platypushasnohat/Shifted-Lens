@@ -21,6 +21,7 @@ public class SLItems {
     public static final RegistryObject<Item> WHIRLIGIG = registerItem("whirligig", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> ANCHOVY_SPAWN_EGG = registerSpawnEggItem("anchovy", SLEntities.ANCHOVY, 0xe0e0e0, 0x757575);
+    public static final RegistryObject<Item> FLYING_FISH_SPAWN_EGG = registerSpawnEggItem("flying_fish", SLEntities.FLYING_FISH, 0x147bb5, 0xffe0db);
     public static final RegistryObject<Item> SQUILL_SPAWN_EGG = registerSpawnEggItem("squill", SLEntities.SQUILL, 0xe1f7fe, 0x95c0d7);
 
     private static <I extends Item> RegistryObject<I> registerItem(String name, Supplier<? extends I> supplier) {

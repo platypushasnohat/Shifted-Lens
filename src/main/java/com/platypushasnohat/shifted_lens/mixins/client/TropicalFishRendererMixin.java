@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLTropicalFishModelB;
+import com.platypushasnohat.shifted_lens.client.renderer.GuardianBeamRenderer;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.model.ColorableHierarchicalModel;
@@ -11,10 +12,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.TropicalFishRenderer;
-import net.minecraft.client.renderer.entity.layers.TropicalFishPatternLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.TropicalFish;
+import net.minecraft.world.entity.monster.Guardian;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -59,17 +61,18 @@ public abstract class TropicalFishRendererMixin extends MobRenderer<TropicalFish
         this.shiftedLens$remodelB = new SLTropicalFishModelB<>(context.bakeLayer(SLModelLayers.TROPICAL_FISH_B));
     }
 
-    @Override
-    public void render(@NotNull TropicalFish fish, float f, float g, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int i) {
+    @Inject(method = "render(Lnet/minecraft/world/entity/animal/TropicalFish;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
+    public void render(TropicalFish fish, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, CallbackInfo ci) {
+        ci.cancel();
         if (SLConfig.REPLACE_TROPICAL_FISH.get()) {
             ColorableHierarchicalModel<TropicalFish> colorablehierarchicalmodel = getTropicalFishModel(fish);
             this.model = colorablehierarchicalmodel;
             float[] afloat = fish.getBaseColor().getTextureDiffuseColors();
             colorablehierarchicalmodel.setColor(afloat[0], afloat[1], afloat[2]);
-            super.render(fish, f, g, poseStack, bufferSource, i);
+            super.render(fish, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
             colorablehierarchicalmodel.setColor(1.0F, 1.0F, 1.0F);
         }
-        super.render(fish, f, g, poseStack, bufferSource, i);
+        super.render(fish, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
     }
 
     @Unique

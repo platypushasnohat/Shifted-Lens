@@ -23,8 +23,6 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
     @Override
     public void addTags(HolderLookup.Provider provider) {
 
-        this.tag(HAS_SQUILL).addTag(BiomeTags.IS_OVERWORLD);
-
         this.tag(HAS_ANCHOVIES).add(
                 Biomes.OCEAN,
                 Biomes.DEEP_OCEAN,
@@ -34,7 +32,7 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
 
         this.tag(HAS_CAMELS).addTag(Tags.Biomes.IS_DESERT);
 
-        this.tag(SPAWNS_OCEAN_SALMON).addTag(BiomeTags.IS_OCEAN);
+        this.tag(HAS_SQUILL).addTag(BiomeTags.IS_OVERWORLD);
 
         this.tag(SPAWNS_WARM_COD).add(
                 Biomes.LUKEWARM_OCEAN,
@@ -49,6 +47,8 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
                 Biomes.DEEP_FROZEN_OCEAN,
                 Biomes.FROZEN_RIVER
         );
+
+        this.tag(SPAWNS_OCEAN_SALMON).addTag(BiomeTags.IS_OCEAN);
 
         this.tag(SPAWNS_COLD_SQUID).add(
                 Biomes.COLD_OCEAN,

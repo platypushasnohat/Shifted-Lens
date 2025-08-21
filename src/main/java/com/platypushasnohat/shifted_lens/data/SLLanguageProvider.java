@@ -33,6 +33,7 @@ public class SLLanguageProvider extends LanguageProvider {
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
 
         this.forEntity(SLEntities.ANCHOVY);
+        this.forEntity(SLEntities.FLYING_FISH);
         this.forEntity(SLEntities.SQUILL);
     }
 

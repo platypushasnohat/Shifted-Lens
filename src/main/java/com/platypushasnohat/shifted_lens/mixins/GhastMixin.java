@@ -48,6 +48,7 @@ public abstract class GhastMixin extends FlyingMob implements Enemy, GhastAnimat
                 this.moveRelative(0.02F, vec3);
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.6F));
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.05D, 0.0D));
             } else if (this.isInLava()) {
                 this.moveRelative(0.02F, vec3);
                 this.move(MoverType.SELF, this.getDeltaMovement());

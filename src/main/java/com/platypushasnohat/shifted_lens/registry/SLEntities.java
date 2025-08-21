@@ -23,6 +23,14 @@ public class SLEntities {
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "anchovy").toString())
     );
 
+    public static final RegistryObject<EntityType<FlyingFish>> FLYING_FISH = ENTITY_TYPES.register(
+            "flying_fish", () ->
+                    EntityType.Builder.of(FlyingFish::new, MobCategory.WATER_AMBIENT)
+                            .sized(0.4F, 0.2F)
+                            .clientTrackingRange(4)
+                            .build(new ResourceLocation(ShiftedLens.MOD_ID, "flying_fish").toString())
+    );
+
     public static final RegistryObject<EntityType<Squill>> SQUILL = ENTITY_TYPES.register(
             "squill", () ->
             EntityType.Builder.of(Squill::new, MobCategory.CREATURE)

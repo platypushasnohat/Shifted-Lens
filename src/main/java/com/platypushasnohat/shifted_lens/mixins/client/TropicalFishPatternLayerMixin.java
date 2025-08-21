@@ -9,7 +9,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.TropicalFishModelA;
 import net.minecraft.client.model.TropicalFishModelB;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -59,7 +58,6 @@ public abstract class TropicalFishPatternLayerMixin extends RenderLayer<Tropical
     @Unique
     private static final ResourceLocation TROPICAL_FISH_B_PATTERN_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/tropical_fish/tropical_fish_b_pattern_1.png");
 
-
     @Shadow
     @Final
     private TropicalFishModelA<TropicalFish> modelA;
@@ -80,8 +78,10 @@ public abstract class TropicalFishPatternLayerMixin extends RenderLayer<Tropical
         this.shiftedLens$remodelB = new SLTropicalFishModelB<>(modelSet.bakeLayer(SLModelLayers.TROPICAL_FISH_B_PATTERN));
     }
 
-    @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, int p_117614_, TropicalFish fish, float p_117616_, float p_117617_, float p_117618_, float p_117619_, float p_117620_, float p_117621_) {
+
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/animal/TropicalFish;FFFFFF)V", at = @At("HEAD"), cancellable = true)
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, int p_117614_, TropicalFish fish, float p_117616_, float p_117617_, float p_117618_, float p_117619_, float p_117620_, float p_117621_, CallbackInfo ci) {
+        ci.cancel();
         TropicalFish.Pattern pattern = fish.getVariant();
         Object object = switch (pattern.base()) {
             case SMALL -> this.modelA;

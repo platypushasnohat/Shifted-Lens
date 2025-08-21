@@ -19,21 +19,20 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(SLEntities.ANCHOVY.get(), AnchovyRenderer::new);
+        event.registerEntityRenderer(SLEntities.FLYING_FISH.get(), FlyingFishRenderer::new);
         event.registerEntityRenderer(SLEntities.SQUILL.get(), SquillRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
-
-        event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
-
         event.registerLayerDefinition(SLModelLayers.ANCHOVY, AnchovyModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.COD, SLCodModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.FLYING_FISH, FlyingFishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.TROPICAL_FISH_B, () -> SLTropicalFishModelB.createBodyLayer(CubeDeformation.NONE));
         event.registerLayerDefinition(SLModelLayers.TROPICAL_FISH_B_PATTERN, () -> SLTropicalFishModelB.createBodyLayer(new CubeDeformation(0.008F)));
-
-        event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);
     }
 }

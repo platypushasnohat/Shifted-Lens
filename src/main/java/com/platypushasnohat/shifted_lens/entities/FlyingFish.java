@@ -28,13 +28,13 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
-public class Anchovy extends AbstractSchoolingFish {
+public class FlyingFish extends AbstractSchoolingFish {
 
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anchovy.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(FlyingFish.class, EntityDataSerializers.INT);
 
     public final AnimationState flopAnimationState = new AnimationState();
 
-    public Anchovy(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
+    public FlyingFish(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 5, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 4);
@@ -71,7 +71,7 @@ public class Anchovy extends AbstractSchoolingFish {
         this.flopAnimationState.animateWhen(this.isAlive() && !this.isInWaterOrBubble(), this.tickCount);
     }
 
-    public static boolean canSpawn(EntityType<Anchovy> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+    public static boolean canSpawn(EntityType<FlyingFish> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
         return WaterAnimal.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, pos, random);
     }
 
@@ -108,7 +108,7 @@ public class Anchovy extends AbstractSchoolingFish {
 
     @Override
     public int getMaxSchoolSize() {
-        return 128;
+        return 20;
     }
 
     @Nullable
