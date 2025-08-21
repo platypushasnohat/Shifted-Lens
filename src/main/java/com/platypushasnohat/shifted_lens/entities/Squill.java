@@ -26,7 +26,6 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
-import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -54,14 +53,15 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     public Squill(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SquillMoveController(this);
+        this.xpReward = 5;
         setPersistenceRequired();
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.16F)
-                .add(Attributes.FLYING_SPEED, 0.16F)
+                .add(Attributes.MOVEMENT_SPEED, 0.17F)
+                .add(Attributes.FLYING_SPEED, 0.17F)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
