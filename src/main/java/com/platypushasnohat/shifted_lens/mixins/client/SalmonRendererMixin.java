@@ -61,8 +61,9 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
         cir.setReturnValue(SLConfig.REPLACE_SALMON.get() ? texture : SALMON_LOCATION);
     }
 
-    @Override
-    protected void setupRotations(Salmon fish, PoseStack poseStack, float i, float g, float h) {
+    @Inject(method = "setupRotations(Lnet/minecraft/world/entity/animal/Salmon;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("HEAD"), cancellable = true)
+    protected void setupRotations(Salmon fish, PoseStack poseStack, float i, float g, float h, CallbackInfo ci) {
+        ci.cancel();
         if (SLConfig.REPLACE_SALMON.get()) {
             super.setupRotations(fish, poseStack, i, g, h);
         } else {

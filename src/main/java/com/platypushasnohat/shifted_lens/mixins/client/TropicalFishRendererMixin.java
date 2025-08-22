@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLTropicalFishModelB;
-import com.platypushasnohat.shifted_lens.client.renderer.GuardianBeamRenderer;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.model.ColorableHierarchicalModel;
@@ -14,9 +13,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.TropicalFishRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.TropicalFish;
-import net.minecraft.world.entity.monster.Guardian;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -99,8 +96,9 @@ public abstract class TropicalFishRendererMixin extends MobRenderer<TropicalFish
         cir.setReturnValue(SLConfig.REPLACE_TROPICAL_FISH.get() ? texture : vanillaTexture);
     }
 
-    @Override
-    public void setupRotations(TropicalFish fish, PoseStack poseStack, float p_116228_, float p_116229_, float p_116230_) {
+    @Inject(method = "setupRotations(Lnet/minecraft/world/entity/animal/TropicalFish;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("HEAD"), cancellable = true)
+    public void setupRotations(TropicalFish fish, PoseStack poseStack, float p_116228_, float p_116229_, float p_116230_, CallbackInfo ci) {
+        ci.cancel();
         if (SLConfig.BETTER_FISH_FLOPPING.get()) {
             super.setupRotations(fish, poseStack, p_116228_, p_116229_, p_116230_);
         } else {

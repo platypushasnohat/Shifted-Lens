@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(Ghast.class)
+@Mixin(value = Ghast.class, priority = 1001)
 public abstract class GhastMixin extends FlyingMob implements Enemy, GhastAnimationStateAccess {
 
     @Shadow public abstract boolean isCharging();
@@ -84,11 +84,6 @@ public abstract class GhastMixin extends FlyingMob implements Enemy, GhastAnimat
     @Override
     public boolean isNoGravity() {
         return true;
-    }
-
-    @Override
-    protected float getSoundVolume() {
-        return 4.0F;
     }
 
     @Override

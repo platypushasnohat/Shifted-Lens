@@ -70,8 +70,9 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
         cir.setReturnValue(SLConfig.REPLACE_COD.get() ? texture : COD_LOCATION);
     }
 
-    @Override
-    protected void setupRotations(@NotNull Cod fish, @NotNull PoseStack poseStack, float i, float g, float h) {
+    @Inject(method = "setupRotations(Lnet/minecraft/world/entity/animal/Cod;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("HEAD"), cancellable = true)
+    protected void setupRotations(Cod fish, PoseStack poseStack, float i, float g, float h, CallbackInfo ci) {
+        ci.cancel();
         if (SLConfig.REPLACE_COD.get()) {
             super.setupRotations(fish, poseStack, i, g, h);
         } else {

@@ -62,12 +62,8 @@ public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel
         cir.setReturnValue(SLConfig.REPLACE_GHAST.get() ? GHAST_TEXTURE : texture);
     }
 
-    @Override
-    protected void scale(Ghast ghast, PoseStack poseStack, float f) {
-        if (SLConfig.REPLACE_GHAST.get()) {
-            poseStack.scale(1.0F, 1.0F, 1.0F);
-        } else {
-            poseStack.scale(4.5F, 4.5F, 4.5F);
-        }
+    @Inject(method = "scale(Lnet/minecraft/world/entity/monster/Ghast;Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
+    protected void scale(Ghast ghast, PoseStack matrixStack, float partialTicks, CallbackInfo ci) {
+        ci.cancel();
     }
 }

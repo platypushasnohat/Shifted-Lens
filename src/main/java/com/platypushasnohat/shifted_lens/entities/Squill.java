@@ -69,7 +69,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SquillAttackGoal(this));
-        this.goalSelector.addGoal(2, new AirSwimGoal(this));
+        this.goalSelector.addGoal(2, new SquillWanderGoal(this));
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 20, true, false, entity -> entity.getType().is(SLEntityTags.SQUILL_TARGETS)));
     }
@@ -235,13 +235,13 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
     }
 
     // goals
-    static class AirSwimGoal extends Goal {
+    static class SquillWanderGoal extends Goal {
 
         private final Squill squill;
         private int cooldown;
         private double x, y, z;
 
-        public AirSwimGoal(Squill squill) {
+        public SquillWanderGoal(Squill squill) {
             this.squill = squill;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
@@ -257,13 +257,15 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
                 int heightBelow = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, blockX, blockZ);
                 boolean isAirBelow = level.getBlockState(new BlockPos(blockX, heightBelow, blockZ)).isAir();
                 int blockY = squill.getBlockY();
+                int maxHeight = (int) (squill.level().getMaxBuildHeight() / 1.25F);
+                
                 Vec3 randomPos;
-                if ((!isAirBelow && blockY - heightBelow > 15) || (isAirBelow && blockY > level.getSeaLevel() + 15)) {
+                if ((!isAirBelow && blockY - heightBelow > 15) || (isAirBelow && blockY > maxHeight)) {
                     RandomSource random = squill.getRandom();
-                    randomPos = squill.position().add(new Vec3(random.nextBoolean() ? (random.nextInt(12)) : (random.nextInt(12) * -1), -random.nextInt(16), random.nextBoolean() ? (random.nextInt(12)) : (random.nextInt(12) * -1)));
+                    randomPos = squill.position().add(new Vec3(random.nextBoolean() ? (random.nextInt(12)) : (random.nextInt(12) * -1), -random.nextInt(32), random.nextBoolean() ? (random.nextInt(12)) : (random.nextInt(12) * -1)));
                 } else {
                     Vec3 view = squill.getViewVector(0.0F);
-                    randomPos = HoverRandomPos.getPos(squill, 32, 16, view.x, view.z, ((float) Math.PI / 2F), 3, 1);
+                    randomPos = HoverRandomPos.getPos(squill, 32, 12, view.x, view.z, ((float) Math.PI / 2F), 3, 1);
                 }
                 if (randomPos != null) {
                     this.x = randomPos.x();
@@ -278,7 +280,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
         @Override
         public void start() {
             squill.getMoveControl().setWantedPosition(this.x, this.y, this.z, 1.0F);
-            this.cooldown = squill.getRandom().nextInt(60) + 40;
+            this.cooldown = squill.getRandom().nextInt(80) + 60;
         }
 
         @Override
@@ -294,7 +296,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
 
     static class SquillAttackGoal extends Goal {
 
-        private Squill squill;
+        private final Squill squill;
 
         private Vec3 startOrbitFrom;
         private int orbitTime;
@@ -408,7 +410,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal {
 
     static class SquillMoveController extends MoveControl {
 
-        private Squill squill;
+        private final Squill squill;
         private Vec3 prevPos;
         private int stuckTicks;
 

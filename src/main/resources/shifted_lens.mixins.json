@@ -6,11 +6,9 @@
   "refmap": "shifted_lens.refmap.json",
   "mixins": [
     "AbstractFishMixin",
-    "AbstractHurtingProjectileMixin",
     "CamelMixin",
     "CodMixin",
     "ElderGuardianMixin",
-    "FireballMixin",
     "FireChargeItemMixin",
     "GhastMixin",
     "GuardianMixin",
