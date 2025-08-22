@@ -24,7 +24,7 @@ public class SLItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         item(INFERNO_CHARGE);
-        item(WHIRLIGIG);
+        handheldItem(WHIRLIGIG);
 
         for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof SpawnEggItem && Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getNamespace().equals(ShiftedLens.MOD_ID)) {
@@ -37,8 +37,21 @@ public class SLItemModelProvider extends ItemModelProvider {
         return generated(item.getId().getPath(), modLoc("item/" + item.getId().getPath()));
     }
 
+    private ItemModelBuilder handheldItem(RegistryObject<?> item) {
+        return handheld(item.getId().getPath(), modLoc("item/" + item.getId().getPath()));
+    }
+
+    // utils
     private ItemModelBuilder generated(String name, ResourceLocation... layers) {
         ItemModelBuilder builder = withExistingParent(name, "item/generated");
+        for (int i = 0; i < layers.length; i++) {
+            builder = builder.texture("layer" + i, layers[i]);
+        }
+        return builder;
+    }
+
+    private ItemModelBuilder handheld(String name, ResourceLocation... layers) {
+        ItemModelBuilder builder = withExistingParent(name, "item/handheld");
         for (int i = 0; i < layers.length; i++) {
             builder = builder.texture("layer" + i, layers[i]);
         }
