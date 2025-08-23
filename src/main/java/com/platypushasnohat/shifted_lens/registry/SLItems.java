@@ -20,6 +20,8 @@ public class SLItems {
 
     public static final RegistryObject<Item> INFERNO_CHARGE = registerItem("inferno_charge", () -> new InfernoChargeItem(new Item.Properties()));
     public static final RegistryObject<Item> WHIRLIGIG = registerItem("whirligig", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SQUILL_TOOTH = registerItem("squill_tooth", () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> RAW_ANCHOVY = registerItemNoLang("anchovy", () -> new Item(foodItem(SLFoodValues.RAW_ANCHOVY)));
     public static final RegistryObject<Item> COOKED_ANCHOVY = registerItem("cooked_anchovy", () -> new Item(foodItem(SLFoodValues.COOKED_ANCHOVY)));
 

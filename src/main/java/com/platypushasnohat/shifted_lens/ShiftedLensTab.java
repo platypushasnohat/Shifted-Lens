@@ -35,6 +35,7 @@ public class ShiftedLensTab {
                         tabOutput.accept(Items.FIRE_CHARGE);
                         tabOutput.accept(INFERNO_CHARGE.get());
                         tabOutput.accept(WHIRLIGIG.get());
+                        tabOutput.accept(SQUILL_TOOTH.get());
                         tabOutput.accept(RAW_ANCHOVY.get());
                         tabOutput.accept(COOKED_ANCHOVY.get());
 

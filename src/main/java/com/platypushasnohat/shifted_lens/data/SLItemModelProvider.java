@@ -25,6 +25,7 @@ public class SLItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         item(INFERNO_CHARGE);
         handheldItem(WHIRLIGIG);
+        item(SQUILL_TOOTH);
         item(RAW_ANCHOVY);
         item(COOKED_ANCHOVY);
 

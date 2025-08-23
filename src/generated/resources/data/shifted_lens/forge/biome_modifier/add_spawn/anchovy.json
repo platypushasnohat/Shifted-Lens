@@ -3,7 +3,7 @@
   "biomes": "#shifted_lens:has_mob/anchovy",
   "spawners": {
     "type": "shifted_lens:anchovy",
-    "maxCount": 128,
+    "maxCount": 96,
     "minCount": 48,
     "weight": 1
   }
