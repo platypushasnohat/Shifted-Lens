@@ -1,6 +1,5 @@
-package com.platypushasnohat.shifted_lens.registry;
+package com.platypushasnohat.shifted_lens;
 
-import com.platypushasnohat.shifted_lens.ShiftedLens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -11,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static com.platypushasnohat.shifted_lens.registry.SLItems.*;
 
-public class SLCreativeTab {
+public class ShiftedLensTab {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ShiftedLens.MOD_ID);
 
@@ -34,6 +33,8 @@ public class SLCreativeTab {
                         tabOutput.accept(Items.FIRE_CHARGE);
                         tabOutput.accept(INFERNO_CHARGE.get());
                         tabOutput.accept(WHIRLIGIG.get());
+                        tabOutput.accept(RAW_ANCHOVY.get());
+                        tabOutput.accept(COOKED_ANCHOVY.get());
 
                     }).build());
 }

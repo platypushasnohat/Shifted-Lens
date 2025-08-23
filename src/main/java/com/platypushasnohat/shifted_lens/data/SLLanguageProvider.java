@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.registry.SLCreativeTab;
+import com.platypushasnohat.shifted_lens.ShiftedLensTab;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.sounds.SoundEvent;
@@ -28,9 +28,11 @@ public class SLLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        addTab(SLCreativeTab.SHIFTED_LENS_TAB.get(), "Shifted Lens");
+        addTab(ShiftedLensTab.SHIFTED_LENS_TAB.get(), "Shifted Lens");
 
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
+
+        addItem(SLItems.RAW_ANCHOVY, "Raw Anchovy");
 
         this.forEntity(SLEntities.ANCHOVY);
         this.forEntity(SLEntities.FLYING_FISH);

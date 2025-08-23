@@ -41,7 +41,7 @@ public abstract class TropicalFishModelBMixin<T extends Entity> extends Colorabl
     }
 
     @Inject(method = "createBodyLayer", at = @At("HEAD"), cancellable = true)
-    private static void createBodyLayer(CallbackInfoReturnable<LayerDefinition> callbackInfo) {
+    private static void createBodyLayer(CallbackInfoReturnable<LayerDefinition> cir) {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
@@ -67,7 +67,7 @@ public abstract class TropicalFishModelBMixin<T extends Entity> extends Colorabl
         swim_control.addOrReplaceChild("body", CubeListBuilder.create()
                 .texOffs(0, 20).addBox(-1.0F, -3.0F, -3.0F, 2.0F, 6.0F, 6.0F), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        callbackInfo.setReturnValue(LayerDefinition.create(meshdefinition, 32, 32));
+        cir.setReturnValue(LayerDefinition.create(meshdefinition, 32, 32));
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V", at = @At("HEAD"), cancellable = true)

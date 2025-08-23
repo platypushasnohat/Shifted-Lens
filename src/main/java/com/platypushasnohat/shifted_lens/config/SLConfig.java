@@ -18,6 +18,8 @@ public class SLConfig {
 
     public static ForgeConfigSpec.ConfigValue<Boolean> BETTER_FISH_FLOPPING;
 
+    public static ForgeConfigSpec.ConfigValue<Boolean> MILKABLE_SQUIDS;
+
     public static final ForgeConfigSpec COMMON;
 
     static {
@@ -39,6 +41,7 @@ public class SLConfig {
 
         builder.push("tweaks");
         BETTER_FISH_FLOPPING = builder.comment("Whether or not fish flopping is more realistic").define("better-fish-flopping", true);
+        MILKABLE_SQUIDS = builder.comment("Whether or squids can be milked with buckets").define("milkable-squids", true);
         builder.pop();
 
         COMMON = builder.build();

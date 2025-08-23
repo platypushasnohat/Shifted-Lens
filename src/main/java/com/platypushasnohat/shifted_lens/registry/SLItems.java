@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.items.InfernoChargeItem;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
@@ -19,6 +20,8 @@ public class SLItems {
 
     public static final RegistryObject<Item> INFERNO_CHARGE = registerItem("inferno_charge", () -> new InfernoChargeItem(new Item.Properties()));
     public static final RegistryObject<Item> WHIRLIGIG = registerItem("whirligig", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RAW_ANCHOVY = registerItemNoLang("anchovy", () -> new Item(foodItem(SLFoodValues.RAW_ANCHOVY)));
+    public static final RegistryObject<Item> COOKED_ANCHOVY = registerItem("cooked_anchovy", () -> new Item(foodItem(SLFoodValues.COOKED_ANCHOVY)));
 
     public static final RegistryObject<Item> ANCHOVY_SPAWN_EGG = registerSpawnEggItem("anchovy", SLEntities.ANCHOVY, 0xe0e0e0, 0x757575);
     public static final RegistryObject<Item> FLYING_FISH_SPAWN_EGG = registerSpawnEggItem("flying_fish", SLEntities.FLYING_FISH, 0x147bb5, 0xffe0db);
@@ -37,5 +40,9 @@ public class SLItems {
 
     private static RegistryObject<Item> registerSpawnEggItem(String name, RegistryObject type, int baseColor, int spotColor) {
         return registerItem(name + "_spawn_egg", () -> new ForgeSpawnEggItem(type, baseColor, spotColor, new Item.Properties()));
+    }
+
+    public static Item.Properties foodItem(FoodProperties food) {
+        return new Item.Properties().food(food);
     }
 }

@@ -16,6 +16,7 @@
     "GuardianMixin$GuardianAttackSelector",
     "LargeFireballMixin",
     "PoseMixin",
+    "PufferfishMixin",
     "SalmonMixin",
     "SquidMixin",
     "SquidMixin$SquidRandomMovementGoal",
@@ -26,11 +27,14 @@
     "client.ElderGuardianRendererMixin",
     "client.GhastRendererMixin",
     "client.GuardianRendererMixin",
+    "client.PufferfishBigModelMixin",
+    "client.PufferfishMidModelMixin",
+    "client.PufferfishSmallModelMixin",
     "client.SalmonRendererMixin",
     "client.SquidRendererMixin",
+    "client.TadpoleModelMixin",
     "client.TropicalFishModelAMixin",
     "client.TropicalFishModelBMixin",
-    "client.TropicalFishPatternLayerMixin",
     "client.TropicalFishRendererMixin"
   ],
   "injectors": {

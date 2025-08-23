@@ -25,6 +25,8 @@ public class SLItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         item(INFERNO_CHARGE);
         handheldItem(WHIRLIGIG);
+        item(RAW_ANCHOVY);
+        item(COOKED_ANCHOVY);
 
         for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof SpawnEggItem && Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getNamespace().equals(ShiftedLens.MOD_ID)) {

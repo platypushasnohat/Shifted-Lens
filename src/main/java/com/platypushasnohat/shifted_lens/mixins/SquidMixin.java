@@ -1,20 +1,32 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,10 +46,23 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
     }
 
     @Override
-    public void travel(Vec3 travelVector) {
+    public void travel(@NotNull Vec3 travelVector) {
         if (this.isEffectiveAi() || this.isControlledByLocalInstance()) {
             this.move(MoverType.SELF, this.getDeltaMovement());
         }
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
+        if (itemstack.is(Items.BUCKET) && SLConfig.MILKABLE_SQUIDS.get()) {
+            player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+            ItemStack result = ItemUtils.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
+            player.setItemInHand(hand, result);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
+        }
+        else return InteractionResult.FAIL;
     }
 
     @Mixin(targets = "net.minecraft.world.entity.animal.Squid$SquidRandomMovementGoal")
@@ -51,7 +76,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
             if (this.squid.getRandom().nextInt(reducedTickDelay(60)) == 0 || !this.squid.isInWater() || !this.squid.hasMovementVector()) {
                 var f = this.squid.getRandom().nextFloat() * (float) (Math.PI * 2);
                 var tx = Mth.cos(f) * 0.2F;
-                var ty = -0.1F + this.squid.getRandom().nextFloat() * 0.15F;
+                var ty = -0.1F + this.squid.getRandom().nextFloat() * 0.18F;
                 var tz = Mth.sin(f) * 0.2F;
                 this.squid.setMovementVector(tx, ty, tz);
             }
