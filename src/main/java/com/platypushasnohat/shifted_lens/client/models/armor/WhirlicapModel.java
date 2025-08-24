@@ -30,10 +30,10 @@ public class WhirlicapModel extends HumanoidModel<LivingEntity> {
 		PartDefinition head = root.getChild("head");
 
 		PartDefinition whirlicap = head.addOrReplaceChild("whirlicap", CubeListBuilder.create()
-				.texOffs(25, 45).addBox(-4.0F, -9.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.3F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+				.texOffs(25, 45).addBox(-4.0F, -9.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.6F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition thingthatpokesout = whirlicap.addOrReplaceChild("thingthatpokesout", CubeListBuilder.create()
-				.texOffs(25, 57).addBox(-4.0F, -2.0F, -3.0F, 8.0F, 0.0F, 3.0F, new CubeDeformation(0.005F)), PartPose.offset(0.0F, -2.75F, -4.0F));
+				.texOffs(25, 57).addBox(-4.0F, -1.75F, -3.5F, 8.0F, 0.0F, 3.0F, new CubeDeformation(0.005F)), PartPose.offset(0.0F, -2.75F, -4.0F));
 
 		PartDefinition whirligig = whirlicap.addOrReplaceChild("whirligig", CubeListBuilder.create().texOffs(25, 32).addBox(-6.5F, -6.0F, -6.5F, 13.0F, 0.0F, 13.0F, new CubeDeformation(0.005F))
 				.texOffs(51, 57).addBox(-1.0F, -6.0F, 0.0F, 2.0F, 5.0F, 0.0F, new CubeDeformation(0.005F))

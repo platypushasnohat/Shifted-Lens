@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.data.*;
+import com.platypushasnohat.shifted_lens.events.MiscEvents;
 import com.platypushasnohat.shifted_lens.registry.SLBrewingRecipes;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
@@ -48,6 +49,7 @@ public class ShiftedLens {
         ShiftedLensTab.CREATIVE_TAB.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new MiscEvents());
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {

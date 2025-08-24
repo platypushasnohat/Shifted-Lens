@@ -4,22 +4,16 @@ import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.registry.enums.SLArmorMaterials;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class WhirlicapItem extends ArmorItem {
-
-    private static final AttributeModifier WHIRLICAP_SLOW_FALL = new AttributeModifier(UUID.fromString("5b397cd8-4dca-47a0-9496-e6dfb00d2387"), "Falling acceleration reduction", -0.05, AttributeModifier.Operation.ADDITION);
 
     private int flightTime = 0;
     private final int maxflightTime = 50;
@@ -31,19 +25,9 @@ public class WhirlicapItem extends ArmorItem {
     @Override
     public void onArmorTick(ItemStack stack, Level level, Player player) {
         Vec3 motion = player.getDeltaMovement();
-        AttributeInstance gravity = player.getAttribute(ForgeMod.ENTITY_GRAVITY.get());
-
-        boolean isSlowFalling = player.getDeltaMovement().y <= 0.0D && !player.isCrouching();
-        if (isSlowFalling) {
-            if (!gravity.hasModifier(WHIRLICAP_SLOW_FALL)) {
-                gravity.addTransientModifier(WHIRLICAP_SLOW_FALL);
-            }
-        } else if (gravity.hasModifier(WHIRLICAP_SLOW_FALL)) {
-            gravity.removeModifier(WHIRLICAP_SLOW_FALL);
-        }
+        player.resetFallDistance();
 
         if (!onGround(player) && motion.y < 0.08 + 0.2) {
-            player.resetFallDistance();
             if (player.jumping && !player.isCrouching() && flightTime <= maxflightTime) {
                 this.flightTime++;
                 if (flightTime > 2) {
@@ -51,7 +35,6 @@ public class WhirlicapItem extends ArmorItem {
                 }
             }
         }
-
         if (onGround(player)) {
             flightTime = 0;
         }
