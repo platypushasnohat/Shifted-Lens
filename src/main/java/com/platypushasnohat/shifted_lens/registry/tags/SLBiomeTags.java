@@ -15,7 +15,7 @@ public class SLBiomeTags {
     public static final TagKey<Biome> SPAWNS_COLD_SQUID = modBiomeTag("spawns_cold_squid");
 
     public static final TagKey<Biome> HAS_SQUILL = modBiomeTag("has_mob/squill");
-    public static final TagKey<Biome> HAS_ANCHOVIES = modBiomeTag("has_mob/anchovy");
+    public static final TagKey<Biome> HAS_BAITFISH = modBiomeTag("has_mob/baitfish");
     public static final TagKey<Biome> HAS_CAMELS = modBiomeTag("has_mob/camel");
 
     private static TagKey<Biome> modBiomeTag(String name) {

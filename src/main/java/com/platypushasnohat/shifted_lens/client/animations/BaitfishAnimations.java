@@ -5,7 +5,7 @@ import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
-public class AnchovyAnimations {
+public class BaitfishAnimations {
 
 	public static final AnimationDefinition SWIM = AnimationDefinition.Builder.withLength(8.0F).looping()
 			.addAnimation("root", new AnimationChannel(AnimationChannel.Targets.ROTATION,

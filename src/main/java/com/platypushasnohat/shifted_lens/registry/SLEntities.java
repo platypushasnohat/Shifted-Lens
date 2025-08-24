@@ -15,12 +15,12 @@ public class SLEntities {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ShiftedLens.MOD_ID);
 
-    public static final RegistryObject<EntityType<Anchovy>> ANCHOVY = ENTITY_TYPES.register(
-            "anchovy", () ->
-            EntityType.Builder.of(Anchovy::new, MobCategory.WATER_AMBIENT)
+    public static final RegistryObject<EntityType<Baitfish>> BAITFISH = ENTITY_TYPES.register(
+            "baitfish", () ->
+            EntityType.Builder.of(Baitfish::new, MobCategory.WATER_AMBIENT)
                     .sized(0.4F, 0.2F)
                     .clientTrackingRange(4)
-                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "anchovy").toString())
+                    .build(new ResourceLocation(ShiftedLens.MOD_ID, "baitfish").toString())
     );
 
     public static final RegistryObject<EntityType<FlyingFish>> FLYING_FISH = ENTITY_TYPES.register(

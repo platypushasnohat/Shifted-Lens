@@ -2,8 +2,11 @@ package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.data.*;
+import com.platypushasnohat.shifted_lens.registry.SLBrewingRecipes;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
+import com.platypushasnohat.shifted_lens.registry.SLPotions;
+import com.platypushasnohat.shifted_lens.utils.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -12,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -26,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 public class ShiftedLens {
 
     public static final String MOD_ID = "shifted_lens";
+    public static final CommonProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public ShiftedLens() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -39,17 +44,18 @@ public class ShiftedLens {
 
         SLItems.ITEMS.register(modEventBus);
         SLEntities.ENTITY_TYPES.register(modEventBus);
-        ShiftedLensTab.CREATIVE_TABS.register(modEventBus);
+        SLPotions.POTIONS.register(modEventBus);
+        ShiftedLensTab.CREATIVE_TAB.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
-
+        event.enqueueWork(SLBrewingRecipes::registerPotionRecipes);
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-
+        event.enqueueWork(PROXY::clientInit);
     }
 
     private void dataSetup(GatherDataEvent data) {

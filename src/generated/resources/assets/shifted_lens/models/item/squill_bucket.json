@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "shifted_lens:item/anchovy"
+    "layer0": "shifted_lens:item/squill_bucket"
   }
 }

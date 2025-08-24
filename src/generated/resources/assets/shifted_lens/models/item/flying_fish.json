@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "shifted_lens:item/cooked_anchovy"
+    "layer0": "shifted_lens:item/flying_fish"
   }
 }

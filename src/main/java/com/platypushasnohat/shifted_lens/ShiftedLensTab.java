@@ -1,5 +1,7 @@
 package com.platypushasnohat.shifted_lens;
 
+import com.platypushasnohat.shifted_lens.registry.SLBrewingRecipes;
+import com.platypushasnohat.shifted_lens.registry.SLPotions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,32 +14,44 @@ import static com.platypushasnohat.shifted_lens.registry.SLItems.*;
 
 public class ShiftedLensTab {
 
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ShiftedLens.MOD_ID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ShiftedLens.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> SHIFTED_LENS_TAB = CREATIVE_TABS.register("shifted_lens",
+    public static final RegistryObject<CreativeModeTab> SHIFTED_LENS_TAB = CREATIVE_TAB.register("shifted_lens",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(WHIRLIGIG.get()))
                     .title(Component.translatable("itemGroup.shifted_lens"))
-                    .displayItems((pParameters, tabOutput) -> {
+                    .displayItems((parameters, output) -> {
 
-                        tabOutput.accept(ANCHOVY_SPAWN_EGG.get());
-                        tabOutput.accept(Items.COD_SPAWN_EGG);
-                        tabOutput.accept(Items.ELDER_GUARDIAN_SPAWN_EGG);
-                        tabOutput.accept(FLYING_FISH_SPAWN_EGG.get());
-                        tabOutput.accept(Items.GHAST_SPAWN_EGG);
-                        tabOutput.accept(Items.GUARDIAN_SPAWN_EGG);
-                        tabOutput.accept(Items.PUFFERFISH_SPAWN_EGG);
-                        tabOutput.accept(Items.SALMON_SPAWN_EGG);
-                        tabOutput.accept(Items.SQUID_SPAWN_EGG);
-                        tabOutput.accept(SQUILL_SPAWN_EGG.get());
-                        tabOutput.accept(Items.TADPOLE_SPAWN_EGG);
-                        tabOutput.accept(Items.TROPICAL_FISH_SPAWN_EGG);
+                        output.accept(BAITFISH_SPAWN_EGG.get());
+                        output.accept(FLYING_FISH_SPAWN_EGG.get());
+                        output.accept(SQUILL_SPAWN_EGG.get());
 
-                        tabOutput.accept(Items.FIRE_CHARGE);
-                        tabOutput.accept(INFERNO_CHARGE.get());
-                        tabOutput.accept(WHIRLIGIG.get());
-                        tabOutput.accept(SQUILL_TOOTH.get());
-                        tabOutput.accept(RAW_ANCHOVY.get());
-                        tabOutput.accept(COOKED_ANCHOVY.get());
+                        output.accept(Items.FIRE_CHARGE);
+                        output.accept(INFERNO_CHARGE.get());
+                        output.accept(WHIRLIGIG.get());
+                        output.accept(WHIRLICAP.get());
+                        output.accept(SQUILL_TOOTH.get());
+                        output.accept(RAW_BAITFISH.get());
+                        output.accept(COOKED_BAITFISH.get());
+                        output.accept(FLYING_FISH.get());
+                        output.accept(FLYING_FISH_BUCKET.get());
+                        output.accept(SQUID_BUCKET.get());
+                        output.accept(SQUILL_BUCKET.get());
+
+                        output.accept(SLBrewingRecipes.registerPotion(SLPotions.LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerPotion(SLPotions.LONG_LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerPotion(SLPotions.STRONG_LEVITATION_POTION.get()));
+
+                        output.accept(SLBrewingRecipes.registerSplashPotion(SLPotions.LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerSplashPotion(SLPotions.LONG_LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerSplashPotion(SLPotions.STRONG_LEVITATION_POTION.get()));
+
+                        output.accept(SLBrewingRecipes.registerLingeringPotion(SLPotions.LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerLingeringPotion(SLPotions.LONG_LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerLingeringPotion(SLPotions.STRONG_LEVITATION_POTION.get()));
+
+                        output.accept(SLBrewingRecipes.registerTippedArrow(SLPotions.LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerTippedArrow(SLPotions.LONG_LEVITATION_POTION.get()));
+                        output.accept(SLBrewingRecipes.registerTippedArrow(SLPotions.STRONG_LEVITATION_POTION.get()));
 
                     }).build());
 }

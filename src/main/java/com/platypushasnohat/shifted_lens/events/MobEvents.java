@@ -19,7 +19,7 @@ public class MobEvents {
 
     @SubscribeEvent
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-        event.register(SLEntities.ANCHOVY.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Anchovy::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(SLEntities.BAITFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Baitfish::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CamelExtension::checkCamelSpawnRules, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(SLEntities.FLYING_FISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingFish::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(SLEntities.SQUILL.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Squill::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
@@ -27,7 +27,7 @@ public class MobEvents {
 
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(SLEntities.ANCHOVY.get(), Anchovy.createAttributes().build());
+        event.put(SLEntities.BAITFISH.get(), Baitfish.createAttributes().build());
         event.put(SLEntities.FLYING_FISH.get(), FlyingFish.createAttributes().build());
         event.put(SLEntities.SQUILL.get(), Squill.createAttributes().build());
     }

@@ -14,6 +14,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Squid;
@@ -31,6 +33,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
@@ -79,6 +84,21 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
                 var ty = -0.1F + this.squid.getRandom().nextFloat() * 0.18F;
                 var tz = Mth.sin(f) * 0.2F;
                 this.squid.setMovementVector(tx, ty, tz);
+            }
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "spawnInk")
+    private void spawnInk(CallbackInfo info) {
+        if (!this.level().isClientSide()) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.25F, 2.25F, 2.25F))) {
+                if (!(entity instanceof Squid)) {
+                    if (((Squid) (Object) this) instanceof GlowSquid) {
+                        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
+                    } else {
+                        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60));
+                    }
+                }
             }
         }
     }

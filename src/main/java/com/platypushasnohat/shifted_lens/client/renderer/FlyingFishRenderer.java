@@ -1,9 +1,7 @@
 package com.platypushasnohat.shifted_lens.client.renderer;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.client.models.AnchovyModel;
 import com.platypushasnohat.shifted_lens.client.models.FlyingFishModel;
-import com.platypushasnohat.shifted_lens.entities.Anchovy;
 import com.platypushasnohat.shifted_lens.entities.FlyingFish;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.RenderType;

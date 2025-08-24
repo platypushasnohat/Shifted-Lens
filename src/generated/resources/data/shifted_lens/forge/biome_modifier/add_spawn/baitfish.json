@@ -1,8 +1,8 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "#shifted_lens:has_mob/anchovy",
+  "biomes": "#shifted_lens:has_mob/baitfish",
   "spawners": {
-    "type": "shifted_lens:anchovy",
+    "type": "shifted_lens:baitfish",
     "maxCount": 96,
     "minCount": 48,
     "weight": 1

@@ -23,7 +23,7 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
     @Override
     public void addTags(HolderLookup.Provider provider) {
 
-        this.tag(HAS_ANCHOVIES).add(
+        this.tag(HAS_BAITFISH).add(
                 Biomes.OCEAN,
                 Biomes.DEEP_OCEAN,
                 Biomes.LUKEWARM_OCEAN,

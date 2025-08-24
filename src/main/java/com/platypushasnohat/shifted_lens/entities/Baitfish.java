@@ -28,13 +28,13 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class Anchovy extends AbstractSchoolingFish {
+public class Baitfish extends AbstractSchoolingFish {
 
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Anchovy.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Baitfish.class, EntityDataSerializers.INT);
 
     public final AnimationState flopAnimationState = new AnimationState();
 
-    public Anchovy(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
+    public Baitfish(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 5, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 4);
@@ -87,7 +87,7 @@ public class Anchovy extends AbstractSchoolingFish {
         this.flopAnimationState.animateWhen(this.isAlive() && !this.isInWaterOrBubble(), this.tickCount);
     }
 
-    public static boolean canSpawn(EntityType<Anchovy> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+    public static boolean canSpawn(EntityType<Baitfish> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
         return WaterAnimal.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, pos, random);
     }
 

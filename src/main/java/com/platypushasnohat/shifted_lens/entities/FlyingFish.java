@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.entities;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -10,6 +11,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -21,12 +24,15 @@ import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.AbstractSchoolingFish;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FlyingFish extends AbstractSchoolingFish {
@@ -57,6 +63,16 @@ public class FlyingFish extends AbstractSchoolingFish {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 3.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.1F);
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return SLItems.FLYING_FISH_BUCKET.get().getDefaultInstance();
     }
 
     @Override
@@ -126,9 +142,9 @@ public class FlyingFish extends AbstractSchoolingFish {
         return 20;
     }
 
-    @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
+    @Nullable
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
         this.setVariant(level().getRandom().nextInt(1));
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
@@ -147,18 +163,12 @@ public class FlyingFish extends AbstractSchoolingFish {
 
     @Override
     @Nullable
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.SALMON_HURT;
     }
 
     @Override
-    @Nullable
-    protected SoundEvent getFlopSound() {
+    protected @NotNull SoundEvent getFlopSound() {
         return SoundEvents.SALMON_FLOP;
-    }
-
-    @Override
-    public ItemStack getBucketItemStack() {
-        return ItemStack.EMPTY;
     }
 }

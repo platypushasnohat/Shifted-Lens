@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.*;
+import com.platypushasnohat.shifted_lens.client.models.armor.WhirlicapModel;
 import com.platypushasnohat.shifted_lens.client.renderer.*;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
@@ -17,19 +18,24 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(SLEntities.ANCHOVY.get(), AnchovyRenderer::new);
+        event.registerEntityRenderer(SLEntities.BAITFISH.get(), BaitfishRenderer::new);
         event.registerEntityRenderer(SLEntities.FLYING_FISH.get(), FlyingFishRenderer::new);
         event.registerEntityRenderer(SLEntities.SQUILL.get(), SquillRenderer::new);
     }
 
     @SubscribeEvent
-    public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(SLModelLayers.ANCHOVY, AnchovyModel::createBodyLayer);
+    public static void registerEntityLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(SLModelLayers.BAITFISH, BaitfishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.COD, SLCodModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.FLYING_FISH, FlyingFishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    public static void registerArmorLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(SLModelLayers.WHIRLICAP, WhirlicapModel::createArmorLayer);
     }
 }

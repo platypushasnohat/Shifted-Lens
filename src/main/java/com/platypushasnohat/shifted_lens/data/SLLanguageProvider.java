@@ -4,6 +4,7 @@ import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.ShiftedLensTab;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
+import com.platypushasnohat.shifted_lens.registry.SLPotions;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,15 +29,23 @@ public class SLLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        addTab(ShiftedLensTab.SHIFTED_LENS_TAB.get(), "Shifted Lens");
+        this.addTab(ShiftedLensTab.SHIFTED_LENS_TAB.get(), "Shifted Lens");
 
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
 
-        addItem(SLItems.RAW_ANCHOVY, "Raw Anchovy");
+        this.addItem(SLItems.RAW_BAITFISH, "Raw Baitfish");
 
-        this.forEntity(SLEntities.ANCHOVY);
+        this.addItem(SLItems.FLYING_FISH_BUCKET, "Bucket of Flying Fish");
+        this.addItem(SLItems.SQUID_BUCKET, "Bucket of Squid");
+        this.addItem(SLItems.SQUILL_BUCKET, "Bucket of Squill");
+
+        this.forEntity(SLEntities.BAITFISH);
         this.forEntity(SLEntities.FLYING_FISH);
         this.forEntity(SLEntities.SQUILL);
+
+        this.potion(SLPotions.LEVITATION_POTION, "Levitation", "levitation");
+        this.potion(SLPotions.LONG_LEVITATION_POTION, "Levitation", "long_levitation");
+        this.potion(SLPotions.STRONG_LEVITATION_POTION, "Levitation", "strong_levitation");
     }
 
     @Override

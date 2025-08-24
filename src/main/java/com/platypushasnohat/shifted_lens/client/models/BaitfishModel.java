@@ -2,8 +2,8 @@ package com.platypushasnohat.shifted_lens.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.platypushasnohat.shifted_lens.client.animations.AnchovyAnimations;
-import com.platypushasnohat.shifted_lens.entities.Anchovy;
+import com.platypushasnohat.shifted_lens.client.animations.BaitfishAnimations;
+import com.platypushasnohat.shifted_lens.entities.Baitfish;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -15,14 +15,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class AnchovyModel<T extends Anchovy> extends HierarchicalModel<T> {
+public class BaitfishModel<T extends Baitfish> extends HierarchicalModel<T> {
 
 	private final ModelPart root;
 	private final ModelPart bottomfin;
 	private final ModelPart topfin;
 	private final ModelPart tailfin;
 
-	public AnchovyModel(ModelPart root) {
+	public BaitfishModel(ModelPart root) {
 		this.root = root.getChild("root");
 		this.bottomfin = this.root.getChild("bottomfin");
 		this.topfin = this.root.getChild("topfin");
@@ -45,13 +45,13 @@ public class AnchovyModel<T extends Anchovy> extends HierarchicalModel<T> {
 	}
 
 	@Override
-	public void setupAnim(Anchovy entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Baitfish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 
 		if (entity.isInWater()) {
-			this.animateWalk(AnchovyAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
+			this.animateWalk(BaitfishAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
 		} else {
-			this.animate(entity.flopAnimationState, AnchovyAnimations.FLOP, ageInTicks);
+			this.animate(entity.flopAnimationState, BaitfishAnimations.FLOP, ageInTicks);
 		}
 
 		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
