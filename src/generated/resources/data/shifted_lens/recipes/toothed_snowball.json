@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:snowball"
+    },
+    "X": {
+      "item": "shifted_lens:squill_tooth"
+    }
+  },
+  "pattern": [
+    " # ",
+    "#X#",
+    " # "
+  ],
+  "result": {
+    "count": 4,
+    "item": "shifted_lens:toothed_snowball"
+  },
+  "show_notification": true
+}

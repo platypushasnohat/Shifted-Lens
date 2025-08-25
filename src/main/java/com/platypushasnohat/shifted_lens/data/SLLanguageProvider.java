@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.ShiftedLensTab;
+import com.platypushasnohat.shifted_lens.registry.SLBlocks;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLPotions;
@@ -32,6 +33,7 @@ public class SLLanguageProvider extends LanguageProvider {
         this.addTab(ShiftedLensTab.SHIFTED_LENS_TAB.get(), "Shifted Lens");
 
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
+        SLBlocks.AUTO_TRANSLATE.forEach(this::forBlocks);
 
         this.addItem(SLItems.RAW_BAITFISH, "Raw Baitfish");
 

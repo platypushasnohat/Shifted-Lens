@@ -1,12 +1,11 @@
 package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.blocks.WhirligigBlock;
+import com.platypushasnohat.shifted_lens.blocks.*;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -25,7 +24,8 @@ public class SLBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ShiftedLens.MOD_ID);
     public static List<RegistryObject<? extends Block>> AUTO_TRANSLATE = new ArrayList<>();
 
-    public static final RegistryObject<Block> WHIRLIGIG = registerBlock("whirligig", () -> new WhirligigBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).instrument(NoteBlockInstrument.IRON_XYLOPHONE).requiresCorrectToolForDrops().noOcclusion().instabreak().strength(1.0F).sound(SoundType.WOOD)));
+//    public static final RegistryObject<Block> WHIRLIGIG = registerBlock("whirligig", () -> new WhirligigBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).instrument(NoteBlockInstrument.IRON_XYLOPHONE).requiresCorrectToolForDrops().noOcclusion().instabreak().strength(1.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> WHIRLIBOX = registerBlock("whirlibox", () -> new WhirliboxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.5F)));
 
     private static <B extends Block> RegistryObject<B> registerBlock(String name, Supplier<? extends B> supplier) {
         RegistryObject<B> block = BLOCKS.register(name, supplier);

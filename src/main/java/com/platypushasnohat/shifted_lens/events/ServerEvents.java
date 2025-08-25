@@ -77,6 +77,4 @@ public class ServerEvents {
             event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
         }
     }
-
-
 }

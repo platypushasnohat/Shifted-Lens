@@ -3,12 +3,14 @@ package com.platypushasnohat.shifted_lens.entities;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -34,10 +36,13 @@ import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -276,8 +281,25 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+    @NotNull
+    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        final ItemStack itemstack = player.getItemInHand(hand);
+        if (itemstack.getItem() == Items.BUCKET && this.isAlive()) {
+            this.gameEvent(GameEvent.ENTITY_INTERACT);
+            this.playSound(this.getPickupSound(), 1.0F, 1.0F);
+            final ItemStack itemstack1 = this.getBucketItemStack();
+            this.saveToBucketTag(itemstack1);
+            final ItemStack itemstack2 = ItemUtils.createFilledResult(itemstack, player, itemstack1, false);
+            player.setItemInHand(hand, itemstack2);
+            final Level level = this.level();
+            if (!this.level().isClientSide) {
+                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer)player, itemstack1);
+            }
+
+            this.discard();
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
+        }
+        return super.mobInteract(player, hand);
     }
 
     // goals

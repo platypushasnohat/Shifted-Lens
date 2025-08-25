@@ -33,6 +33,7 @@ public class SLItemModelProvider extends ItemModelProvider {
         this.item(FLYING_FISH_BUCKET);
         this.item(SQUID_BUCKET);
         this.item(SQUILL_BUCKET);
+        this.item(TOOTHED_SNOWBALL);
 
         for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof SpawnEggItem && Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getNamespace().equals(ShiftedLens.MOD_ID)) {

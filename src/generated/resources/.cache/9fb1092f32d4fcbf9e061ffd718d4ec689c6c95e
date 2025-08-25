@@ -1,3 +1,9 @@
-// 1.20.1	2025-07-31T22:46:42.8153687	Recipes
+// 1.20.1	2025-08-25T11:33:14.5305536	Recipes
+c77eb6bc1589d0529dff13174e999cc4879956ff data/shifted_lens/advancements/recipes/combat/toothed_snowball.json
+2fda22e3c3dd95a7e8bfebe0e3ac4604ac820b15 data/shifted_lens/advancements/recipes/combat/whirlicap.json
 74c94b26b205f30295a5d4ecce66fbaf11f13bca data/shifted_lens/advancements/recipes/misc/inferno_charge.json
+bb5812bd3f53d510127dd1c37893c6a711865453 data/shifted_lens/advancements/recipes/redstone/whirlibox.json
 aa3759630f176235f1c3db3696fb4f8d9ca56fb0 data/shifted_lens/recipes/inferno_charge.json
+38d69df820536e0d47b8ffc349088e626be18270 data/shifted_lens/recipes/toothed_snowball.json
+cfc9ed1978b5822a4a54ac8865c0198e070a8371 data/shifted_lens/recipes/whirlibox.json
+d931957a68cb098055d9f0b56f4cfb883e4f7e7d data/shifted_lens/recipes/whirlicap.json

@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public enum SLArmorMaterials implements ArmorMaterial {
 
-    WHIRLICAP ("whirlicap", 10, new int[] {1, 1, 1, 1}, 10, SoundEvents.ARMOR_EQUIP_TURTLE, 0F, 0F, ()-> Ingredient.of(SLItems.WHIRLIGIG.get()));
+    WHIRLICAP ("whirlicap", 10, new int[] {1, 1, 1, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0F, 0F, ()-> Ingredient.of(SLItems.WHIRLIGIG.get()));
 
     private final String name;
     private final int durabilityMultiplier;

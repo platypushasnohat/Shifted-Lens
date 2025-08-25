@@ -1,0 +1,6 @@
+{
+    "parent": "shifted_lens:block/whirlibox",
+    "textures": {
+        "front": "shifted_lens:block/whirlibox_front_active"
+    }
+}

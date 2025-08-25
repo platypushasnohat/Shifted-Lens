@@ -3,10 +3,7 @@ package com.platypushasnohat.shifted_lens;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.data.*;
 import com.platypushasnohat.shifted_lens.events.MiscEvents;
-import com.platypushasnohat.shifted_lens.registry.SLBrewingRecipes;
-import com.platypushasnohat.shifted_lens.registry.SLEntities;
-import com.platypushasnohat.shifted_lens.registry.SLItems;
-import com.platypushasnohat.shifted_lens.registry.SLPotions;
+import com.platypushasnohat.shifted_lens.registry.*;
 import com.platypushasnohat.shifted_lens.utils.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -44,8 +41,11 @@ public class ShiftedLens {
         context.registerConfig(ModConfig.Type.COMMON, SLConfig.COMMON);
 
         SLItems.ITEMS.register(modEventBus);
+        SLBlocks.BLOCKS.register(modEventBus);
+        SLBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         SLEntities.ENTITY_TYPES.register(modEventBus);
         SLPotions.POTIONS.register(modEventBus);
+        SLParticles.PARTICLES.register(modEventBus);
         ShiftedLensTab.CREATIVE_TAB.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -78,6 +78,7 @@ public class ShiftedLens {
         generator.addProvider(server, new SLBiomeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLDamageTypeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLRecipeProvider(output));
+        generator.addProvider(server, SLLootProvider.register(output));
 
         boolean client = data.includeClient();
         generator.addProvider(client, new SLItemModelProvider(data));

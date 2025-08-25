@@ -1,4 +1,5 @@
 {
+  "block.shifted_lens.whirlibox": "Whirlibox",
   "entity.shifted_lens.baitfish": "Baitfish",
   "entity.shifted_lens.flying_fish": "Flying Fish",
   "entity.shifted_lens.squill": "Squill",
@@ -21,10 +22,12 @@
   "item.shifted_lens.flying_fish_bucket": "Bucket of Flying Fish",
   "item.shifted_lens.flying_fish_spawn_egg": "Flying Fish Spawn Egg",
   "item.shifted_lens.inferno_charge": "Inferno Charge",
+  "item.shifted_lens.lollipop": "Lollipop",
   "item.shifted_lens.squid_bucket": "Bucket of Squid",
   "item.shifted_lens.squill_bucket": "Bucket of Squill",
   "item.shifted_lens.squill_spawn_egg": "Squill Spawn Egg",
   "item.shifted_lens.squill_tooth": "Squill Tooth",
+  "item.shifted_lens.toothed_snowball": "Toothed Snowball",
   "item.shifted_lens.whirlicap": "Whirlicap",
   "item.shifted_lens.whirligig": "Whirligig",
   "itemGroup.shifted_lens": "Shifted Lens"

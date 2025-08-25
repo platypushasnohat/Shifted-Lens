@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=down,powered=false": {
+      "model": "shifted_lens:block/whirlibox",
+      "x": 90
+    },
+    "facing=down,powered=true": {
+      "model": "shifted_lens:block/whirlibox_on",
+      "x": 90
+    },
+    "facing=east,powered=false": {
+      "model": "shifted_lens:block/whirlibox",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "shifted_lens:block/whirlibox_on",
+      "y": 90
+    },
+    "facing=north,powered=false": {
+      "model": "shifted_lens:block/whirlibox"
+    },
+    "facing=north,powered=true": {
+      "model": "shifted_lens:block/whirlibox_on"
+    },
+    "facing=south,powered=false": {
+      "model": "shifted_lens:block/whirlibox",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "shifted_lens:block/whirlibox_on",
+      "y": 180
+    },
+    "facing=up,powered=false": {
+      "model": "shifted_lens:block/whirlibox",
+      "x": 270
+    },
+    "facing=up,powered=true": {
+      "model": "shifted_lens:block/whirlibox_on",
+      "x": 270
+    },
+    "facing=west,powered=false": {
+      "model": "shifted_lens:block/whirlibox",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "shifted_lens:block/whirlibox_on",
+      "y": 270
+    }
+  }
+}
