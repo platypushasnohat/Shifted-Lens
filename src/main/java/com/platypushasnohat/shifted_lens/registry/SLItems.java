@@ -28,7 +28,7 @@ public class SLItems {
 
     public static final RegistryObject<Item> WHIRLICAP = registerItem("whirlicap", () -> new WhirlicapItem(new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item> LOLLIPOP = registerItem("lollipop", () -> new LollipopItem(foodItem(SLFoodValues.LOLLIPOP).stacksTo(1).durability(12)));
+    public static final RegistryObject<Item> LOLLIPOP = registerItem("lollipop", () -> new LollipopItem(foodItem(SLFoodValues.LOLLIPOP).stacksTo(1)));
 
     public static final RegistryObject<Item> RAW_BAITFISH = registerItemNoLang("baitfish", () -> new Item(foodItem(SLFoodValues.RAW_BAITFISH)));
     public static final RegistryObject<Item> COOKED_BAITFISH = registerItem("cooked_baitfish", () -> new Item(foodItem(SLFoodValues.COOKED_BAITFISH)));

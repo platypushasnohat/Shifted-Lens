@@ -12,5 +12,6 @@ public class SLParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ShiftedLens.MOD_ID);
 
     public static final RegistryObject<SimpleParticleType> WHIRLIWIND = PARTICLES.register("whirliwind", () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> WHIRLIBUBBLE = PARTICLES.register("whirlibubble", () -> new SimpleParticleType(false));
 
 }

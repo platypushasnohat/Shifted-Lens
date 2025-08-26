@@ -148,12 +148,12 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             }
         }
 
-        this.playSound(SoundEvents.SQUID_SQUIRT, this.getSoundVolume(), 1.4F);
+        this.playSound(SoundEvents.SQUID_SQUIRT, this.getSoundVolume(), 1.4F * this.getVoicePitch());
         Vec3 vec3 = this.rotateVector(new Vec3(0.0D, -1.0D, 0.0D)).add(this.getX(), this.getY(), this.getZ());
         for (int i = 0; i < 30; ++i) {
             Vec3 vec31 = this.rotateVector(new Vec3((double) this.random.nextFloat() * 0.6D - 0.3D, -1.0D, (double) this.random.nextFloat() * 0.6D - 0.3D));
             Vec3 vec32 = vec31.scale(0.3D + (double) (this.random.nextFloat() * 2.0F));
-            ((ServerLevel)this.level()).sendParticles(SLParticles.WHIRLIWIND.get(), vec3.x, vec3.y + 0.25D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+            ((ServerLevel) this.level()).sendParticles(SLParticles.WHIRLIWIND.get(), vec3.x, vec3.y, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
         }
     }
 

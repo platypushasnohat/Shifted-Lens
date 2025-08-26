@@ -25,8 +25,8 @@ public class SLBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ShiftedLens.MOD_ID);
     public static List<RegistryObject<? extends Block>> AUTO_TRANSLATE = new ArrayList<>();
 
-    public static final RegistryObject<Block> WHIRLIGIG = registerBlock("whirligig", () -> new WhirligigBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).noCollission().noOcclusion().instabreak().strength(0.5F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> WHIRLIBOX = registerBlock("whirlibox", () -> new WhirliboxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.5F)));
+    public static final RegistryObject<Block> WHIRLIGIG = registerBlock("whirligig", () -> new WhirligigBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.HARP).forceSolidOn().noCollission().noOcclusion().strength(1.0F).sound(SoundType.BAMBOO)));
+    public static final RegistryObject<Block> WHIRLIBOX = registerBlock("whirlibox", () -> new WhirliboxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.HARP).requiresCorrectToolForDrops().strength(3.5F)));
 
     private static <B extends Block> RegistryObject<B> registerBlock(String name, Supplier<? extends B> supplier) {
         RegistryObject<B> block = BLOCKS.register(name, supplier);

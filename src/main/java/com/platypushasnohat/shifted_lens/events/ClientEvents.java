@@ -3,6 +3,7 @@ package com.platypushasnohat.shifted_lens.events;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.*;
 import com.platypushasnohat.shifted_lens.client.models.armor.WhirlicapModel;
+import com.platypushasnohat.shifted_lens.client.particles.WhirlibubbleParticle;
 import com.platypushasnohat.shifted_lens.client.particles.WhirliwindParticle;
 import com.platypushasnohat.shifted_lens.client.renderer.*;
 import com.platypushasnohat.shifted_lens.client.renderer.blockentity.WhirligigRenderer;
@@ -25,6 +26,7 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(SLParticles.WHIRLIWIND.get(), WhirliwindParticle.Factory::new);
+        event.registerSpriteSet(SLParticles.WHIRLIBUBBLE.get(), WhirlibubbleParticle.Factory::new);
     }
 
     @SubscribeEvent

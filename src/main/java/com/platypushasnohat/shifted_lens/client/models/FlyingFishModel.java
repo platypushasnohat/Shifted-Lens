@@ -76,7 +76,7 @@ public class FlyingFishModel<T extends FlyingFish> extends HierarchicalModel<T> 
 	public void setupAnim(FlyingFish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 
-		if (entity.isInWater()) {
+		if (entity.isInWaterOrBubble()) {
 			this.animateWalk(FlyingFishAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
 		} else {
 			this.animate(entity.flopAnimationState, FlyingFishAnimations.FLOP, ageInTicks);

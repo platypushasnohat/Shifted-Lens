@@ -72,7 +72,7 @@ public class SLCodModel<T extends Cod> extends HierarchicalModel<T> {
 		float partialTicks = ageInTicks - entity.tickCount;
 		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 
-		if (entity.isInWater()) {
+		if (entity.isInWaterOrBubble()) {
 			this.animateWalk(SLCodAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);
 		} else {
 			this.animate(flopAnimationState, SLCodAnimations.FLOP, ageInTicks);

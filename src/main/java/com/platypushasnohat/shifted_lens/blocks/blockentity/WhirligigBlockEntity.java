@@ -31,13 +31,13 @@ public class WhirligigBlockEntity extends BlockEntity {
 
         if (level.isClientSide()) {
             whirligig.activeRotation += 1.0F;
-            if (state.getValue(WhirligigBlock.WATERLOGGED) && level.getBlockState(pos.above()) != Blocks.AIR.defaultBlockState()) {
+            if (state.getValue(WhirligigBlock.WATERLOGGED) && level.getBlockState(pos.above()) == Blocks.WATER.defaultBlockState()) {
                 float angle = (float) Math.toRadians(state.getValue(WhirligigBlock.ROTATION) * 360.0F) / 16.0F;
 
                 double xDirection = -Math.sin(angle);
                 double zDirection = Math.cos(angle);
 
-                if (level.random.nextFloat() <= 0.2F) {
+                if (level.random.nextFloat() <= 0.1F) {
                     double x = pos.getX() + 0.5 + xDirection * 0.2D;
                     double y = pos.getY() + 1;
                     double z = pos.getZ() + 0.5 + zDirection * 0.2D;

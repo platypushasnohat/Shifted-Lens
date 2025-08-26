@@ -2,7 +2,7 @@
   "parent": "item/handheld",
   "loader": "forge:separate_transforms",
   "textures": {
-    "layer0": "shifted_lens:item/lollipop_gui"
+    "layer0": "shifted_lens:item/lollipop"
   },
   "base": {
     "parent": "shifted_lens:item/lollipop_handheld"
@@ -12,6 +12,9 @@
       "parent": "shifted_lens:item/lollipop_gui"
     },
     "fixed": {
+      "parent": "shifted_lens:item/lollipop_gui"
+    },
+    "ground": {
       "parent": "shifted_lens:item/lollipop_gui"
     }
   }

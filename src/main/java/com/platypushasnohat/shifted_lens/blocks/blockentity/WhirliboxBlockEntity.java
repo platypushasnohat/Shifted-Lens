@@ -53,21 +53,21 @@ public class WhirliboxBlockEntity extends BlockEntity {
         }
 
         if (level.isClientSide()) {
-            double xOff = direction.getStepX() * 0.09F;
-            double yOff = direction.getStepY() * 0.09F;
-            double zOff = direction.getStepZ() * 0.09F;
+            double xOff = direction.getStepX() * 0.15F;
+            double yOff = direction.getStepY() * 0.15F;
+            double zOff = direction.getStepZ() * 0.15F;
 
             double particleOffset = moveDirection.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : -1;
 
             for (int j = 1; j < blockDist; j++) {
-                if (level.random.nextFloat() <= 0.2F) {
+                if (level.random.nextFloat() <= 0.15F) {
                     BlockPos targetPos = worldPosition.relative(direction, j);
                     double x = targetPos.getX() + getParticlePos(xOff, level.random, particleOffset);
                     double y = targetPos.getY() + getParticlePos(yOff, level.random, particleOffset);
                     double z = targetPos.getZ() + getParticlePos(zOff, level.random, particleOffset);
 
                     if (level.getBlockState(targetPos).is(Blocks.WATER)) {
-                        level.addParticle(ParticleTypes.BUBBLE, x, y, z, xOff, yOff, zOff);
+                        level.addParticle(SLParticles.WHIRLIBUBBLE.get(), x, y, z, xOff, yOff, zOff);
                     } else {
                         level.addParticle(SLParticles.WHIRLIWIND.get(), x, y, z, xOff, yOff, zOff);
                     }
@@ -77,6 +77,6 @@ public class WhirliboxBlockEntity extends BlockEntity {
     }
 
     private double getParticlePos(double offset, RandomSource random, double offset1) {
-        return (offset == 0 ? 0.5f + (random.nextFloat() + random.nextFloat() - 1) / 2f : (0.5f + offset1 * (random.nextFloat() - 1.25)));
+        return (offset == 0F ? 0.5F + (random.nextFloat() + random.nextFloat() - 1F) / 2F : (0.5F + offset1 * (random.nextFloat() - 1.25F)));
     }
 }

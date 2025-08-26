@@ -27,5 +27,9 @@ public class SLBlockTagProvider extends BlockTagsProvider {
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 WHIRLIBOX.get()
         );
+
+        this.tag(BlockTags.MINEABLE_WITH_AXE).add(
+                WHIRLIGIG.get()
+        );
     }
 }

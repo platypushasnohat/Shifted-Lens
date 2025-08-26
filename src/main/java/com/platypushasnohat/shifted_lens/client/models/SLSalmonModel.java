@@ -81,7 +81,7 @@ public class SLSalmonModel<T extends Salmon> extends HierarchicalModel<T> {
 
 		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 
-		if (entity.isInWater()) {
+		if (entity.isInWaterOrBubble()) {
 			this.animateWalk(SLSalmonAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);
 		} else {
 			this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
