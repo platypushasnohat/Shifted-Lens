@@ -58,6 +58,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
 
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(Squill.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Squill.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> COMBAT_COOLDOWN = SynchedEntityData.defineId(Squill.class, EntityDataSerializers.INT);
 
     private Vec3 prevPull = Vec3.ZERO, pull = Vec3.ZERO;
     private float alphaProgress;
@@ -158,8 +159,13 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
 
     public boolean hurt(DamageSource source, float amount) {
         if (super.hurt(source, amount) && this.getLastHurtByMob() != null) {
-            if (!this.level().isClientSide && this.getHealth() <= this.getMaxHealth() * 0.25F) {
-                this.spawnInk();
+            if (!this.level().isClientSide) {
+                if (this.getHealth() <= this.getMaxHealth() * 0.25F && this.getCombatCooldown() <= 0) {
+                    this.combatCooldown();
+                }
+                if (this.getCombatCooldown() > 0) {
+                    this.spawnInk();
+                }
             }
             return true;
         } else {
@@ -232,6 +238,10 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             alphaProgress--;
         }
 
+        if (this.getCombatCooldown() > 0) {
+            this.setCombatCooldown(this.getCombatCooldown() - 1);
+        }
+
         if (this.level().isClientSide()) {
             setupAnimationStates();
 
@@ -259,6 +269,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         super.defineSynchedData();
         this.entityData.define(ATTACKING, false);
         this.entityData.define(FROM_BUCKET, false);
+        this.entityData.define(COMBAT_COOLDOWN, 0);
     }
 
     @Override
@@ -266,6 +277,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putBoolean("Attacking", this.isAttacking());
         compoundTag.putBoolean("FromBucket", this.fromBucket());
+        compoundTag.putInt("CombatCooldown", this.getCombatCooldown());
     }
 
     @Override
@@ -273,6 +285,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         super.readAdditionalSaveData(compoundTag);
         this.setAttacking(compoundTag.getBoolean("Attacking"));
         this.setFromBucket(compoundTag.getBoolean("FromBucket"));
+        this.setCombatCooldown(compoundTag.getInt("CombatCooldown"));
     }
 
     public boolean isAttacking() {
@@ -281,6 +294,18 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
 
     public void setAttacking(boolean attacking) {
         this.entityData.set(ATTACKING, attacking);
+    }
+
+    public int getCombatCooldown() {
+        return this.entityData.get(COMBAT_COOLDOWN);
+    }
+
+    public void setCombatCooldown(int cooldown) {
+        this.entityData.set(COMBAT_COOLDOWN, cooldown);
+    }
+
+    public void combatCooldown() {
+        this.entityData.set(COMBAT_COOLDOWN, 60 + random.nextInt(20 * 4));
     }
 
     @Override
@@ -440,7 +465,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         @Override
         public boolean canUse() {
             LivingEntity target = squill.getTarget();
-            return target != null && target.isAlive() && !squill.isPassenger() && this.squill.getHealth() > this.squill.getMaxHealth() * 0.25F;
+            return target != null && target.isAlive() && !squill.isPassenger() && this.squill.getCombatCooldown() <= 0;
         }
 
         @Override
@@ -452,7 +477,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
                 return false;
             } else if (!squill.isWithinRestriction(target.blockPosition())) {
                 return false;
-            } else if (this.squill.getHealth() <= this.squill.getMaxHealth() * 0.25F) {
+            } else if (this.squill.getCombatCooldown() > 0) {
                 return false;
             } else {
                 return !(target instanceof Player) || !target.isSpectator() && !((Player) target).isCreative() || !squill.getNavigation().isDone();
@@ -542,7 +567,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         }
 
         protected boolean shouldPanic() {
-            return this.squill.getLastHurtByMob() != null && this.squill.getHealth() <= this.squill.getMaxHealth() * 0.25F;
+            return this.squill.getLastHurtByMob() != null && this.squill.getCombatCooldown() > 0;
         }
 
         protected boolean findRandomPosition() {

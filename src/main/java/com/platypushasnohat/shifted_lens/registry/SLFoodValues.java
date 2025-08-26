@@ -18,4 +18,8 @@ public class SLFoodValues {
             .nutrition(1).saturationMod(0.2F)
             .build();
 
+    public static final FoodProperties LOLLIPOP = (new FoodProperties.Builder())
+            .nutrition(1).saturationMod(0.2F)
+            .build();
+
 }
