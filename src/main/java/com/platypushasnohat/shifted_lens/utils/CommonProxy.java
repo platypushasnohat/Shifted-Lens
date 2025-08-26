@@ -14,8 +14,4 @@ public class CommonProxy {
     public Object getArmorRenderProperties() {
         return null;
     }
-
-    public Object getISTERProperties() {
-        return null;
-    }
 }

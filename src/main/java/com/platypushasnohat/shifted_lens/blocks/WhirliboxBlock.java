@@ -67,6 +67,7 @@ public class WhirliboxBlock extends BaseEntityBlock {
     }
 
     @Override
+    @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return WhirliboxBlock.createTickerHelper(blockEntityType, SLBlockEntities.WHIRLIBOX_BLOCK_ENTITY.get(), WhirliboxBlockEntity::tick);
     }

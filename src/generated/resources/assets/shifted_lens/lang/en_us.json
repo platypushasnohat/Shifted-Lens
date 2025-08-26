@@ -1,5 +1,6 @@
 {
   "block.shifted_lens.whirlibox": "Whirlibox",
+  "block.shifted_lens.whirligig": "Whirligig",
   "entity.shifted_lens.baitfish": "Baitfish",
   "entity.shifted_lens.flying_fish": "Flying Fish",
   "entity.shifted_lens.squill": "Squill",
@@ -29,6 +30,5 @@
   "item.shifted_lens.squill_tooth": "Squill Tooth",
   "item.shifted_lens.toothed_snowball": "Toothed Snowball",
   "item.shifted_lens.whirlicap": "Whirlicap",
-  "item.shifted_lens.whirligig": "Whirligig",
   "itemGroup.shifted_lens": "Shifted Lens"
 }

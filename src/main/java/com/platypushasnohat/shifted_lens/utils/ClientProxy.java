@@ -3,7 +3,6 @@ package com.platypushasnohat.shifted_lens.utils;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.renderer.blockentity.WhirligigRenderer;
 import com.platypushasnohat.shifted_lens.client.renderer.items.SLArmorRenderProperties;
-import com.platypushasnohat.shifted_lens.client.renderer.items.SLItemStackRenderer;
 import com.platypushasnohat.shifted_lens.registry.SLBlockEntities;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,8 +12,6 @@ import net.minecraftforge.fml.common.Mod;
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = ShiftedLens.MOD_ID, value = Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
-
-    private final SLItemStackRenderer isterProperties = new SLItemStackRenderer();
 
     public void init() {
     }
@@ -26,10 +23,5 @@ public class ClientProxy extends CommonProxy {
     @Override
     public Object getArmorRenderProperties() {
         return new SLArmorRenderProperties();
-    }
-
-    @Override
-    public Object getISTERProperties() {
-        return isterProperties;
     }
 }

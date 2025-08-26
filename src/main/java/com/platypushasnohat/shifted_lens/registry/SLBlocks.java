@@ -2,7 +2,6 @@ package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.blocks.*;
-import com.platypushasnohat.shifted_lens.items.BlockItemWithISTER;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -26,7 +25,7 @@ public class SLBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ShiftedLens.MOD_ID);
     public static List<RegistryObject<? extends Block>> AUTO_TRANSLATE = new ArrayList<>();
 
-    public static final RegistryObject<Block> WHIRLIGIG = registerBlock("whirligig", () -> new WhirligigBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).noCollission().noOcclusion().instabreak().strength(1.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> WHIRLIGIG = registerBlock("whirligig", () -> new WhirligigBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).noCollission().noOcclusion().instabreak().strength(0.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> WHIRLIBOX = registerBlock("whirlibox", () -> new WhirliboxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.5F)));
 
     private static <B extends Block> RegistryObject<B> registerBlock(String name, Supplier<? extends B> supplier) {

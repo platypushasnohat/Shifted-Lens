@@ -18,6 +18,7 @@ public class SLModelLayers {
     public static final ModelLayerLocation SQUILL = main("squill");
 
     public static final ModelLayerLocation WHIRLICAP = main("whirlicap");
+    public static final ModelLayerLocation WHIRLIGIG = main("whirligig");
 
     private static ModelLayerLocation register(String id, String name) {
         return new ModelLayerLocation(new ResourceLocation(ShiftedLens.MOD_ID, id), name);

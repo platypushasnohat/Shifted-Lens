@@ -40,6 +40,7 @@ public class SLBlockLootTableProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         this.dropSelf(WHIRLIBOX.get());
+        this.dropSelf(WHIRLIGIG.get());
     }
 
     @Override

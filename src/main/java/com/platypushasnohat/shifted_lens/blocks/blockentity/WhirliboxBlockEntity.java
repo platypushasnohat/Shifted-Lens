@@ -5,10 +5,12 @@ import com.platypushasnohat.shifted_lens.registry.SLBlockEntities;
 import com.platypushasnohat.shifted_lens.registry.SLParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -63,7 +65,12 @@ public class WhirliboxBlockEntity extends BlockEntity {
                     double x = targetPos.getX() + getParticlePos(xOff, level.random, particleOffset);
                     double y = targetPos.getY() + getParticlePos(yOff, level.random, particleOffset);
                     double z = targetPos.getZ() + getParticlePos(zOff, level.random, particleOffset);
-                    level.addParticle(SLParticles.WHIRLIWIND.get(), x, y, z, xOff, yOff, zOff);
+
+                    if (level.getBlockState(targetPos).is(Blocks.WATER)) {
+                        level.addParticle(ParticleTypes.BUBBLE, x, y, z, xOff, yOff, zOff);
+                    } else {
+                        level.addParticle(SLParticles.WHIRLIWIND.get(), x, y, z, xOff, yOff, zOff);
+                    }
                 }
             }
         }
