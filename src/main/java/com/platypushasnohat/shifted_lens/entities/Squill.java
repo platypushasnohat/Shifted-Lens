@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.entities;
 
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
+import com.platypushasnohat.shifted_lens.registry.SLParticles;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -19,6 +21,8 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,7 +35,6 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
-import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -59,6 +62,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
     private Vec3 prevPull = Vec3.ZERO, pull = Vec3.ZERO;
     private float alphaProgress;
     private float prevAlphaProgress;
+    public float xBodyRot;
+    public float xBodyRotO;
 
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState aggroAnimationState = new AnimationState();
@@ -81,6 +86,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
 
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new SquillPanicGoal(this));
         this.goalSelector.addGoal(1, new SquillAttackGoal(this));
         this.goalSelector.addGoal(2, new SquillWanderGoal(this));
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this).setAlertOthers());
@@ -106,8 +112,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
     }
 
     @Override
-    protected @NotNull PathNavigation createNavigation(Level pLevel) {
-        FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel) {
+    protected @NotNull PathNavigation createNavigation(Level level) {
+        FlyingPathNavigation navigation = new FlyingPathNavigation(this, level) {
             public boolean isStableDestination(BlockPos pos) {
                 return !level().getBlockState(pos.below(128)).isAir();
             }
@@ -126,6 +132,38 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             this.setDeltaMovement(this.getDeltaMovement().scale(0.8D));
         } else {
             super.travel(travelVector);
+        }
+    }
+
+    private Vec3 rotateVector(Vec3 vec3) {
+        Vec3 vec31 = vec3.xRot(this.xBodyRotO * ((float) Math.PI / 180F));
+        return vec31.yRot(-this.yBodyRotO * ((float) Math.PI / 180F));
+    }
+
+    private void spawnInk() {
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.25F, 2.25F, 2.25F))) {
+            if (!(entity instanceof Squill)) {
+                entity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40));
+            }
+        }
+
+        this.playSound(SoundEvents.SQUID_SQUIRT, this.getSoundVolume(), 1.4F);
+        Vec3 vec3 = this.rotateVector(new Vec3(0.0D, -1.0D, 0.0D)).add(this.getX(), this.getY(), this.getZ());
+        for (int i = 0; i < 30; ++i) {
+            Vec3 vec31 = this.rotateVector(new Vec3((double) this.random.nextFloat() * 0.6D - 0.3D, -1.0D, (double) this.random.nextFloat() * 0.6D - 0.3D));
+            Vec3 vec32 = vec31.scale(0.3D + (double) (this.random.nextFloat() * 2.0F));
+            ((ServerLevel)this.level()).sendParticles(SLParticles.WHIRLIWIND.get(), vec3.x, vec3.y + 0.25D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+        }
+    }
+
+    public boolean hurt(DamageSource source, float amount) {
+        if (super.hurt(source, amount) && this.getLastHurtByMob() != null) {
+            if (!this.level().isClientSide && this.getHealth() <= this.getMaxHealth() * 0.25F) {
+                this.spawnInk();
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -184,6 +222,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
     public void tick() {
         super.tick();
 
+        xBodyRotO = xBodyRot;
         prevAlphaProgress = alphaProgress;
 
         if (this.isAlive() && alphaProgress < 20F) {
@@ -200,6 +239,10 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             Vec3 pos = this.position();
             this.pull = pos.add(this.pull.subtract(pos).normalize().scale(0.25F));
         }
+
+        Vec3 vec3 = this.getDeltaMovement();
+        double d0 = vec3.horizontalDistance();
+        this.xBodyRot += (-((float)Mth.atan2(d0, vec3.y)) * (180F / (float)Math.PI) - this.xBodyRot) * 0.1F;
     }
 
     public void setupAnimationStates() {
@@ -291,9 +334,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             this.saveToBucketTag(itemstack1);
             final ItemStack itemstack2 = ItemUtils.createFilledResult(itemstack, player, itemstack1, false);
             player.setItemInHand(hand, itemstack2);
-            final Level level = this.level();
             if (!this.level().isClientSide) {
-                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer)player, itemstack1);
+                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, itemstack1);
             }
 
             this.discard();
@@ -398,7 +440,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         @Override
         public boolean canUse() {
             LivingEntity target = squill.getTarget();
-            return target != null && target.isAlive() && !squill.isPassenger();
+            return target != null && target.isAlive() && !squill.isPassenger() && this.squill.getHealth() > this.squill.getMaxHealth() * 0.25F;
         }
 
         @Override
@@ -409,6 +451,8 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             } else if (!target.isAlive()) {
                 return false;
             } else if (!squill.isWithinRestriction(target.blockPosition())) {
+                return false;
+            } else if (this.squill.getHealth() <= this.squill.getMaxHealth() * 0.25F) {
                 return false;
             } else {
                 return !(target instanceof Player) || !target.isSpectator() && !((Player) target).isCreative() || !squill.getNavigation().isDone();
@@ -473,6 +517,58 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
             final double extraX = circleDistance * Mth.sin((angle));
             final double extraZ = circleDistance * Mth.cos(angle);
             return startOrbitFrom.add(extraX, 0, extraZ);
+        }
+    }
+
+    public static class SquillPanicGoal extends Goal {
+
+        protected final Squill squill;
+        protected double posX;
+        protected double posY;
+        protected double posZ;
+        protected boolean isRunning;
+
+        public SquillPanicGoal(Squill squill) {
+            this.squill = squill;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        public boolean canUse() {
+            if (!this.shouldPanic()) {
+                return false;
+            } else {
+                return this.findRandomPosition();
+            }
+        }
+
+        protected boolean shouldPanic() {
+            return this.squill.getLastHurtByMob() != null && this.squill.getHealth() <= this.squill.getMaxHealth() * 0.25F;
+        }
+
+        protected boolean findRandomPosition() {
+            Vec3 view = squill.getViewVector(0.0F);
+            Vec3 vec3 = HoverRandomPos.getPos(squill, 12, 12, view.x, view.z, ((float) Math.PI / 2F), 3, 1);
+            if (vec3 == null) {
+                return false;
+            } else {
+                this.posX = vec3.x;
+                this.posY = vec3.y;
+                this.posZ = vec3.z;
+                return true;
+            }
+        }
+
+        public void start() {
+            this.squill.getNavigation().moveTo(this.posX, this.posY, this.posZ, 3.0D);
+            this.isRunning = true;
+        }
+
+        public void stop() {
+            this.isRunning = false;
+        }
+
+        public boolean canContinueToUse() {
+            return !this.squill.getNavigation().isDone();
         }
     }
 

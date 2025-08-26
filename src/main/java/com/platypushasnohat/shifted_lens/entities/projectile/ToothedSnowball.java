@@ -48,8 +48,9 @@ public class ToothedSnowball extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult hitResult) {
         super.onHitEntity(hitResult);
         Entity entity = hitResult.getEntity();
-        int i = entity instanceof Blaze ? 5 : 2;
-        entity.hurt(this.damageSources().thrown(this, this.getOwner()), (float)i);
+        int damage = entity instanceof Blaze ? 5 : 2;
+        entity.hurt(this.damageSources().thrown(this, this.getOwner()), (float) damage);
+        entity.setTicksFrozen(Math.min(entity.getTicksRequiredToFreeze() * 4, entity.getTicksFrozen() + 60));
     }
 
     private ParticleOptions getParticle() {

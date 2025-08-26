@@ -24,7 +24,6 @@ public class SLItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         this.item(INFERNO_CHARGE);
-        this.handheldItem(WHIRLIGIG);
         this.item(WHIRLICAP);
         this.item(SQUILL_TOOTH);
         this.item(RAW_BAITFISH);

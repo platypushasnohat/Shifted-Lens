@@ -24,7 +24,7 @@ public class ShiftedLensTab {
                         output.accept(SQUILL_SPAWN_EGG.get());
                         output.accept(SQUILL_TOOTH.get());
                         output.accept(TOOTHED_SNOWBALL.get());
-                        output.accept(WHIRLIGIG.get());
+                        output.accept(SLBlocks.WHIRLIGIG.get());
                         output.accept(WHIRLICAP.get());
                         output.accept(SLBlocks.WHIRLIBOX.get());
                         output.accept(LOLLIPOP.get());

@@ -18,6 +18,7 @@
     "PoseMixin",
     "PufferfishMixin",
     "SalmonMixin",
+    "SnowballMixin",
     "SquidMixin",
     "SquidMixin$SquidRandomMovementGoal",
     "TropicalFishMixin"

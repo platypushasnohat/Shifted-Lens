@@ -5,7 +5,7 @@
         "side": "minecraft:block/furnace_top",
         "top": "minecraft:block/furnace_top",
         "front": "shifted_lens:block/whirlibox_front",
-        "particle": "shifted_lens:block/whirlibox_front"
+        "particle": "minecraft:block/furnace_top"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

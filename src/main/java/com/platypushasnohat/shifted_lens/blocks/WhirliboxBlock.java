@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.blocks;
 
+import com.platypushasnohat.shifted_lens.blocks.blockentity.WhirliboxBlockEntity;
 import com.platypushasnohat.shifted_lens.registry.SLBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

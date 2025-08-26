@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.registry.enums;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.registry.SLItems;
+import com.platypushasnohat.shifted_lens.registry.SLBlocks;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public enum SLArmorMaterials implements ArmorMaterial {
 
-    WHIRLICAP ("whirlicap", 10, new int[] {1, 1, 1, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0F, 0F, ()-> Ingredient.of(SLItems.WHIRLIGIG.get()));
+    WHIRLICAP ("whirlicap", 10, new int[] {1, 1, 1, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0F, 0F, ()-> Ingredient.of(SLBlocks.WHIRLIGIG.get()));
 
     private final String name;
     private final int durabilityMultiplier;
