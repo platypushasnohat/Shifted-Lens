@@ -31,6 +31,7 @@ public class SLLanguageProvider extends LanguageProvider {
 
         SLItems.AUTO_TRANSLATE.forEach(this::forItems);
         SLBlocks.AUTO_TRANSLATE.forEach(this::forBlocks);
+        SLPaintings.PAINTING_TRANSLATIONS.forEach(this::painting);
 
         this.addItem(SLItems.RAW_BAITFISH, "Raw Baitfish");
 
@@ -106,6 +107,11 @@ public class SLLanguageProvider extends LanguageProvider {
         add("item.minecraft.splash_potion.effect." + regName, "Splash Potion of " + name);
         add("item.minecraft.lingering_potion.effect." + regName, "Lingering Potion of " + name);
         add("item.minecraft.tipped_arrow.effect." + regName, "Arrow of " + name);
+    }
+
+    protected void painting(String name, String author) {
+        add("painting." + ShiftedLens.MOD_ID + "." + name + ".title",  SLTextUtils.createTranslation(name));
+        add("painting." + ShiftedLens.MOD_ID + "." + name + ".author",  author);
     }
 
     public void addTab(CreativeModeTab key, String name){

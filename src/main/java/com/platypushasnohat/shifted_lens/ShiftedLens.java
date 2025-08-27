@@ -49,6 +49,7 @@ public class ShiftedLens {
         SLPotions.POTIONS.register(modEventBus);
         SLSoundEvents.SOUND_EVENTS.register(modEventBus);
         SLParticles.PARTICLE_TYPES.register(modEventBus);
+        SLPaintings.PAINTING_VARIANTS.register(modEventBus);
         ShiftedLensTab.CREATIVE_TAB.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -81,6 +82,7 @@ public class ShiftedLens {
         generator.addProvider(server, new SLBiomeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLDamageTypeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLRecipeProvider(output));
+        generator.addProvider(server, new SLPaintingTagProvider(output, provider, helper));
         generator.addProvider(server, SLLootProvider.register(output));
 
         boolean client = data.includeClient();
