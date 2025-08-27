@@ -30,7 +30,7 @@ public class WhirlibubbleParticle extends TextureSheetParticle {
         if (this.hasPhysics && (x != 0.0D || y != 0.0D || z != 0.0D) && x * x + y * y + z * z < Mth.square(100)) {
             Vec3 moveDir = new Vec3(x, y, z);
             Vec3 vec3 = Entity.collideBoundingBox(null, moveDir, this.getBoundingBox(), this.level, List.of());
-            if (moveDir.distanceToSqr(vec3) > 0.000000001D && !(level.getBlockState(BlockPos.containing(x, y, z)).getBlock() instanceof WhirliboxBlock)) {
+            if ((moveDir.distanceToSqr(vec3) > 0.000000001D && !(level.getBlockState(BlockPos.containing(x, y, z)).getBlock() instanceof WhirliboxBlock))) {
                 this.remove();
                 return;
             }

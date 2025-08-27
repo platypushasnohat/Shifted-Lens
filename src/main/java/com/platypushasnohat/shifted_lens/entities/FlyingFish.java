@@ -1,7 +1,8 @@
 package com.platypushasnohat.shifted_lens.entities;
 
-import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
+import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,32 +20,45 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
-import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal;
-import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
-import net.minecraft.world.entity.animal.Bucketable;
-import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FlyingFish extends AbstractSchoolingFish {
+import java.util.List;
+import java.util.stream.Stream;
+
+public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable {
 
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(FlyingFish.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> GLIDING = SynchedEntityData.defineId(FlyingFish.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(FlyingFish.class, EntityDataSerializers.BOOLEAN);
 
     public final AnimationState flopAnimationState = new AnimationState();
+    public final AnimationState glidingAnimationState = new AnimationState();
 
-    public FlyingFish(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
+    public int glideCooldown = random.nextInt(50 * 8 * 4) + 180;
+
+    public float prevOnLandProgress;
+    public float onLandProgress;
+
+    @Nullable
+    private FlyingFish leader;
+    private int schoolSize = 1;
+
+    public FlyingFish(EntityType<? extends WaterAnimal> entityType, Level level) {
         super(entityType, level);
-        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 5, 0.02F, 0.1F, true);
-        this.lookControl = new SmoothSwimmingLookControl(this, 4);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, true);
+        this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
     @Override
@@ -52,27 +66,19 @@ public class FlyingFish extends AbstractSchoolingFish {
         return new WaterBoundPathNavigation(this, level);
     }
 
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
-        this.goalSelector.addGoal(2, new FollowFlockLeaderGoal(this));
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 3.0D)
+                .add(Attributes.MAX_HEALTH, 4.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.1F);
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
-    }
-
-    @Override
-    public ItemStack getBucketItemStack() {
-        return SLItems.FLYING_FISH_BUCKET.get().getDefaultInstance();
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(1, new FlyingFishGlideGoal(this));
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
+        this.goalSelector.addGoal(3, new CustomRandomSwimGoal(this, 1, 1, 16, 8, 3));
+        this.goalSelector.addGoal(4, new FlyingFishFollowLeaderGoal(this));
     }
 
     @Override
@@ -90,8 +96,68 @@ public class FlyingFish extends AbstractSchoolingFish {
     }
 
     @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && source.getEntity() != null) {
+            this.glideCooldown = 0;
+        }
+        return hurt;
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+    }
+
+    @Override
+    public void saveToBucketTag(ItemStack stack) {
+        Bucketable.saveDefaultDataToBucketTag(this, stack);
+    }
+
+    @Override
+    public void loadFromBucketTag(CompoundTag compoundTag) {
+        Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return SLItems.FLYING_FISH_BUCKET.get().getDefaultInstance();
+    }
+
+    @Override
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
+    }
+
+    @Override
+    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+        return false;
+    }
+
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    }
+
+    @Override
     public void tick() {
         super.tick();
+
+        if (this.hasFollowers() && this.level().random.nextInt(200) == 1) {
+            List<? extends FlyingFish> list = this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+            if (list.size() <= 1) {
+                this.schoolSize = 1;
+            }
+        }
+
+        if (isGliding()) {
+            if (!this.isInWaterOrBubble() && this.getDeltaMovement().y < 0.0) {
+                this.setDeltaMovement(this.getDeltaMovement().multiply(1.0F, 0.55F, 1.0F));
+            }
+        }
+
+        if (glideCooldown > 0) {
+            glideCooldown--;
+        }
 
         if (this.level().isClientSide()) {
             this.setupAnimationStates();
@@ -99,7 +165,81 @@ public class FlyingFish extends AbstractSchoolingFish {
     }
 
     private void setupAnimationStates() {
-        this.flopAnimationState.animateWhen(this.isAlive() && !this.isInWaterOrBubble(), this.tickCount);
+        this.flopAnimationState.animateWhen(!this.isGliding() && !this.isInWaterOrBubble(), this.tickCount);
+        this.glidingAnimationState.animateWhen(this.isGliding() && !this.isInWaterOrBubble(), this.tickCount);
+    }
+
+    public void aiStep() {
+        this.prevOnLandProgress = onLandProgress;
+        boolean onLand = !this.isInWaterOrBubble() && this.onGround();
+        if (onLand && onLandProgress < 5F) {
+            onLandProgress++;
+        }
+        if (!onLand && onLandProgress > 0F) {
+            onLandProgress--;
+        }
+
+        if (!isInWaterOrBubble() && this.isAlive()) {
+            if (this.onGround() && random.nextFloat() < 0.1F) {
+                this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
+                this.setYRot(this.random.nextFloat() * 360.0F);
+                this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+            }
+        }
+        super.aiStep();
+    }
+
+    public int getMaxSpawnClusterSize() {
+        return this.getMaxSchoolSize();
+    }
+
+    public int getMaxSchoolSize() {
+        return 20;
+    }
+
+    public boolean isFollower() {
+        return this.leader != null && this.leader.isAlive();
+    }
+
+    public FlyingFish startFollowing(FlyingFish fish) {
+        this.leader = fish;
+        fish.addFollower();
+        return fish;
+    }
+
+    public void stopFollowing() {
+        this.leader.removeFollower();
+        this.leader = null;
+    }
+
+    private void addFollower() {
+        ++this.schoolSize;
+    }
+
+    private void removeFollower() {
+        --this.schoolSize;
+    }
+
+    public boolean canBeFollowed() {
+        return this.hasFollowers() && this.schoolSize < this.getMaxSchoolSize();
+    }
+
+    public boolean hasFollowers() {
+        return this.schoolSize > 1;
+    }
+
+    public boolean inRangeOfLeader() {
+        return this.distanceToSqr(this.leader) <= 121.0D;
+    }
+
+    public void pathToLeader() {
+        if (this.isFollower()) {
+            this.getNavigation().moveTo(this.leader, 1.0D);
+        }
+    }
+
+    public void addFollowers(Stream<? extends FlyingFish> entity) {
+        entity.limit(this.getMaxSchoolSize() - this.schoolSize).filter((fish) -> fish != this).forEach((fish1) -> fish1.startFollowing(this));
     }
 
     public static boolean canSpawn(EntityType<FlyingFish> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
@@ -110,18 +250,22 @@ public class FlyingFish extends AbstractSchoolingFish {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(VARIANT, 0);
+        this.entityData.define(GLIDING, false);
+        this.entityData.define(FROM_BUCKET, false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("Variant", this.getVariant());
+        compoundTag.putBoolean("FromBucket", this.fromBucket());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.setVariant(compoundTag.getInt("Variant"));
+        this.setFromBucket(compoundTag.getBoolean("FromBucket"));
     }
 
     public int getVariant() {
@@ -132,14 +276,25 @@ public class FlyingFish extends AbstractSchoolingFish {
         this.entityData.set(VARIANT, variant);
     }
 
-    @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
-        return size.height * 0.5F;
+    public boolean isGliding() {
+        return this.entityData.get(GLIDING);
+    }
+
+    public void setGliding(boolean flying) {
+        this.entityData.set(GLIDING, flying);
+    }
+
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
+    }
+
+    public void setFromBucket(boolean fromBucket) {
+        this.entityData.set(FROM_BUCKET, fromBucket);
     }
 
     @Override
-    public int getMaxSchoolSize() {
-        return 20;
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
+        return size.height * 0.5F;
     }
 
     @Override
@@ -151,24 +306,22 @@ public class FlyingFish extends AbstractSchoolingFish {
 
     @Override
     @Nullable
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.SALMON_AMBIENT;
-    }
-
-    @Override
-    @Nullable
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SALMON_DEATH;
+        return SLSoundEvents.FISH_DEATH.get();
     }
 
     @Override
     @Nullable
     protected SoundEvent getHurtSound(@NotNull DamageSource source) {
-        return SoundEvents.SALMON_HURT;
+        return SLSoundEvents.FISH_HURT.get();
+    }
+
+    protected @NotNull SoundEvent getFlopSound() {
+        return SLSoundEvents.FISH_FLOP.get();
     }
 
     @Override
-    protected @NotNull SoundEvent getFlopSound() {
-        return SoundEvents.SALMON_FLOP;
+    public boolean isFlying() {
+        return true;
     }
 }

@@ -14,8 +14,6 @@ public class SLBrewingRecipes {
 
     public static void registerPotionRecipes() {
         BrewingRecipeRegistry.addRecipe(new SLBrewingRecipe(Ingredient.of(registerPotion(Potions.SLOW_FALLING)), Ingredient.of(SLItems.SQUILL_TOOTH.get()), registerPotion(SLPotions.LEVITATION_POTION)));
-        BrewingRecipeRegistry.addRecipe(new SLBrewingRecipe(Ingredient.of(registerPotion(SLPotions.LEVITATION_POTION)), Ingredient.of(Items.REDSTONE), registerPotion(SLPotions.LONG_LEVITATION_POTION)));
-        BrewingRecipeRegistry.addRecipe(new SLBrewingRecipe(Ingredient.of(registerPotion(SLPotions.LEVITATION_POTION)), Ingredient.of(Items.GLOWSTONE_DUST), registerPotion(SLPotions.STRONG_LEVITATION_POTION)));
     }
 
     public static ItemStack registerPotion(RegistryObject<Potion> potion) {

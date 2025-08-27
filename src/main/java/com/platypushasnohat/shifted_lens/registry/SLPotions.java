@@ -12,7 +12,5 @@ public class SLPotions {
 
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, ShiftedLens.MOD_ID);
 
-    public static final RegistryObject<Potion> LEVITATION_POTION = POTIONS.register("levitation", () -> new Potion(new MobEffectInstance(MobEffects.LEVITATION, 300)));
-    public static final RegistryObject<Potion> LONG_LEVITATION_POTION = POTIONS.register("long_levitation", () -> new Potion(new MobEffectInstance(MobEffects.LEVITATION, 500)));
-    public static final RegistryObject<Potion> STRONG_LEVITATION_POTION = POTIONS.register("strong_levitation", () -> new Potion(new MobEffectInstance(MobEffects.LEVITATION, 200, 1)));
+    public static final RegistryObject<Potion> LEVITATION_POTION = POTIONS.register("levitation", () -> new Potion(new MobEffectInstance(MobEffects.LEVITATION, 400)));
 }

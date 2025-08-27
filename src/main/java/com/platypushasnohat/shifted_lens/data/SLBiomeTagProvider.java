@@ -30,6 +30,11 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
                 Biomes.DEEP_LUKEWARM_OCEAN
         );
 
+        this.tag(HAS_FLYING_FISH).add(
+                Biomes.OCEAN,
+                Biomes.DEEP_OCEAN
+        );
+
         this.tag(HAS_CAMELS).addTag(Tags.Biomes.IS_DESERT);
 
         this.tag(HAS_SQUILL).addTag(BiomeTags.IS_OVERWORLD);
@@ -48,7 +53,24 @@ public class SLBiomeTagProvider extends BiomeTagsProvider {
                 Biomes.FROZEN_RIVER
         );
 
-        this.tag(SPAWNS_OCEAN_SALMON).addTag(BiomeTags.IS_OCEAN);
+        this.tag(SPAWNS_OCEAN_SALMON).add(
+                Biomes.LUKEWARM_OCEAN,
+                Biomes.DEEP_LUKEWARM_OCEAN,
+                Biomes.WARM_OCEAN,
+                Biomes.OCEAN,
+                Biomes.DEEP_OCEAN
+        );
+
+        this.tag(SPAWNS_COLD_OCEAN_SALMON).add(
+                Biomes.COLD_OCEAN,
+                Biomes.DEEP_COLD_OCEAN,
+                Biomes.FROZEN_OCEAN,
+                Biomes.DEEP_FROZEN_OCEAN
+        );
+
+        this.tag(SPAWNS_COLD_RIVER_SALMON).add(
+                Biomes.FROZEN_RIVER
+        );
 
         this.tag(SPAWNS_COLD_SQUID).add(
                 Biomes.COLD_OCEAN,

@@ -16,7 +16,6 @@ import javax.annotation.Nullable;
 public class WhirlicapItem extends ArmorItem {
 
     private int flightTime = 0;
-    private final int maxflightTime = 50;
 
     public WhirlicapItem(Properties properties) {
         super(SLArmorMaterials.WHIRLICAP, Type.HELMET, properties);
@@ -28,7 +27,7 @@ public class WhirlicapItem extends ArmorItem {
         player.resetFallDistance();
 
         if (!onGround(player) && motion.y < 0.08 + 0.2) {
-            if (player.jumping && !player.isCrouching() && flightTime <= maxflightTime) {
+            if (player.jumping && !player.isCrouching() && flightTime <= 40) {
                 this.flightTime++;
                 if (flightTime > 2) {
                     player.setDeltaMovement(motion.x, motion.y + 0.09F, motion.z);

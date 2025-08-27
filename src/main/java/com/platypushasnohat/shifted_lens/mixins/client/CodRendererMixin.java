@@ -53,7 +53,7 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
 
     @Override
     public void render(@NotNull Cod fish, float f, float g, @NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i) {
-        if (SLConfig.REPLACE_COD.get()) this.model = this.shiftedLens$remodel;
+        this.model = this.shiftedLens$remodel;
         super.render(fish, f, g, poseStack, multiBufferSource, i);
     }
 
@@ -67,22 +67,24 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
         if (variant == 2) {
             texture = WARM_COD_TEXTURE;
         }
-        cir.setReturnValue(SLConfig.REPLACE_COD.get() ? texture : COD_LOCATION);
+        cir.setReturnValue(texture);
     }
 
     @Inject(method = "setupRotations(Lnet/minecraft/world/entity/animal/Cod;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("HEAD"), cancellable = true)
     protected void setupRotations(Cod fish, PoseStack poseStack, float i, float g, float h, CallbackInfo ci) {
         ci.cancel();
-        if (SLConfig.REPLACE_COD.get()) {
-            super.setupRotations(fish, poseStack, i, g, h);
-        } else {
-            super.setupRotations(fish, poseStack, i, g, h);
-            float f = 4.3F * Mth.sin(0.6F * i);
-            poseStack.mulPose(Axis.YP.rotationDegrees(f));
-            if (!fish.isInWater()) {
-                poseStack.translate(0.1F, 0.1F, -0.1F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            }
-        }
+        super.setupRotations(fish, poseStack, i, g, h);
+
+//        if (SLConfig.REPLACE_COD.get()) {
+//            super.setupRotations(fish, poseStack, i, g, h);
+//        } else {
+//            super.setupRotations(fish, poseStack, i, g, h);
+//            float f = 4.3F * Mth.sin(0.6F * i);
+//            poseStack.mulPose(Axis.YP.rotationDegrees(f));
+//            if (!fish.isInWater()) {
+//                poseStack.translate(0.1F, 0.1F, -0.1F);
+//                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+//            }
+//        }
     }
 }

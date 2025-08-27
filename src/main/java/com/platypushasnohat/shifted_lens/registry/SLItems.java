@@ -32,12 +32,12 @@ public class SLItems {
 
     public static final RegistryObject<Item> RAW_BAITFISH = registerItemNoLang("baitfish", () -> new Item(foodItem(SLFoodValues.RAW_BAITFISH)));
     public static final RegistryObject<Item> COOKED_BAITFISH = registerItem("cooked_baitfish", () -> new Item(foodItem(SLFoodValues.COOKED_BAITFISH)));
+    public static final RegistryObject<Item> BAITFISH_BUCKET = registerItemNoLang("baitfish_bucket", () -> new SLMobBucketItem(SLEntities.BAITFISH, Fluids.WATER, new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> FLYING_FISH = registerItem("flying_fish", () -> new Item(foodItem(SLFoodValues.FLYING_FISH)));
-    public static final RegistryObject<Item> FLYING_FISH_BUCKET = registerItemNoLang("flying_fish_bucket", () -> new MobBucketItem(SLEntities.FLYING_FISH, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> FLYING_FISH_BUCKET = registerItemNoLang("flying_fish_bucket", () -> new SLMobBucketItem(SLEntities.FLYING_FISH, Fluids.WATER, new Item.Properties().stacksTo(1)));
 
-
-    public static final RegistryObject<Item> SQUID_BUCKET = registerItemNoLang("squid_bucket", () -> new MobBucketItem(() -> EntityType.SQUID, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SQUID_BUCKET = registerItemNoLang("squid_bucket", () -> new SLMobBucketItem(() -> EntityType.SQUID, Fluids.WATER, new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> SQUILL_BUCKET = registerItemNoLang("squill_bucket", () -> new SquillBucketItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> BAITFISH_SPAWN_EGG = registerSpawnEggItem("baitfish", SLEntities.BAITFISH, 0xe0e0e0, 0x757575);

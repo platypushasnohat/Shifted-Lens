@@ -1,7 +1,10 @@
 package com.platypushasnohat.shifted_lens.items;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +33,20 @@ public class SLMobBucketItem extends MobBucketItem {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+        ChatFormatting[] chatFormatting = new ChatFormatting[]{ChatFormatting.ITALIC, ChatFormatting.GRAY};
+        if (getFishType() == EntityType.SQUID) {
+            CompoundTag compoundtag = stack.getTag();
+            if (compoundtag != null && compoundtag.contains("Variant", 3)) {
+                int i = compoundtag.getInt("Variant");
+
+                String variant = "shifted_lens.squid.variant" + i;
+
+                MutableComponent mutablecomponent = Component.translatable(variant);
+                mutablecomponent.withStyle(chatFormatting);
+                components.add(mutablecomponent);
+            }
+        }
     }
 
     @Override

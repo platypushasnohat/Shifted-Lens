@@ -1,0 +1,96 @@
+{
+  "fish_death": {
+    "sounds": [
+      "entity/fish/hurt1",
+      "entity/fish/hurt2",
+      "entity/fish/hurt3",
+      "entity/fish/hurt4"
+    ],
+    "subtitle": "subtitles.shifted_lens.fish_death"
+  },
+  "fish_flop": {
+    "sounds": [
+      {
+        "name": "entity/fish/flop1",
+        "volume": 0.3
+      },
+      {
+        "name": "entity/fish/flop2",
+        "volume": 0.3
+      },
+      {
+        "name": "entity/fish/flop3",
+        "volume": 0.3
+      },
+      {
+        "name": "entity/fish/flop4",
+        "volume": 0.3
+      }
+    ],
+    "subtitle": "subtitles.shifted_lens.fish_flop"
+  },
+  "fish_hurt": {
+    "sounds": [
+      "entity/fish/hurt1",
+      "entity/fish/hurt2",
+      "entity/fish/hurt3",
+      "entity/fish/hurt4"
+    ],
+    "subtitle": "subtitles.shifted_lens.fish_hurt"
+  },
+  "squill_death": {
+    "sounds": [
+      {
+        "name": "entity/squid/death1",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/death2",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/death3",
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.shifted_lens.squill_death"
+  },
+  "squill_hurt": {
+    "sounds": [
+      {
+        "name": "entity/squid/hurt1",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/hurt2",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/hurt3",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/hurt4",
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.shifted_lens.squill_hurt"
+  },
+  "squill_squirt": {
+    "sounds": [
+      {
+        "name": "entity/squid/squirt1",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/squirt2",
+        "pitch": 1.5
+      },
+      {
+        "name": "entity/squid/squirt3",
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.shifted_lens.squill_squirt"
+  }
+}

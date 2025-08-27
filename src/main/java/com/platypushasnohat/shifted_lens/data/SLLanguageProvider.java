@@ -2,10 +2,7 @@ package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.ShiftedLensTab;
-import com.platypushasnohat.shifted_lens.registry.SLBlocks;
-import com.platypushasnohat.shifted_lens.registry.SLEntities;
-import com.platypushasnohat.shifted_lens.registry.SLItems;
-import com.platypushasnohat.shifted_lens.registry.SLPotions;
+import com.platypushasnohat.shifted_lens.registry.*;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -40,14 +37,33 @@ public class SLLanguageProvider extends LanguageProvider {
         this.addItem(SLItems.FLYING_FISH_BUCKET, "Bucket of Flying Fish");
         this.addItem(SLItems.SQUID_BUCKET, "Bucket of Squid");
         this.addItem(SLItems.SQUILL_BUCKET, "Bucket of Squill");
+        this.addItem(SLItems.BAITFISH_BUCKET, "Bucket of Baitfish");
 
         this.forEntity(SLEntities.BAITFISH);
         this.forEntity(SLEntities.FLYING_FISH);
         this.forEntity(SLEntities.SQUILL);
 
+        this.sound(SLSoundEvents.FISH_DEATH, "Fish dies");
+        this.sound(SLSoundEvents.FISH_HURT, "Fish hurts");
+        this.sound(SLSoundEvents.FISH_FLOP, "Fish flops");
+
+        this.sound(SLSoundEvents.SQUILL_DEATH, "Squill dies");
+        this.sound(SLSoundEvents.SQUILL_HURT, "Squill hurts");
+        this.sound(SLSoundEvents.SQUILL_SQUIRT, "Squill squirts");
+
         this.potion(SLPotions.LEVITATION_POTION, "Levitation", "levitation");
-        this.potion(SLPotions.LONG_LEVITATION_POTION, "Levitation", "long_levitation");
-        this.potion(SLPotions.STRONG_LEVITATION_POTION, "Levitation", "strong_levitation");
+
+        this.add("shifted_lens.cod.variant0", "Temperate");
+        this.add("shifted_lens.cod.variant1", "Cold");
+        this.add("shifted_lens.cod.variant2", "Warm");
+
+        this.add("shifted_lens.salmon.variant0", "River");
+        this.add("shifted_lens.salmon.variant1", "Ocean");
+        this.add("shifted_lens.salmon.variant2", "Cold River");
+        this.add("shifted_lens.salmon.variant3", "Cold Ocean");
+
+        this.add("shifted_lens.squid.variant0", "Temperate");
+        this.add("shifted_lens.squid.variant1", "Cold");
     }
 
     @Override
@@ -68,7 +84,7 @@ public class SLLanguageProvider extends LanguageProvider {
     }
 
     public void sound(Supplier<? extends SoundEvent> key, String subtitle){
-        add("subtitles.opposing_force." + key.get().getLocation().getPath(), subtitle);
+        add("subtitles.shifted_lens." + key.get().getLocation().getPath(), subtitle);
     }
 
     private void addEnchantmentWithDesc(Enchantment enchantment, String description) {

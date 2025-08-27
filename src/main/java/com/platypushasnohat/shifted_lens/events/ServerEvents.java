@@ -3,9 +3,11 @@ package com.platypushasnohat.shifted_lens.events;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.entities.*;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
+import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
@@ -56,6 +58,7 @@ public class ServerEvents {
         Entity entity = event.getTarget();
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
+
         if (stack.getItem() == Items.WATER_BUCKET && entity.isAlive() && entity instanceof Squid squid) {
             squid.playSound(SoundEvents.BUCKET_FILL_FISH, 1.0F, 1.0F);
             ItemStack bucket;
@@ -66,6 +69,12 @@ public class ServerEvents {
             }
 
             Bucketable.saveDefaultDataToBucketTag(squid, bucket);
+            CompoundTag compoundnbt = bucket.getOrCreateTag();
+            compoundnbt.putInt("Variant", ((VariantAccess) squid).getVariant());
+            if (squid.hasCustomName()) {
+                bucket.setHoverName(squid.getCustomName());
+            }
+
             ItemStack itemstack2 = ItemUtils.createFilledResult(stack, player, bucket, false);
             player.setItemInHand(event.getHand(), itemstack2);
             if (!event.getLevel().isClientSide()) {

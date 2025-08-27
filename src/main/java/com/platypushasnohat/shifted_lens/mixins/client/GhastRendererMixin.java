@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
 import com.platypushasnohat.shifted_lens.client.renderer.layers.SLGhastGlowLayer;
+import com.platypushasnohat.shifted_lens.config.SLClientConfig;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -52,14 +53,13 @@ public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel
 
     @Override
     public void render(Ghast ghast, float f, float g, @NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int i) {
-        if (SLConfig.REPLACE_GHAST.get()) this.model = this.shiftedLens$remodel;
+        this.model = this.shiftedLens$remodel;
         super.render(ghast, f, g, poseStack, multiBufferSource, i);
     }
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Ghast;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getTextureLocation(Ghast ghast, CallbackInfoReturnable<ResourceLocation> cir) {
-        ResourceLocation texture = ghast.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
-        cir.setReturnValue(SLConfig.REPLACE_GHAST.get() ? GHAST_TEXTURE : texture);
+        cir.setReturnValue(SLClientConfig.RETRO_GHAST.get() ? RETRO_GHAST_TEXTURE : GHAST_TEXTURE);
     }
 
     @Inject(method = "scale(Lnet/minecraft/world/entity/monster/Ghast;Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)

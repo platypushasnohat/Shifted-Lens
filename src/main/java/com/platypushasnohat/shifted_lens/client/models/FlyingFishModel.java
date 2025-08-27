@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.FlyingFishAnimations;
 import com.platypushasnohat.shifted_lens.entities.FlyingFish;
-import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -80,14 +79,17 @@ public class FlyingFishModel<T extends FlyingFish> extends HierarchicalModel<T> 
 			this.animateWalk(FlyingFishAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
 		} else {
 			this.animate(entity.flopAnimationState, FlyingFishAnimations.FLOP, ageInTicks);
+			this.animate(entity.glidingAnimationState, FlyingFishAnimations.SKIM, ageInTicks);
 		}
 
-		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
-		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+		float prevOnLandProgress = entity.prevOnLandProgress;
+		float onLandProgress = entity.onLandProgress;
 		float partialTicks = ageInTicks - entity.tickCount;
 		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 
-		this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
+		if (!entity.isGliding()) {
+			this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
+		}
 		this.root.zRot += landProgress * ((float) Math.toRadians(-90) / 5F);
 	}
 

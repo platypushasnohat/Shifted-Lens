@@ -28,7 +28,7 @@ public class SLEntities {
             "flying_fish", () ->
                     EntityType.Builder.of(FlyingFish::new, MobCategory.WATER_AMBIENT)
                             .sized(0.4F, 0.2F)
-                            .clientTrackingRange(4)
+                            .clientTrackingRange(10)
                             .build(new ResourceLocation(ShiftedLens.MOD_ID, "flying_fish").toString())
     );
 
@@ -36,7 +36,7 @@ public class SLEntities {
             "squill", () ->
             EntityType.Builder.of(Squill::new, MobCategory.CREATURE)
                     .sized(0.8F, 0.8F)
-                    .clientTrackingRange(8)
+                    .clientTrackingRange(10)
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "squill").toString())
     );
 

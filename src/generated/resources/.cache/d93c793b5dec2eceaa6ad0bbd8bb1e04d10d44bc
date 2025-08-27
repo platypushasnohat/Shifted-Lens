@@ -1,8 +1,11 @@
-// 1.20.1	2025-08-24T10:13:15.3020511	Tags for minecraft:worldgen/biome mod id shifted_lens
+// 1.20.1	2025-08-26T21:53:55.0790531	Tags for minecraft:worldgen/biome mod id shifted_lens
 49aab029f6fbef15ba880f51f6e5fc2f50baeb4e data/shifted_lens/tags/worldgen/biome/has_mob/baitfish.json
 66231d74902a9f3a4339266335581c57c91784dd data/shifted_lens/tags/worldgen/biome/has_mob/camel.json
+6cdfdcfccfb03c1d2ba445ef9f1b72f874237f6c data/shifted_lens/tags/worldgen/biome/has_mob/flying_fish.json
 b020f6cdcd2d955793278b2f89a178a1d31e599a data/shifted_lens/tags/worldgen/biome/has_mob/squill.json
 27037cb355ec1418537638b5c05ad5ca47769c13 data/shifted_lens/tags/worldgen/biome/spawns_cold_cod.json
+e37ebcc6790139d0267b5ca434789daa965be54d data/shifted_lens/tags/worldgen/biome/spawns_cold_ocean_salmon.json
+40723fd34277775832cb82c883237527a38e7c1b data/shifted_lens/tags/worldgen/biome/spawns_cold_river_salmon.json
 27037cb355ec1418537638b5c05ad5ca47769c13 data/shifted_lens/tags/worldgen/biome/spawns_cold_squid.json
-afd9da16b8e57511d3b12c69ccd4555d71ebb29f data/shifted_lens/tags/worldgen/biome/spawns_ocean_salmon.json
+d3b71692d620117a10404d9a5355d4c816cb89ea data/shifted_lens/tags/worldgen/biome/spawns_ocean_salmon.json
 c4d6a40ffc3ffe572e12bc913c9427c7a540e3df data/shifted_lens/tags/worldgen/biome/spawns_warm_cod.json

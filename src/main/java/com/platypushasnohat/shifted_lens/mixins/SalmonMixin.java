@@ -15,8 +15,10 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.AbstractSchoolingFish;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Salmon;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -58,7 +60,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
         this.goalSelector.addGoal(3, new SalmonLeapGoal(this, 40));
-        this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1, 10));
+        this.goalSelector.addGoal(4, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
         this.goalSelector.addGoal(5, new FollowFlockLeaderGoal(this));
     }
 
@@ -114,6 +116,17 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
     }
 
     @Override
+    public void saveToBucketTag(ItemStack bucket) {
+        CompoundTag compoundnbt = bucket.getOrCreateTag();
+        Bucketable.saveDefaultDataToBucketTag(this, bucket);
+        compoundnbt.putFloat("Health", this.getHealth());
+        compoundnbt.putInt("Variant", this.getVariant());
+        if (this.hasCustomName()) {
+            bucket.setHoverName(this.getCustomName());
+        }
+    }
+
+    @Override
     public int getVariant() {
         return this.entityData.get(VARIANT);
     }
@@ -125,7 +138,13 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.setVariant(1);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) {
+            this.setVariant(1);
+        } else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) {
+            this.setVariant(2);
+        } else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) {
+            this.setVariant(3);
+        }
         else this.setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }

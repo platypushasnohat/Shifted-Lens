@@ -15,6 +15,7 @@
     "GuardianMixin$GuardianAttackGoal",
     "GuardianMixin$GuardianAttackSelector",
     "LargeFireballMixin",
+    "MobBucketItemMixin",
     "PoseMixin",
     "PufferfishMixin",
     "SalmonMixin",

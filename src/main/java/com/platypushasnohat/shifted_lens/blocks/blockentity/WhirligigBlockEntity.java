@@ -49,7 +49,7 @@ public class WhirligigBlockEntity extends BlockEntity {
 
     public float getActiveRotation(float f) {
         if (this.getBlockState().getValue(WhirligigBlock.WATERLOGGED)) {
-            return (this.activeRotation + f) * (level.isThundering() ? 0.25F : level.isRaining() ? 0.1F : 0.05F);
+            return (this.activeRotation + f) * 0.05F;
         } else {
             return (this.activeRotation + f) * (level.isThundering() ? 0.5F : level.isRaining() ? 0.2F : 0.1F);
         }

@@ -35,7 +35,7 @@ public abstract class TropicalFishMixin extends AbstractSchoolingFish {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
-        this.goalSelector.addGoal(3, new RandomSwimmingGoal(this, 1, 10));
+        this.goalSelector.addGoal(3, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
         this.goalSelector.addGoal(4, new FollowFlockLeaderGoal(this));
     }
 

@@ -19,7 +19,7 @@ public class MiscEvents {
     private static final UUID WHIRLICAP_MODIFIER = UUID.fromString("5b397cd8-4dca-47a0-9496-e6dfb00d2387");
     private static final UUID WHIRLICAP_MODIFIER_SLOW_FALLING = UUID.fromString("494583ff-efd5-4146-be53-4814d6c407cf");
 
-    private static final AttributeModifier WHIRLICAP_GRAVITY = new AttributeModifier(WHIRLICAP_MODIFIER, "whirlicap gravity modifier", -0.05D, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier WHIRLICAP_GRAVITY = new AttributeModifier(WHIRLICAP_MODIFIER, "whirlicap gravity modifier", -0.025D, AttributeModifier.Operation.ADDITION);
     private static final AttributeModifier WHIRLICAP_GRAVITY_SLOW_FALLING = new AttributeModifier(WHIRLICAP_MODIFIER_SLOW_FALLING, "whirlicap gravity modifier 2", -0.01D, AttributeModifier.Operation.ADDITION);
 
     @SubscribeEvent

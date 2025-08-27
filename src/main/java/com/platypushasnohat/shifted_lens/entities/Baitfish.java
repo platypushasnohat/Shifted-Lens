@@ -1,5 +1,8 @@
 package com.platypushasnohat.shifted_lens.entities;
 
+import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.registry.SLItems;
+import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,10 +25,12 @@ import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Baitfish extends AbstractSchoolingFish {
@@ -50,14 +55,19 @@ public class Baitfish extends AbstractSchoolingFish {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
-        this.goalSelector.addGoal(3, new RandomSwimmingGoal(this, 1, 10));
+        this.goalSelector.addGoal(1, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
         this.goalSelector.addGoal(4, new FollowFlockLeaderGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 3.0D)
+                .add(Attributes.MAX_HEALTH, 2.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.0F);
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return new ItemStack(SLItems.BAITFISH_BUCKET.get());
     }
 
     @Override
@@ -136,30 +146,18 @@ public class Baitfish extends AbstractSchoolingFish {
 
     @Override
     @Nullable
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.SALMON_AMBIENT;
-    }
-
-    @Override
-    @Nullable
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SALMON_DEATH;
+        return SLSoundEvents.FISH_DEATH.get();
     }
 
     @Override
     @Nullable
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SALMON_HURT;
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+        return SLSoundEvents.FISH_HURT.get();
     }
 
     @Override
-    @Nullable
-    protected SoundEvent getFlopSound() {
-        return SoundEvents.SALMON_FLOP;
-    }
-
-    @Override
-    public ItemStack getBucketItemStack() {
-        return ItemStack.EMPTY;
+    protected @NotNull SoundEvent getFlopSound() {
+        return SLSoundEvents.FISH_FLOP.get();
     }
 }

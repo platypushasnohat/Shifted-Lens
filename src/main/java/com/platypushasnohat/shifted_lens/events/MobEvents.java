@@ -34,6 +34,7 @@ public class MobEvents {
 
     @SubscribeEvent
     public static void modifyAttributes(EntityAttributeModificationEvent event) {
+        event.add(EntityType.COD, Attributes.MAX_HEALTH, 4.0D);
         event.add(EntityType.COD, Attributes.MOVEMENT_SPEED, 0.8D);
 
         event.add(EntityType.ELDER_GUARDIAN, Attributes.MOVEMENT_SPEED, 0.8D);
@@ -46,7 +47,10 @@ public class MobEvents {
         event.add(EntityType.GUARDIAN, Attributes.FOLLOW_RANGE, 24.0D);
 
         event.add(EntityType.PUFFERFISH, Attributes.MOVEMENT_SPEED, 0.5D);
+
+        event.add(EntityType.SALMON, Attributes.MAX_HEALTH, 6.0D);
         event.add(EntityType.SALMON, Attributes.MOVEMENT_SPEED, 0.8D);
+
         event.add(EntityType.TROPICAL_FISH, Attributes.MOVEMENT_SPEED, 0.9D);
     }
 }

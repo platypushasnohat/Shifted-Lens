@@ -1,3 +1,4 @@
-// 1.20.1	2025-08-25T09:33:22.1441908	Tags for minecraft:block mod id shifted_lens
+// 1.20.1	2025-08-26T11:10:13.4328851	Tags for minecraft:block mod id shifted_lens
+f9593b28b3740d484d202adae681a4b28fbdb442 data/minecraft/tags/blocks/mineable/axe.json
 6f86ab43eff3bca02c18946003138e774b0a2f76 data/minecraft/tags/blocks/mineable/pickaxe.json
 bbd8407927efc4c85da90a5569654ea62dd49d70 data/shifted_lens/tags/blocks/camel_spawnable_on.json

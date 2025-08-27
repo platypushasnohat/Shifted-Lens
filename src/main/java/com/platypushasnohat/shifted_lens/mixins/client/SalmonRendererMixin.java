@@ -35,6 +35,10 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
     private static final ResourceLocation RIVER_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/river_salmon.png");
     @Unique
     private static final ResourceLocation OCEAN_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/ocean_salmon.png");
+    @Unique
+    private static final ResourceLocation COLD_RIVER_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/cold_river_salmon.png");
+    @Unique
+    private static final ResourceLocation COLD_OCEAN_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/cold_ocean_salmon.png");
 
     @Unique
     private SLSalmonModel<Salmon> shiftedLens$remodel;
@@ -50,38 +54,49 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
 
     @Override
     public void render(Salmon fish, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
-        if (SLConfig.REPLACE_SALMON.get()) this.model = this.shiftedLens$remodel;
+        this.model = this.shiftedLens$remodel;
         super.render(fish, f, g, poseStack, multiBufferSource, i);
     }
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Salmon;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getTextureLocation(Salmon fish, CallbackInfoReturnable<ResourceLocation> cir) {
         int variant = ((VariantAccess) fish).getVariant();
-        ResourceLocation texture = variant == 1 ? OCEAN_SALMON : RIVER_SALMON;
-        cir.setReturnValue(SLConfig.REPLACE_SALMON.get() ? texture : SALMON_LOCATION);
+        ResourceLocation texture = RIVER_SALMON;
+        if (variant == 1) {
+            texture = OCEAN_SALMON;
+        }
+        if (variant == 2) {
+            texture = COLD_RIVER_SALMON;
+        }
+        if (variant == 3) {
+            texture = COLD_OCEAN_SALMON;
+        }
+        cir.setReturnValue(texture);
     }
 
     @Inject(method = "setupRotations(Lnet/minecraft/world/entity/animal/Salmon;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("HEAD"), cancellable = true)
     protected void setupRotations(Salmon fish, PoseStack poseStack, float i, float g, float h, CallbackInfo ci) {
         ci.cancel();
-        if (SLConfig.REPLACE_SALMON.get()) {
-            super.setupRotations(fish, poseStack, i, g, h);
-        } else {
-            super.setupRotations(fish, poseStack, i, g, h);
-            float f = 1.0F;
-            float f1 = 1.0F;
-            if (!fish.isInWater()) {
-                f = 1.3F;
-                f1 = 1.7F;
-            }
+        super.setupRotations(fish, poseStack, i, g, h);
 
-            float f2 = f * 4.3F * Mth.sin(f1 * 0.6F * i);
-            poseStack.mulPose(Axis.YP.rotationDegrees(f2));
-            poseStack.translate(0.0F, 0.0F, -0.4F);
-            if (!fish.isInWater()) {
-                poseStack.translate(0.2F, 0.1F, 0.0F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            }
-        }
+//        if (SLConfig.REPLACE_SALMON.get()) {
+//            super.setupRotations(fish, poseStack, i, g, h);
+//        } else {
+//            super.setupRotations(fish, poseStack, i, g, h);
+//            float f = 1.0F;
+//            float f1 = 1.0F;
+//            if (!fish.isInWater()) {
+//                f = 1.3F;
+//                f1 = 1.7F;
+//            }
+//
+//            float f2 = f * 4.3F * Mth.sin(f1 * 0.6F * i);
+//            poseStack.mulPose(Axis.YP.rotationDegrees(f2));
+//            poseStack.translate(0.0F, 0.0F, -0.4F);
+//            if (!fish.isInWater()) {
+//                poseStack.translate(0.2F, 0.1F, 0.0F);
+//                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+//            }
+//        }
     }
 }

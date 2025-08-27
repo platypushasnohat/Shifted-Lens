@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens;
 
+import com.platypushasnohat.shifted_lens.config.SLClientConfig;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.data.*;
 import com.platypushasnohat.shifted_lens.events.MiscEvents;
@@ -39,13 +40,15 @@ public class ShiftedLens {
         modEventBus.addListener(this::dataSetup);
 
         context.registerConfig(ModConfig.Type.COMMON, SLConfig.COMMON);
+        context.registerConfig(ModConfig.Type.CLIENT, SLClientConfig.COMMON);
 
         SLItems.ITEMS.register(modEventBus);
         SLBlocks.BLOCKS.register(modEventBus);
         SLBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         SLEntities.ENTITY_TYPES.register(modEventBus);
         SLPotions.POTIONS.register(modEventBus);
-        SLParticles.PARTICLES.register(modEventBus);
+        SLSoundEvents.SOUND_EVENTS.register(modEventBus);
+        SLParticles.PARTICLE_TYPES.register(modEventBus);
         ShiftedLensTab.CREATIVE_TAB.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -82,6 +85,7 @@ public class ShiftedLens {
 
         boolean client = data.includeClient();
         generator.addProvider(client, new SLItemModelProvider(data));
+        generator.addProvider(client, new SLSoundDefinitionsProvider(output, helper));
         generator.addProvider(client, new SLLanguageProvider(data));
     }
 

@@ -37,10 +37,14 @@ public class WhirligigBlock extends BaseEntityBlock implements SimpleWaterlogged
 
     public static void updatePower(BlockState state, Level level, BlockPos pos) {
         int power = 5;
-        if (level.isThundering()) {
-            power = 15;
-        } else if (level.isRaining()) {
-            power = 10;
+        if (state.getValue(WATERLOGGED)) {
+            power = 3;
+        } else {
+            if (level.isThundering()) {
+                power = 15;
+            } else if (level.isRaining()) {
+                power = 10;
+            }
         }
         if (power != state.getValue(WIND_STRENGTH)) {
             level.setBlock(pos, state.setValue(WIND_STRENGTH, power), 3);

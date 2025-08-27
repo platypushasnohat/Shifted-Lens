@@ -1,7 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins.client;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import net.minecraft.client.renderer.entity.SquidRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +30,6 @@ public abstract class SquidRendererMixin {
     private void getTextureLocation(Squid squid, CallbackInfoReturnable<ResourceLocation> cir) {
         int variant = ((VariantAccess) squid).getVariant();
         ResourceLocation texture = variant == 1 ? COLD_SQUID_TEXTURE : SQUID_TEXTURE;
-        cir.setReturnValue(SLConfig.REPLACE_SQUID.get() ? texture : SQUID_LOCATION);
+        cir.setReturnValue(texture);
     }
 }

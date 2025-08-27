@@ -5,7 +5,6 @@ import com.platypushasnohat.shifted_lens.registry.SLBlockEntities;
 import com.platypushasnohat.shifted_lens.registry.SLParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;

@@ -49,7 +49,7 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
     @Inject(method = "render(Lnet/minecraft/world/entity/monster/Guardian;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
     public void render(Guardian guardian, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, CallbackInfo ci) {
         ci.cancel();
-        if (SLConfig.REPLACE_GUARDIAN.get()) this.model = this.shiftedLens$remodel;
+        this.model = this.shiftedLens$remodel;
         super.render(guardian, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
 
         LivingEntity target = guardian.getActiveAttackTarget();
@@ -60,6 +60,6 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Guardian;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getTextureLocation(Guardian guardian, CallbackInfoReturnable<ResourceLocation> cir) {
-        cir.setReturnValue(SLConfig.REPLACE_GUARDIAN.get() ? GUARDIAN_TEXTURE : GUARDIAN_LOCATION);
+        cir.setReturnValue(GUARDIAN_TEXTURE);
     }
 }
