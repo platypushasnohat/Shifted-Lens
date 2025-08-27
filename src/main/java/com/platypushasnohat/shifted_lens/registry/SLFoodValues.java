@@ -23,6 +23,7 @@ public class SLFoodValues {
     public static final FoodProperties LOLLIPOP = (new FoodProperties.Builder())
             .nutrition(3).saturationMod(0.15F)
             .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, 1), 1)
+            .alwaysEat()
             .build();
 
 }

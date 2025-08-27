@@ -60,8 +60,8 @@ public class SLLanguageProvider extends LanguageProvider {
 
         this.add("shifted_lens.salmon.variant0", "River");
         this.add("shifted_lens.salmon.variant1", "Ocean");
-        this.add("shifted_lens.salmon.variant2", "Cold River");
-        this.add("shifted_lens.salmon.variant3", "Cold Ocean");
+        this.add("shifted_lens.salmon.variant2", "Zombie");
+        this.add("shifted_lens.salmon.variant3", "Silver");
 
         this.add("shifted_lens.squid.variant0", "Temperate");
         this.add("shifted_lens.squid.variant1", "Cold");
