@@ -41,7 +41,7 @@ public abstract class TropicalFishMixin extends AbstractSchoolingFish {
 
     @Override
     public int getMaxSchoolSize() {
-        return 32;
+        return 12;
     }
 
     @Override

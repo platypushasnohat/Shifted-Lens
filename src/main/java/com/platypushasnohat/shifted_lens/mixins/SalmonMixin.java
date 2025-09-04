@@ -66,7 +66,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
 
     @Override
     public int getMaxSchoolSize() {
-        return 16;
+        return 8;
     }
 
     @Override

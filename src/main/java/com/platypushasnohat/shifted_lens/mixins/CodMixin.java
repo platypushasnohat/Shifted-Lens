@@ -64,7 +64,7 @@ public abstract class CodMixin extends AbstractSchoolingFish implements FishAnim
 
     @Override
     public int getMaxSchoolSize() {
-        return 20;
+        return 10;
     }
 
     @Override
