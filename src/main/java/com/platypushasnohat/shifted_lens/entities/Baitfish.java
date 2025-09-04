@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.entities;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
 import net.minecraft.core.BlockPos;
@@ -134,13 +135,26 @@ public class Baitfish extends AbstractSchoolingFish {
 
     @Override
     public int getMaxSchoolSize() {
-        return 128;
+        return 72;
     }
 
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
         this.setVariant(level().getRandom().nextInt(1));
+        if (spawnType == MobSpawnType.CHUNK_GENERATION || spawnType == MobSpawnType.NATURAL) {
+            int schoolCount = (int) (this.getMaxSchoolSize() * this.getRandom().nextFloat());
+            if (schoolCount > 0 && !this.level().isClientSide()) {
+                for (int i = 0; i < schoolCount; i++) {
+                    float distance = 1.5F;
+                    Baitfish entity = new Baitfish(SLEntities.BAITFISH.get(), this.level());
+                    entity.setVariant(this.getVariant());
+                    entity.moveTo(this.getX() + this.getRandom().nextFloat() * distance, this.getY() + this.getRandom().nextFloat() * distance, this.getZ() + this.getRandom().nextFloat() * distance);
+                    entity.startFollowing(this);
+                    this.level().addFreshEntity(entity);
+                }
+            }
+        }
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 

@@ -4,4 +4,5 @@ import net.minecraft.world.entity.AnimationState;
 
 public interface FishAnimationAccess {
     AnimationState getFlopAnimationState();
+    AnimationState getSwimAnimationState();
 }

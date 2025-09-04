@@ -1,6 +1,9 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.config.SLConfig;
+import com.platypushasnohat.shifted_lens.entities.ai.utils.SquidLookControl;
+import com.platypushasnohat.shifted_lens.entities.utils.SLPoses;
+import com.platypushasnohat.shifted_lens.mixin_utils.SquidAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +18,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -26,9 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,20 +42,118 @@ import javax.annotation.Nullable;
 
 @Mixin(Squid.class)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
+public abstract class SquidMixin extends WaterAnimal implements SquidAnimationAccess, VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.INT);
+
+    @Unique
+    private int squirtTimer = 0;
+
+    @Unique
+    private final AnimationState pushAnimationState = new AnimationState();
+
+    @Unique
+    private final AnimationState squirtAnimationState = new AnimationState();
+
+    @Override
+    public AnimationState getPushAnimationState() {
+        return pushAnimationState;
+    }
+
+    @Override
+    public AnimationState getSquirtAnimationState() {
+        return squirtAnimationState;
+    }
 
     protected SquidMixin(EntityType<? extends WaterAnimal> entityType, Level level) {
         super(entityType, level);
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void init(EntityType<? extends WaterAnimal> entityType, Level level, CallbackInfo callbackInfo) {
+        this.moveControl = new SmoothSwimmingMoveControl(this, 45, 5, 0.02F, 0.1F, false);
+        this.lookControl = new SquidLookControl(this);
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(1, new PanicGoal(this, 2.0D));
+        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1, 40));
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new WaterBoundPathNavigation(this, level);
+    }
+
     @Override
     public void travel(@NotNull Vec3 travelVector) {
-        if (this.isEffectiveAi() || this.isControlledByLocalInstance()) {
+        if (this.isEffectiveAi() && this.isInWaterOrBubble()) {
+            this.moveRelative(this.getSpeed(), travelVector);
             this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+        } else {
+            super.travel(travelVector);
         }
+    }
+
+    @Inject(method = "aiStep()V", at = @At("HEAD"), cancellable = true)
+    public void aiStep(CallbackInfo ci) {
+        ci.cancel();
+        super.aiStep();
+
+        if (this.isEffectiveAi()) {
+            if (this.isPassenger()) {
+                this.setYRot(0.0F);
+                this.setXRot(0.0F);
+                this.setAirSupply(this.getMaxAirSupply());
+            } else if (this.isInWater() && this.getNavigation().isDone()) {
+                float yaw = this.getYRot();
+                float pitch = this.getXRot();
+                float pitchFactor = Mth.cos(pitch * ((float) Math.PI / 180F));
+                float x = -Mth.sin(yaw * ((float) Math.PI / 180F)) * pitchFactor;
+                float y = -Mth.sin(pitch * ((float) Math.PI / 180F));
+                float z = Mth.cos(yaw * ((float) Math.PI / 180F)) * pitchFactor;
+                Vec3 motion = new Vec3(x, y, z).normalize().scale(0.012F);
+                this.push(motion.x, motion.y, motion.z);
+            }
+
+            if (!this.level().isClientSide && (Mth.abs(this.xRotO - this.getXRot()) >= 1.0F || Mth.abs(this.yRotO - this.getYRot()) >= 1.0F)) {
+                this.hasImpulse = true;
+            }
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.level().isClientSide()) {
+            this.setupAnimationStates();
+        }
+    }
+
+    @Unique
+    private void setupAnimationStates() {
+        pushAnimationState.animateWhen(this.isAlive(), this.tickCount);
+        squirtAnimationState.animateWhen(this.getPose() == SLPoses.SQUIRTING.get(), this.tickCount);
+
+        if (this.getPose() == SLPoses.SQUIRTING.get()) {
+            this.squirtTimer++;
+            if (squirtTimer > 15) {
+                this.setPose(Pose.STANDING);
+                squirtTimer = 0;
+            }
+        }
+    }
+
+    @Override
+    public void calculateEntityAnimation(boolean flying) {
+        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+        float f2 = Math.min(f1 * 10.0F, 1.0F);
+        this.walkAnimation.update(f2, 0.4F);
     }
 
     @Override
@@ -67,27 +169,11 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
         else return InteractionResult.FAIL;
     }
 
-    @Mixin(targets = "net.minecraft.world.entity.animal.Squid$SquidRandomMovementGoal")
-    public abstract static class SquidRandomMovementGoal extends Goal {
-        @Shadow
-        @Final
-        private Squid squid;
-
-        @Override
-        public void tick() {
-            if (this.squid.getRandom().nextInt(reducedTickDelay(60)) == 0 || !this.squid.isInWater() || !this.squid.hasMovementVector()) {
-                var f = this.squid.getRandom().nextFloat() * (float) (Math.PI * 2);
-                var tx = Mth.cos(f) * 0.2F;
-                var ty = -0.1F + this.squid.getRandom().nextFloat() * 0.18F;
-                var tz = Mth.sin(f) * 0.2F;
-                this.squid.setMovementVector(tx, ty, tz);
-            }
-        }
-    }
-
     @Inject(at = @At("HEAD"), method = "spawnInk")
     private void spawnInk(CallbackInfo info) {
-        if (!this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
+            this.setPose(SLPoses.SQUIRTING.get());
+        } else {
             for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.25F, 2.25F, 2.25F))) {
                 if (!(entity instanceof Squid)) {
                     if (((Squid) (Object) this) instanceof GlowSquid) {

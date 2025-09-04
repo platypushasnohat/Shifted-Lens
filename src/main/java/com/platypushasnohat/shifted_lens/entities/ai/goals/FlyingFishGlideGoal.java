@@ -62,14 +62,19 @@ public class FlyingFishGlideGoal extends Goal {
             } else if (fish.isGliding() && fish.isInWaterOrBubble()) {
                 stop();
             }
-            Direction direction = this.fish.getMotionDirection();
+            Direction direction;
+            if (fish.leader != null && fish.isInWater() && !fish.isGliding()) {
+                direction = this.fish.leader.getMotionDirection();
+            } else {
+                direction = this.fish.getMotionDirection();
+            }
             Vec3 movement = new Vec3(direction.getStepX(), 0, direction.getStepZ()).normalize().scale(0.4F);
             Vec3 glide = new Vec3(movement.x, y, movement.z);
-            fish.setYRot(((float) Mth.atan2(glide.z, glide.x)) * Mth.RAD_TO_DEG - 90F);
-            fish.yRotO = (float) Mth.atan2(glide.z, glide.x) * Mth.RAD_TO_DEG - 90F;
-            fish.yBodyRot = (float) Mth.atan2(glide.z, glide.x) * Mth.RAD_TO_DEG - 90F;
-            fish.yHeadRot = (float) Mth.atan2(glide.z, glide.x) * Mth.RAD_TO_DEG - 90F;
             fish.setDeltaMovement(glide);
+            fish.setYRot(((float) Mth.atan2(this.fish.getMotionDirection().getStepZ(), this.fish.getMotionDirection().getStepX())) * Mth.RAD_TO_DEG - 90F);
+            fish.yRotO = (float) Mth.atan2(this.fish.getMotionDirection().getStepZ(), this.fish.getMotionDirection().getStepX()) * Mth.RAD_TO_DEG - 90F;
+            fish.yBodyRot = (float) Mth.atan2(this.fish.getMotionDirection().getStepZ(), this.fish.getMotionDirection().getStepX()) * Mth.RAD_TO_DEG - 90F;
+            fish.yHeadRot = (float) Mth.atan2(this.fish.getMotionDirection().getStepZ(), this.fish.getMotionDirection().getStepX()) * Mth.RAD_TO_DEG - 90F;
             this.fish.setGliding(true);
         }
     }

@@ -53,7 +53,7 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
             }
 
             if (!isInWaterOrBubble() && this.isAlive()) {
-                if (this.onGround() && random.nextFloat() < 0.1F) {
+                if (this.onGround() && random.nextFloat() < 0.3F) {
                     this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
                     this.setYRot(this.random.nextFloat() * 360.0F);
                     this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());

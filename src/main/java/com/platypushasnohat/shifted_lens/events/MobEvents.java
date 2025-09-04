@@ -51,6 +51,8 @@ public class MobEvents {
         event.add(EntityType.SALMON, Attributes.MAX_HEALTH, 6.0D);
         event.add(EntityType.SALMON, Attributes.MOVEMENT_SPEED, 0.8D);
 
+        event.add(EntityType.SQUID, Attributes.MOVEMENT_SPEED, 0.64D);
+
         event.add(EntityType.TROPICAL_FISH, Attributes.MOVEMENT_SPEED, 0.9D);
     }
 }

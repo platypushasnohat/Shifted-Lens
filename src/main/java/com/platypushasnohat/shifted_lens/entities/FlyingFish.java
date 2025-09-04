@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.entities;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
+import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
 import net.minecraft.core.BlockPos;
@@ -52,7 +53,7 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
     public float onLandProgress;
 
     @Nullable
-    private FlyingFish leader;
+    public FlyingFish leader;
     private int schoolSize = 1;
 
     public FlyingFish(EntityType<? extends WaterAnimal> entityType, Level level) {
@@ -100,6 +101,10 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
         boolean hurt = super.hurt(source, amount);
         if (hurt && source.getEntity() != null) {
             this.glideCooldown = 0;
+            List<? extends FlyingFish> list = this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(8, 7, 8));
+            for (FlyingFish entity : list) {
+                entity.glideCooldown = 0;
+            }
         }
         return hurt;
     }
@@ -153,6 +158,10 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
             if (!this.isInWaterOrBubble() && this.getDeltaMovement().y < 0.0) {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(1.0F, 0.55F, 1.0F));
             }
+        }
+
+        if (this.leader != null) {
+            this.glideCooldown = this.leader.glideCooldown;
         }
 
         if (glideCooldown > 0) {
@@ -301,6 +310,20 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
     @Nullable
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
         this.setVariant(level().getRandom().nextInt(1));
+        if (spawnType == MobSpawnType.CHUNK_GENERATION || spawnType == MobSpawnType.NATURAL) {
+            int schoolCount = (int) (this.getMaxSchoolSize() * this.getRandom().nextFloat());
+            if (schoolCount > 0 && !this.level().isClientSide()) {
+                for (int i = 0; i < schoolCount; i++) {
+                    float distance = 1.5F;
+                    FlyingFish entity = new FlyingFish(SLEntities.FLYING_FISH.get(), this.level());
+                    entity.setVariant(this.getVariant());
+                    entity.moveTo(this.getX() + this.getRandom().nextFloat() * distance, this.getY() + this.getRandom().nextFloat() * distance, this.getZ() + this.getRandom().nextFloat() * distance);
+                    entity.startFollowing(this);
+                    entity.glideCooldown = this.glideCooldown;
+                    this.level().addFreshEntity(entity);
+                }
+            }
+        }
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 

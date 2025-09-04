@@ -3,8 +3,8 @@
   "biomes": "#shifted_lens:has_mob/baitfish",
   "spawners": {
     "type": "shifted_lens:baitfish",
-    "maxCount": 96,
-    "minCount": 48,
+    "maxCount": 1,
+    "minCount": 1,
     "weight": 1
   }
 }

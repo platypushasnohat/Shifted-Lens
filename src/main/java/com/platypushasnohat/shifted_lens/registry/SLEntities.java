@@ -20,7 +20,7 @@ public class SLEntities {
             "baitfish", () ->
             EntityType.Builder.of(Baitfish::new, MobCategory.WATER_AMBIENT)
                     .sized(0.4F, 0.2F)
-                    .clientTrackingRange(4)
+                    .clientTrackingRange(10)
                     .build(new ResourceLocation(ShiftedLens.MOD_ID, "baitfish").toString())
     );
 

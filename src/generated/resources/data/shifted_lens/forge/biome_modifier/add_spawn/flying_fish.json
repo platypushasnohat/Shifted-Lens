@@ -3,8 +3,8 @@
   "biomes": "#shifted_lens:has_mob/flying_fish",
   "spawners": {
     "type": "shifted_lens:flying_fish",
-    "maxCount": 8,
-    "minCount": 8,
+    "maxCount": 2,
+    "minCount": 2,
     "weight": 3
   }
 }

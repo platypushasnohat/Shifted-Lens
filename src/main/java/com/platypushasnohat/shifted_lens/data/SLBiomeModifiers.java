@@ -31,9 +31,9 @@ import java.util.stream.Stream;
 public class SLBiomeModifiers {
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
-        addSpawn(context, "baitfish", SLBiomeTags.HAS_BAITFISH, new MobSpawnSettings.SpawnerData(SLEntities.BAITFISH.get(), 1, 48, 96));
+        addSpawn(context, "baitfish", SLBiomeTags.HAS_BAITFISH, new MobSpawnSettings.SpawnerData(SLEntities.BAITFISH.get(), 1, 1, 1));
         addSpawn(context, "camel", SLBiomeTags.HAS_CAMELS, new MobSpawnSettings.SpawnerData(EntityType.CAMEL, 1, 1, 2));
-        addSpawn(context, "flying_fish", SLBiomeTags.HAS_FLYING_FISH, new MobSpawnSettings.SpawnerData(SLEntities.FLYING_FISH.get(), 3, 8, 8));
+        addSpawn(context, "flying_fish", SLBiomeTags.HAS_FLYING_FISH, new MobSpawnSettings.SpawnerData(SLEntities.FLYING_FISH.get(), 3, 2, 2));
         addSpawn(context, "squill", SLBiomeTags.HAS_SQUILL, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 2, 32, 64));
     }
 

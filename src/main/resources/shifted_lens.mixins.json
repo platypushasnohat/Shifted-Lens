@@ -21,7 +21,6 @@
     "SalmonMixin",
     "SnowballMixin",
     "SquidMixin",
-    "SquidMixin$SquidRandomMovementGoal",
     "TropicalFishMixin"
   ],
   "client": [
