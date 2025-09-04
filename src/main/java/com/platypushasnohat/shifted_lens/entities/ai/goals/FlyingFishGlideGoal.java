@@ -10,6 +10,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 public class FlyingFishGlideGoal extends Goal {
 
@@ -79,8 +80,9 @@ public class FlyingFishGlideGoal extends Goal {
         }
     }
 
-    private BlockPos findSurfacePos(){
-        BlockPos fishPos = fish.blockPosition();
+    private BlockPos findSurfacePos() {
+        BlockPos fishPos;
+        fishPos = Objects.requireNonNullElse(fish.leader, fish).blockPosition();
         for (int i = 0; i < 15; i++) {
             BlockPos offset = fishPos.offset(fish.getRandom().nextInt(16) - 8, 0, fish.getRandom().nextInt(16) - 8);
             while (fish.level().isWaterAt(offset) && offset.getY() < fish.level().getMaxBuildHeight()) {

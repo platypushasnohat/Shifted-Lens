@@ -203,7 +203,7 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
     }
 
     public int getMaxSchoolSize() {
-        return 20;
+        return 12;
     }
 
     public boolean isFollower() {
