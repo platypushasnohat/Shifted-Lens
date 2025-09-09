@@ -128,7 +128,7 @@ public class WhirligigBlock extends BaseEntityBlock implements SimpleWaterlogged
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(ROTATION, Integer.valueOf(RotationSegment.convertToSegment(context.getRotation() + 180.0F))).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
+        return this.defaultBlockState().setValue(ROTATION, RotationSegment.convertToSegment(context.getRotation() + 180.0F)).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
     }
 
     @Override
