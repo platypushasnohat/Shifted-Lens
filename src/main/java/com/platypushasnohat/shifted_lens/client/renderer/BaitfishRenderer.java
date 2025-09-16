@@ -13,13 +13,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class BaitfishRenderer extends MobRenderer<Baitfish, BaitfishModel<Baitfish>> {
+public class BaitfishRenderer extends MobRenderer<Baitfish, BaitfishModel> {
 
     private static final ResourceLocation TEXTURE_RIVER = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/baitfish/baitfish.png");
     private static final ResourceLocation TEXTURE_OCEAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/baitfish/baitfish.png");
 
     public BaitfishRenderer(EntityRendererProvider.Context context) {
-        super(context, new BaitfishModel<>(context.bakeLayer(SLModelLayers.BAITFISH)), 0.2F);
+        super(context, new BaitfishModel(context.bakeLayer(SLModelLayers.BAITFISH)), 0.2F);
     }
 
     @Override

@@ -2,15 +2,11 @@ package com.platypushasnohat.shifted_lens.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.platypushasnohat.shifted_lens.client.animations.BaitfishAnimations;
 import com.platypushasnohat.shifted_lens.client.animations.SLSquidAnimations;
-import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
-import com.platypushasnohat.shifted_lens.mixin_utils.SquidAnimationAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
+public class SLSquidModel extends HierarchicalModel<Squid> {
 
 	private final ModelPart root;
 	private final ModelPart body;
@@ -50,23 +46,32 @@ public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 
 		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 16.0F, 0.0F));
 
-		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -8.0F, -6.0F, 12.0F, 16.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 0.0F));
+		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create()
+				.texOffs(0, 0).addBox(-6.0F, -8.0F, -6.0F, 12.0F, 16.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 0.0F));
 
-		PartDefinition tentacle1 = body.addOrReplaceChild("tentacle1", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 7.0F, 0.0F));
+		PartDefinition tentacle1 = body.addOrReplaceChild("tentacle1", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 7.0F, 0.0F));
 
-		PartDefinition tentacle2 = body.addOrReplaceChild("tentacle2", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(3.5F, 7.0F, 3.5F));
+		PartDefinition tentacle2 = body.addOrReplaceChild("tentacle2", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(3.5F, 7.0F, 3.5F));
 
-		PartDefinition tentacle3 = body.addOrReplaceChild("tentacle3", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 7.0F, 5.0F));
+		PartDefinition tentacle3 = body.addOrReplaceChild("tentacle3", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 7.0F, 5.0F));
 
-		PartDefinition tentacle4 = body.addOrReplaceChild("tentacle4", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.5F, 7.0F, 3.5F));
+		PartDefinition tentacle4 = body.addOrReplaceChild("tentacle4", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.5F, 7.0F, 3.5F));
 
-		PartDefinition tentacle5 = body.addOrReplaceChild("tentacle5", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 7.0F, 0.0F));
+		PartDefinition tentacle5 = body.addOrReplaceChild("tentacle5", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 7.0F, 0.0F));
 
-		PartDefinition tentacle6 = body.addOrReplaceChild("tentacle6", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.5F, 7.0F, -3.5F));
+		PartDefinition tentacle6 = body.addOrReplaceChild("tentacle6", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.5F, 7.0F, -3.5F));
 
-		PartDefinition tentacle7 = body.addOrReplaceChild("tentacle7", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 7.0F, -5.0F));
+		PartDefinition tentacle7 = body.addOrReplaceChild("tentacle7", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 7.0F, -5.0F));
 
-		PartDefinition tentacle8 = body.addOrReplaceChild("tentacle8", CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(3.5F, 7.0F, -3.5F));
+		PartDefinition tentacle8 = body.addOrReplaceChild("tentacle8", CubeListBuilder.create()
+				.texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 18.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(3.5F, 7.0F, -3.5F));
 
 		return LayerDefinition.create(meshdefinition, 64, 32);
 	}
@@ -74,11 +79,7 @@ public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 	@Override
 	public void setupAnim(Squid entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState squirtAnimationState = ((SquidAnimationAccess) entity).getSquirtAnimationState();
-		if (entity.isInWaterOrBubble()) {
-			this.animateWalk(SLSquidAnimations.PUSH, limbSwing, limbSwingAmount, 2, 4);
-		}
-		this.animate(squirtAnimationState, SLSquidAnimations.SQUIRT, ageInTicks, 1);
+		this.animateWalk(SLSquidAnimations.PUSH, limbSwing, limbSwingAmount, 2, 4);
 	}
 
 	@Override

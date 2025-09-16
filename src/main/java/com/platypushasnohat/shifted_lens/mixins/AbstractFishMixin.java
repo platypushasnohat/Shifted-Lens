@@ -24,6 +24,41 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
     @Shadow
     protected abstract SoundEvent getFlopSound();
 
+    @Override
+    public boolean onlyFlopOnGround() {
+        return false;
+    }
+
+    @Override
+    public float flopChance() {
+        return 0.5F;
+    }
+
+    @Inject(method = "aiStep()V", at = @At("HEAD"), cancellable = true)
+    private void aiStep(CallbackInfo ci) {
+        if (SLConfig.BETTER_FISH_FLOPPING.get()) {
+            ci.cancel();
+
+            this.prevOnLandProgress = onLandProgress;
+            boolean onLand = this.onlyFlopOnGround() ? !this.isInWaterOrBubble() && this.onGround() : !this.isInWaterOrBubble();
+            if (onLand && onLandProgress < 5F) {
+                onLandProgress++;
+            }
+            if (!onLand && onLandProgress > 0F) {
+                onLandProgress--;
+            }
+
+            if (!isInWaterOrBubble() && this.isAlive()) {
+                if (this.onGround() && random.nextFloat() < this.flopChance()) {
+                    this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
+                    this.setYRot(this.random.nextFloat() * 360.0F);
+                    this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+                }
+            }
+            super.aiStep();
+        }
+    }
+
     @Unique
     public float prevOnLandProgress;
     @Unique
@@ -36,30 +71,5 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
     @Override
     public float getOnLandProgress() {
         return onLandProgress;
-    }
-
-    @Inject(method = "aiStep()V", at = @At("HEAD"), cancellable = true)
-    private void aiStep(CallbackInfo ci) {
-        if (SLConfig.BETTER_FISH_FLOPPING.get()) {
-            ci.cancel();
-
-            this.prevOnLandProgress = onLandProgress;
-            boolean onLand = !this.isInWaterOrBubble() && this.onGround();
-            if (onLand && onLandProgress < 5F) {
-                onLandProgress++;
-            }
-            if (!onLand && onLandProgress > 0F) {
-                onLandProgress--;
-            }
-
-            if (!isInWaterOrBubble() && this.isAlive()) {
-                if (this.onGround() && random.nextFloat() < 0.3F) {
-                    this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
-                    this.setYRot(this.random.nextFloat() * 360.0F);
-                    this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
-                }
-            }
-            super.aiStep();
-        }
     }
 }

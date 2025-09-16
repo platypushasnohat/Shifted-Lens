@@ -5,7 +5,6 @@ import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
 import com.platypushasnohat.shifted_lens.client.renderer.layers.SLGhastGlowLayer;
 import com.platypushasnohat.shifted_lens.config.SLClientConfig;
-import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -26,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(GhastRenderer.class)
-public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel<Ghast>> {
+public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel> {
 
     @Shadow
     private static final ResourceLocation GHAST_LOCATION = new ResourceLocation("textures/entity/ghast/ghast.png");
@@ -39,16 +38,16 @@ public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel
     private static final ResourceLocation RETRO_GHAST_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast/retro_ghast.png");
 
     @Unique
-    private SLGhastModel<Ghast> shiftedLens$remodel;
+    private SLGhastModel shiftedLens$remodel;
 
-    public GhastRendererMixin(EntityRendererProvider.Context context, SLGhastModel<Ghast> entityModel, float f) {
+    public GhastRendererMixin(EntityRendererProvider.Context context, SLGhastModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void GhastRenderer(EntityRendererProvider.Context context, CallbackInfo callbackInfo) {
-        this.shiftedLens$remodel = new SLGhastModel<>(context.bakeLayer(SLModelLayers.GHAST));
-        this.addLayer(new SLGhastGlowLayer<>(this));
+        this.shiftedLens$remodel = new SLGhastModel(context.bakeLayer(SLModelLayers.GHAST));
+        this.addLayer(new SLGhastGlowLayer(this));
     }
 
     @Override

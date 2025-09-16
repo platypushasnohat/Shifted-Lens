@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class BaitfishModel<T extends Baitfish> extends HierarchicalModel<T> {
+public class BaitfishModel extends HierarchicalModel<Baitfish> {
 
 	private final ModelPart root;
 	private final ModelPart bottomfin;
@@ -33,13 +33,17 @@ public class BaitfishModel<T extends Baitfish> extends HierarchicalModel<T> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -1.0F, -5.0F, 1.0F, 2.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, -1.0F));
+		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create()
+				.texOffs(0, 0).addBox(-0.5F, -1.0F, -5.0F, 1.0F, 2.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, -1.0F));
 
-		PartDefinition bottomfin = root.addOrReplaceChild("bottomfin", CubeListBuilder.create().texOffs(0, 12).addBox(0.0F, 0.0F, -1.0F, 0.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, 0.0F));
+		PartDefinition bottomfin = root.addOrReplaceChild("bottomfin", CubeListBuilder.create()
+				.texOffs(0, 12).addBox(0.0F, 0.0F, -1.0F, 0.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, 0.0F));
 
-		PartDefinition topfin = root.addOrReplaceChild("topfin", CubeListBuilder.create().texOffs(14, 12).addBox(0.0F, -1.0F, -1.0F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 0.0F));
+		PartDefinition topfin = root.addOrReplaceChild("topfin", CubeListBuilder.create()
+				.texOffs(14, 12).addBox(0.0F, -1.0F, -1.0F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 0.0F));
 
-		PartDefinition tailfin = root.addOrReplaceChild("tailfin", CubeListBuilder.create().texOffs(8, 12).addBox(0.0F, -1.0F, 0.0F, 0.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 5.0F));
+		PartDefinition tailfin = root.addOrReplaceChild("tailfin", CubeListBuilder.create()
+				.texOffs(8, 12).addBox(0.0F, -1.0F, 0.0F, 0.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 5.0F));
 
 		return LayerDefinition.create(meshdefinition, 32, 32);
 	}

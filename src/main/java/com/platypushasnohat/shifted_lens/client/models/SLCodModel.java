@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLCodModel<T extends Cod> extends HierarchicalModel<T> {
+public class SLCodModel extends HierarchicalModel<Cod> {
 
 	private final ModelPart root;
 	private final ModelPart right_fin;
@@ -42,22 +42,29 @@ public class SLCodModel<T extends Cod> extends HierarchicalModel<T> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -3.0F, -2.0F, 2.0F, 5.0F, 7.0F, new CubeDeformation(0.0F))
+		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create()
+				.texOffs(0, 0).addBox(-1.0F, -3.0F, -2.0F, 2.0F, 5.0F, 7.0F, new CubeDeformation(0.0F))
 				.texOffs(12, 12).addBox(0.0F, 2.0F, -2.5F, 0.0F, 1.0F, 7.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, 21.0F, -1.0F));
 
-		PartDefinition right_fin = root.addOrReplaceChild("right_fin", CubeListBuilder.create().texOffs(0, 22).addBox(-2.0F, 0.0F, -1.0F, 2.0F, 0.0F, 2.0F, new CubeDeformation(0.025F)), PartPose.offsetAndRotation(-1.0F, 1.0F, -1.0F, 0.0F, 0.0F, -0.7854F));
+		PartDefinition right_fin = root.addOrReplaceChild("right_fin", CubeListBuilder.create()
+				.texOffs(0, 22).addBox(-2.0F, 0.0F, -1.0F, 2.0F, 0.0F, 2.0F, new CubeDeformation(0.025F)), PartPose.offsetAndRotation(-1.0F, 1.0F, -1.0F, 0.0F, 0.0F, -0.7854F));
 
-		PartDefinition left_fin = root.addOrReplaceChild("left_fin", CubeListBuilder.create().texOffs(22, 20).addBox(0.0F, 0.0F, -1.0F, 2.0F, 0.0F, 2.0F, new CubeDeformation(0.025F)), PartPose.offsetAndRotation(1.0F, 1.0F, -1.0F, 0.0F, 0.0F, 0.7854F));
+		PartDefinition left_fin = root.addOrReplaceChild("left_fin", CubeListBuilder.create()
+				.texOffs(22, 20).addBox(0.0F, 0.0F, -1.0F, 2.0F, 0.0F, 2.0F, new CubeDeformation(0.025F)), PartPose.offsetAndRotation(1.0F, 1.0F, -1.0F, 0.0F, 0.0F, 0.7854F));
 
-		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(12, 20).addBox(-1.0F, -2.0F, -3.0F, 2.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
+		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create()
+				.texOffs(12, 20).addBox(-1.0F, -2.0F, -3.0F, 2.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
 				.texOffs(18, 8).addBox(-1.0F, 2.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -2.0F));
 
-		PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(22, 22).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+		PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create()
+				.texOffs(22, 22).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 24).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.2F)), PartPose.offset(0.0F, 0.0F, -3.0F));
 
-		PartDefinition tail = root.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 12).addBox(0.0F, -2.0F, 0.0F, 0.0F, 4.0F, 6.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, 0.0F, 5.0F));
+		PartDefinition tail = root.addOrReplaceChild("tail", CubeListBuilder.create()
+				.texOffs(0, 12).addBox(0.0F, -2.0F, 0.0F, 0.0F, 4.0F, 6.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, 0.0F, 5.0F));
 
-		PartDefinition fin_back = root.addOrReplaceChild("fin_back", CubeListBuilder.create().texOffs(18, 0).addBox(0.0F, -2.0F, -1.0F, 0.0F, 2.0F, 6.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, -2.0F, -2.0F));
+		PartDefinition fin_back = root.addOrReplaceChild("fin_back", CubeListBuilder.create()
+				.texOffs(18, 0).addBox(0.0F, -2.0F, -1.0F, 0.0F, 2.0F, 6.0F, new CubeDeformation(0.025F)), PartPose.offset(0.0F, -2.0F, -2.0F));
 
 		return LayerDefinition.create(meshdefinition, 32, 32);
 	}

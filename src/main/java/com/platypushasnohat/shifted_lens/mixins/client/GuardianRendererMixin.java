@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(GuardianRenderer.class)
-public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuardianModel<Guardian>> {
+public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuardianModel> {
 
     @Shadow
     private static final ResourceLocation GUARDIAN_LOCATION = new ResourceLocation("textures/entity/guardian.png");
@@ -35,15 +35,15 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
     private static final ResourceLocation GUARDIAN_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/guardian.png");
 
     @Unique
-    private SLGuardianModel<Guardian> shiftedLens$remodel;
+    private SLGuardianModel shiftedLens$remodel;
 
-    public GuardianRendererMixin(EntityRendererProvider.Context context, SLGuardianModel<Guardian> entityModel, float f) {
+    public GuardianRendererMixin(EntityRendererProvider.Context context, SLGuardianModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
     @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;FLnet/minecraft/client/model/geom/ModelLayerLocation;)V", at = @At("TAIL"))
     private void GuardianRenderer(EntityRendererProvider.Context context, float p_174162_, ModelLayerLocation layerLocation, CallbackInfo ci) {
-        this.shiftedLens$remodel = new SLGuardianModel<>(context.bakeLayer(SLModelLayers.GUARDIAN));
+        this.shiftedLens$remodel = new SLGuardianModel(context.bakeLayer(SLModelLayers.GUARDIAN));
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/monster/Guardian;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)

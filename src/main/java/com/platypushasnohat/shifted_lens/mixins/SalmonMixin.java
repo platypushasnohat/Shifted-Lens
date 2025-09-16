@@ -1,7 +1,9 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SalmonLeapGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
@@ -31,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 @Mixin(Salmon.class)
-public abstract class SalmonMixin extends AbstractSchoolingFish implements FishAnimationAccess, VariantAccess {
+public abstract class SalmonMixin extends AbstractSchoolingFish implements AbstractFishAccess, FishAnimationAccess, VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Salmon.class, EntityDataSerializers.INT);
@@ -44,13 +46,23 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
         return shiftedLens$flopAnimationState;
     }
 
+    @Override
+    public boolean onlyFlopOnGround() {
+        return true;
+    }
+
+    @Override
+    public float flopChance() {
+        return 0.4F;
+    }
+
     protected SalmonMixin(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
         super(entityType, level);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends AbstractSchoolingFish> entityType, Level level, CallbackInfo callbackInfo) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, true);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
@@ -75,9 +87,6 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
             this.moveRelative(this.getSpeed(), travelVec);
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
-            if (this.getTarget() == null) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
-            }
         } else {
             super.travel(travelVec);
         }
@@ -138,13 +147,9 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements FishA
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) {
-            this.setVariant(1);
-        } else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) {
-            this.setVariant(2);
-        } else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) {
-            this.setVariant(3);
-        }
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.setVariant(1);
+        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) this.setVariant(2);
+        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) this.setVariant(3);
         else this.setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }

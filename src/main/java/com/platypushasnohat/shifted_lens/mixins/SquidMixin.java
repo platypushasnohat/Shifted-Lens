@@ -2,14 +2,15 @@ package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.utils.SquidLookControl;
-import com.platypushasnohat.shifted_lens.entities.utils.SLPoses;
-import com.platypushasnohat.shifted_lens.mixin_utils.SquidAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,29 +44,16 @@ import javax.annotation.Nullable;
 
 @Mixin(Squid.class)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public abstract class SquidMixin extends WaterAnimal implements SquidAnimationAccess, VariantAccess {
+public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
+
+    @Shadow
+    protected abstract SoundEvent getSquirtSound();
+
+    @Shadow
+    protected abstract ParticleOptions getInkParticle();
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.INT);
-
-    @Unique
-    private int squirtTimer = 0;
-
-    @Unique
-    private final AnimationState pushAnimationState = new AnimationState();
-
-    @Unique
-    private final AnimationState squirtAnimationState = new AnimationState();
-
-    @Override
-    public AnimationState getPushAnimationState() {
-        return pushAnimationState;
-    }
-
-    @Override
-    public AnimationState getSquirtAnimationState() {
-        return squirtAnimationState;
-    }
 
     protected SquidMixin(EntityType<? extends WaterAnimal> entityType, Level level) {
         super(entityType, level);
@@ -129,24 +118,6 @@ public abstract class SquidMixin extends WaterAnimal implements SquidAnimationAc
     @Override
     public void tick() {
         super.tick();
-
-        if (this.level().isClientSide()) {
-            this.setupAnimationStates();
-        }
-    }
-
-    @Unique
-    private void setupAnimationStates() {
-        pushAnimationState.animateWhen(this.isAlive(), this.tickCount);
-        squirtAnimationState.animateWhen(this.getPose() == SLPoses.SQUIRTING.get(), this.tickCount);
-
-        if (this.getPose() == SLPoses.SQUIRTING.get()) {
-            this.squirtTimer++;
-            if (squirtTimer > 15) {
-                this.setPose(Pose.STANDING);
-                squirtTimer = 0;
-            }
-        }
     }
 
     @Override
@@ -169,18 +140,24 @@ public abstract class SquidMixin extends WaterAnimal implements SquidAnimationAc
         else return InteractionResult.FAIL;
     }
 
-    @Inject(at = @At("HEAD"), method = "spawnInk")
-    private void spawnInk(CallbackInfo info) {
-        if (this.level().isClientSide()) {
-            this.setPose(SLPoses.SQUIRTING.get());
-        } else {
-            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.25F, 2.25F, 2.25F))) {
-                if (!(entity instanceof Squid)) {
-                    if (((Squid) (Object) this) instanceof GlowSquid) {
-                        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
-                    } else {
-                        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60));
-                    }
+    @Inject(at = @At("HEAD"), method = "spawnInk", cancellable = true)
+    private void spawnInk(CallbackInfo ci) {
+        ci.cancel();
+        this.playSound(this.getSquirtSound(), this.getSoundVolume(), this.getVoicePitch());
+        Vec3 vec3 = getDeltaMovement();
+
+        for (int i = 0; i < 30; ++i) {
+            Vec3 vec31 = this.getDeltaMovement();
+            Vec3 vec32 = vec31.scale(0.3D + (double) (this.random.nextFloat() * 2.0F));
+            ((ServerLevel) this.level()).sendParticles(this.getInkParticle(), vec3.x, vec3.y + 0.5D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+        }
+
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.0F))) {
+            if (!(entity instanceof Squid)) {
+                if (((Squid) (Object) this) instanceof GlowSquid) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
+                } else {
+                    entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60));
                 }
             }
         }

@@ -13,12 +13,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class FlyingFishRenderer extends MobRenderer<FlyingFish, FlyingFishModel<FlyingFish>> {
+public class FlyingFishRenderer extends MobRenderer<FlyingFish, FlyingFishModel> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/flying_fish/flying_fish.png");
 
     public FlyingFishRenderer(EntityRendererProvider.Context context) {
-        super(context, new FlyingFishModel<>(context.bakeLayer(SLModelLayers.FLYING_FISH)), 0.2F);
+        super(context, new FlyingFishModel(context.bakeLayer(SLModelLayers.FLYING_FISH)), 0.2F);
     }
 
     @Override

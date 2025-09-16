@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(SquidRenderer.class)
-public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel<Squid>> implements VariantAccess {
+public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel> implements VariantAccess {
 
     @Shadow
     private static final ResourceLocation SQUID_LOCATION = new ResourceLocation("textures/entity/squid/squid.png");
@@ -37,15 +37,15 @@ public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel
     private static final ResourceLocation COLD_SQUID_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/squid/cold_squid.png");
 
     @Unique
-    private SLSquidModel<Squid> shiftedLens$remodel;
+    private SLSquidModel shiftedLens$remodel;
 
-    public SquidRendererMixin(EntityRendererProvider.Context context, SLSquidModel<Squid> model, float f) {
+    public SquidRendererMixin(EntityRendererProvider.Context context, SLSquidModel model, float f) {
         super(context, model, f);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void SquidRenderer(EntityRendererProvider.Context context, SquidModel model, CallbackInfo ci) {
-        this.shiftedLens$remodel = new SLSquidModel<>(context.bakeLayer(SLModelLayers.SQUID));
+        this.shiftedLens$remodel = new SLSquidModel(context.bakeLayer(SLModelLayers.SQUID));
     }
 
     @Override
@@ -64,17 +64,14 @@ public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel
     @Inject(method = "setupRotations(Lnet/minecraft/world/entity/animal/Squid;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("HEAD"), cancellable = true)
     protected void setupRotations(Squid entity, PoseStack poseStack, float i, float g, float partialTicks, CallbackInfo ci) {
         ci.cancel();
-//        super.setupRotations(entity, poseStack, i, g, partialTicks);
-        if (entity.isInWaterOrBubble()) {
-            if (isEntityUpsideDown(entity)) {
-                poseStack.translate(0.0D, entity.getBbHeight() + 0.1F, 0.0D);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
-            }
-            float translateY = entity.getBbHeight() * 0.5F;
-            poseStack.translate(0.0F, translateY, 0.0F);
-            poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())));
-            poseStack.mulPose(Axis.XP.rotationDegrees((Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot()) + 90.0F) % 360.0F));
-            poseStack.translate(0.0F, -translateY, 0.0F);
+        if (isEntityUpsideDown(entity)) {
+            poseStack.translate(0.0D, entity.getBbHeight() + 0.1F, 0.0D);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
         }
+        float translateY = entity.getBbHeight() * 0.5F;
+        poseStack.translate(0.0F, translateY, 0.0F);
+        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())));
+        poseStack.mulPose(Axis.XP.rotationDegrees((Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot()) + 90.0F) % 360.0F));
+        poseStack.translate(0.0F, -translateY, 0.0F);
     }
 }

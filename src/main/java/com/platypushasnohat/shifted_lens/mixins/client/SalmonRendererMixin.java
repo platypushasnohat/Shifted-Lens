@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(SalmonRenderer.class)
-public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonModel<Salmon>> implements VariantAccess {
+public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonModel> implements VariantAccess {
 
     @Shadow
     private static final ResourceLocation SALMON_LOCATION = new ResourceLocation("textures/entity/fish/salmon.png");
@@ -38,15 +38,15 @@ public abstract class SalmonRendererMixin extends MobRenderer<Salmon, SLSalmonMo
     private static final ResourceLocation COLD_OCEAN_SALMON = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/salmon/cold_ocean_salmon.png");
 
     @Unique
-    private SLSalmonModel<Salmon> shiftedLens$remodel;
+    private SLSalmonModel shiftedLens$remodel;
 
-    public SalmonRendererMixin(EntityRendererProvider.Context context, SLSalmonModel<Salmon> entityModel, float f) {
+    public SalmonRendererMixin(EntityRendererProvider.Context context, SLSalmonModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void SalmonRenderer(EntityRendererProvider.Context context, CallbackInfo callbackInfo) {
-        this.shiftedLens$remodel = new SLSalmonModel<>(context.bakeLayer(SLModelLayers.SALMON));
+        this.shiftedLens$remodel = new SLSalmonModel(context.bakeLayer(SLModelLayers.SALMON));
     }
 
     @Override

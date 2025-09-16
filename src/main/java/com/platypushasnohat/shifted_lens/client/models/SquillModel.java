@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SquillModel<T extends Squill> extends HierarchicalModel<T> {
+public class SquillModel extends HierarchicalModel<Squill> {
 
 	private float alpha = 1.0F;
 

@@ -6,8 +6,7 @@ public enum SLPoses {
 
     BEAM_START,
     BEAM,
-    BEAM_END,
-    SQUIRTING;
+    BEAM_END;
 
     public Pose get() {
         return Pose.valueOf(this.name());

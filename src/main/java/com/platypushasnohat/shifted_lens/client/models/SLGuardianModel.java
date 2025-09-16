@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLGuardianModel<T extends Guardian> extends HierarchicalModel<T> {
+public class SLGuardianModel extends HierarchicalModel<Guardian> {
 
 	private final ModelPart root;
 	private final ModelPart body;

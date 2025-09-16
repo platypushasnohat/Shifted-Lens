@@ -1,10 +1,8 @@
 package com.platypushasnohat.shifted_lens.mixins.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLCodModel;
-import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,7 +10,6 @@ import net.minecraft.client.renderer.entity.CodRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Cod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(CodRenderer.class)
-public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>> implements VariantAccess {
+public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel> implements VariantAccess {
 
     @Shadow
     private static final ResourceLocation COD_LOCATION = new ResourceLocation("textures/entity/fish/cod.png");
@@ -40,15 +37,15 @@ public abstract class CodRendererMixin extends MobRenderer<Cod, SLCodModel<Cod>>
     private static final ResourceLocation WARM_COD_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/warm_cod.png");
 
     @Unique
-    private SLCodModel<Cod> shiftedLens$remodel;
+    private SLCodModel shiftedLens$remodel;
 
-    public CodRendererMixin(EntityRendererProvider.Context context, SLCodModel<Cod> entityModel, float f) {
+    public CodRendererMixin(EntityRendererProvider.Context context, SLCodModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void CodRenderer(EntityRendererProvider.Context context, CallbackInfo callbackInfo) {
-        this.shiftedLens$remodel = new SLCodModel<>(context.bakeLayer(SLModelLayers.COD));
+        this.shiftedLens$remodel = new SLCodModel(context.bakeLayer(SLModelLayers.COD));
     }
 
     @Override

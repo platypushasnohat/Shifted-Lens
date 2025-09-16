@@ -19,8 +19,8 @@ public class GuardianBeamRenderer {
 
     public static final RenderType BEAM_TEXTURE = SLRenderTypes.guardianBeam(new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/beam.png"));
 
-    private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
-        consumer.vertex(matrix4f, p_229108_3_, p_229108_4_, p_229108_5_).color(p_229108_6_, p_229108_7_, p_229108_8_, 255).uv(p_229108_9_, p_229108_10_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
+    private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float f, float g, float h, int red, int green, int blue, float k, float l) {
+        consumer.vertex(matrix4f, f, g, h).color(red, green, blue, 255).uv(k, l).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
     public static void render(Entity entity, Entity target, PoseStack poseStack, MultiBufferSource buffer, float partialTicks) {

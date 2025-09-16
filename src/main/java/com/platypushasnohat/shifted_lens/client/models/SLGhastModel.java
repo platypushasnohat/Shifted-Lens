@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLGhastModel<T extends Ghast> extends HierarchicalModel<T> {
+public class SLGhastModel extends HierarchicalModel<Ghast> {
 
 	private final ModelPart root;
 	private final ModelPart Ghast;
@@ -44,21 +44,50 @@ public class SLGhastModel<T extends Ghast> extends HierarchicalModel<T> {
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
+
 		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+
 		PartDefinition Ghast = root.addOrReplaceChild("Ghast", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-		PartDefinition Head = Ghast.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-32.0F, -32.0F, -31.0F, 64.0F, 64.0F, 64.0F, new CubeDeformation(0.1F)).texOffs(128, 153).addBox(-13.0F, 6.0F, -30.5F, 26.0F, 26.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, -32.0F, 0.0F));
-		PartDefinition Closed_Mouth = Head.addOrReplaceChild("Closed_Mouth", CubeListBuilder.create().texOffs(0, 158).addBox(-13.0F, -13.0F, -30.75F, 26.0F, 26.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, 18.0F, 0.0F));
-		PartDefinition Brow = Head.addOrReplaceChild("Brow", CubeListBuilder.create().texOffs(11, 236).addBox(-50.0F, -51.0F, -0.5F, 38.0F, 16.0F, 0.0F, new CubeDeformation(0.1F)).texOffs(159, 210).addBox(-50.0F, -44.0F, -0.75F, 38.0F, 9.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(31.0F, 32.0F, -30.0F));
-		PartDefinition SadBrow = Brow.addOrReplaceChild("SadBrow", CubeListBuilder.create().texOffs(0, 151).addBox(-50.0F, -51.0F, -1.0F, 38.0F, 7.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, 0.0F, 0.25F));
-		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(0, 128).addBox(-20.0F, -9.0F, 0.0F, 40.0F, 23.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, -12.5F, -30.0F));
-		PartDefinition Tentacle0 = Ghast.addOrReplaceChild("Tentacle0", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(-23.0F, -6.0F, -22.0F));
-		PartDefinition Tentacle1 = Ghast.addOrReplaceChild("Tentacle1", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, -6.0F, -22.0F));
-		PartDefinition Tentacle2 = Ghast.addOrReplaceChild("Tentacle2", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(23.0F, -6.0F, -22.0F));
-		PartDefinition Tentacle3 = Ghast.addOrReplaceChild("Tentacle3", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(-23.0F, -5.0F, 1.0F));
-		PartDefinition Tentacle4 = Ghast.addOrReplaceChild("Tentacle4", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(23.0F, -5.0F, 1.0F));
-		PartDefinition Tentacle5 = Ghast.addOrReplaceChild("Tentacle5", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(-23.0F, -5.0F, 24.0F));
-		PartDefinition Tentacle6 = Ghast.addOrReplaceChild("Tentacle6", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(1.0F, -5.0F, 24.0F));
-		PartDefinition Tentacle7 = Ghast.addOrReplaceChild("Tentacle7", CubeListBuilder.create().texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(23.0F, -5.0F, 24.0F));
+
+		PartDefinition Head = Ghast.addOrReplaceChild("Head", CubeListBuilder.create()
+				.texOffs(0, 0).addBox(-32.0F, -32.0F, -31.0F, 64.0F, 64.0F, 64.0F, new CubeDeformation(0.1F)).texOffs(128, 153).addBox(-13.0F, 6.0F, -30.5F, 26.0F, 26.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, -32.0F, 0.0F));
+
+		PartDefinition Closed_Mouth = Head.addOrReplaceChild("Closed_Mouth", CubeListBuilder.create()
+				.texOffs(0, 158).addBox(-13.0F, -13.0F, -30.75F, 26.0F, 26.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, 18.0F, 0.0F));
+
+		PartDefinition Brow = Head.addOrReplaceChild("Brow", CubeListBuilder.create()
+				.texOffs(11, 236).addBox(-50.0F, -51.0F, -0.5F, 38.0F, 16.0F, 0.0F, new CubeDeformation(0.1F)).texOffs(159, 210).addBox(-50.0F, -44.0F, -0.75F, 38.0F, 9.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(31.0F, 32.0F, -30.0F));
+
+		PartDefinition SadBrow = Brow.addOrReplaceChild("SadBrow", CubeListBuilder.create()
+				.texOffs(0, 151).addBox(-50.0F, -51.0F, -1.0F, 38.0F, 7.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, 0.0F, 0.25F));
+
+		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create()
+				.texOffs(0, 128).addBox(-20.0F, -9.0F, 0.0F, 40.0F, 23.0F, 0.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, -12.5F, -30.0F));
+
+		PartDefinition Tentacle0 = Ghast.addOrReplaceChild("Tentacle0", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(-23.0F, -6.0F, -22.0F));
+
+		PartDefinition Tentacle1 = Ghast.addOrReplaceChild("Tentacle1", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(0.0F, -6.0F, -22.0F));
+
+		PartDefinition Tentacle2 = Ghast.addOrReplaceChild("Tentacle2", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(23.0F, -6.0F, -22.0F));
+
+		PartDefinition Tentacle3 = Ghast.addOrReplaceChild("Tentacle3", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(-23.0F, -5.0F, 1.0F));
+
+		PartDefinition Tentacle4 = Ghast.addOrReplaceChild("Tentacle4", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(23.0F, -5.0F, 1.0F));
+
+		PartDefinition Tentacle5 = Ghast.addOrReplaceChild("Tentacle5", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(-23.0F, -5.0F, 24.0F));
+
+		PartDefinition Tentacle6 = Ghast.addOrReplaceChild("Tentacle6", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(1.0F, -5.0F, 24.0F));
+
+		PartDefinition Tentacle7 = Ghast.addOrReplaceChild("Tentacle7", CubeListBuilder.create()
+				.texOffs(80, 128).addBox(-6.0F, 0.0F, -6.0F, 12.0F, 35.0F, 12.0F, new CubeDeformation(0.1F)), PartPose.offset(23.0F, -5.0F, 24.0F));
+
 		return LayerDefinition.create(meshdefinition, 256, 256);
 	}
 
