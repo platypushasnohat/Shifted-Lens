@@ -153,18 +153,18 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
         this.walkAnimation.update(f2, 0.4F);
     }
 
-    @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
-        if (itemstack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
-            player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
-            ItemStack result = ItemUtils.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
-            player.setItemInHand(hand, result);
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
-        }
-        else return InteractionResult.FAIL;
-    }
+//    @Override
+//    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+//        ItemStack itemstack = player.getItemInHand(hand);
+//        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
+//        if (itemstack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
+//            player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+//            ItemStack result = ItemUtils.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
+//            player.setItemInHand(hand, result);
+//            return InteractionResult.sidedSuccess(this.level().isClientSide);
+//        }
+//        else return InteractionResult.FAIL;
+//    }
 
     @Inject(at = @At("HEAD"), method = "spawnInk", cancellable = true)
     private void spawnInk(CallbackInfo ci) {

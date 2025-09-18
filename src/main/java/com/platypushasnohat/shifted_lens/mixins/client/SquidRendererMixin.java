@@ -17,7 +17,6 @@ import net.minecraft.world.entity.animal.Squid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,9 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = SquidRenderer.class, priority = 1001)
 public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel> implements VariantAccess {
-
-    @Shadow
-    private static final ResourceLocation SQUID_LOCATION = new ResourceLocation("textures/entity/squid/squid.png");
 
     @Unique
     private static final ResourceLocation SQUID_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/squid/squid.png");

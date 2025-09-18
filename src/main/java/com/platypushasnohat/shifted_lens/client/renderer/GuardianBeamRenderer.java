@@ -25,14 +25,14 @@ public class GuardianBeamRenderer {
 
     public static void render(Entity entity, Entity target, PoseStack poseStack, MultiBufferSource buffer, float partialTicks) {
         float scale = (((Guardian) entity).getAttackAnimationScale(partialTicks));
+        float clientSideAttackTime = ((Guardian) entity).getClientSideAttackTime() + partialTicks;
 
-        float f1 = (float) entity.level().getGameTime() + partialTicks;
-        float f2 = f1 * 0.5F % 1.0F;
-        float f3 = entity.getEyeHeight();
+        float f2 = clientSideAttackTime * 0.5F % 1.0F;
+        float eyeHeight = entity.getEyeHeight();
         poseStack.pushPose();
-        poseStack.translate(0.0D, f3, 0.0D);
+        poseStack.translate(0.0D, eyeHeight, 0.0D);
         Vec3 Vector3d = getPosition(target, (double) target.getBbHeight() * 0.5D, partialTicks);
-        Vec3 Vector3d1 = getPosition(entity, f3, partialTicks);
+        Vec3 Vector3d1 = getPosition(entity, eyeHeight, partialTicks);
         Vec3 Vector3d2 = Vector3d.subtract(Vector3d1);
         float f4 = (float) (Vector3d2.length() + 1.0D);
         Vector3d2 = Vector3d2.normalize();
@@ -41,7 +41,7 @@ public class GuardianBeamRenderer {
         poseStack.mulPose(Axis.YP.rotation((float) Math.PI / 2.0F - f6));
         poseStack.mulPose(Axis.XP.rotation(f5));
 
-        float f7 = f1 * 0.05F * -1.5F;
+        float f7 = clientSideAttackTime * 0.025F * -1.5F;
         float f8 = scale * scale;
         int j = 64 + (int) (f8 * 191.0F);
         int k = 32 + (int) (f8 * 191.0F);
