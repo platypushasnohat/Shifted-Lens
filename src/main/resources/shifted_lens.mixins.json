@@ -27,6 +27,7 @@
     "client.CodRendererMixin",
     "client.ElderGuardianRendererMixin",
     "client.GhastRendererMixin",
+    "client.GlowSquidRendererMixin",
     "client.GuardianRendererMixin",
     "client.PufferfishBigModelMixin",
     "client.PufferfishMidModelMixin",

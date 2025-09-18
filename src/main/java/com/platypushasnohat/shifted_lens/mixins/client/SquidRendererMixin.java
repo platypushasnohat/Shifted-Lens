@@ -44,7 +44,7 @@ public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void SquidRenderer(EntityRendererProvider.Context context, SquidModel model, CallbackInfo ci) {
+    private void SquidRenderer(EntityRendererProvider.Context context, SquidModel<Squid> model, CallbackInfo ci) {
         this.shiftedLens$remodel = new SLSquidModel(context.bakeLayer(SLModelLayers.SQUID));
     }
 

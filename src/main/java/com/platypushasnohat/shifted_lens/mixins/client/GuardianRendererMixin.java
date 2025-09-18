@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.SLGuardianModel;
 import com.platypushasnohat.shifted_lens.client.renderer.GuardianBeamRenderer;
+import com.platypushasnohat.shifted_lens.config.SLClientConfig;
 import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -35,6 +36,9 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
     private static final ResourceLocation GUARDIAN_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/guardian.png");
 
     @Unique
+    private static final ResourceLocation CLEAN_GUARDIAN_TEXTURE = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/clean_guardian.png");
+
+    @Unique
     private SLGuardianModel shiftedLens$remodel;
 
     public GuardianRendererMixin(EntityRendererProvider.Context context, SLGuardianModel entityModel, float f) {
@@ -60,6 +64,6 @@ public abstract class GuardianRendererMixin extends MobRenderer<Guardian, SLGuar
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Guardian;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getTextureLocation(Guardian guardian, CallbackInfoReturnable<ResourceLocation> cir) {
-        cir.setReturnValue(GUARDIAN_TEXTURE);
+        cir.setReturnValue(SLClientConfig.CLEAN_GUARDIANS.get() ? CLEAN_GUARDIAN_TEXTURE : GUARDIAN_TEXTURE);
     }
 }
