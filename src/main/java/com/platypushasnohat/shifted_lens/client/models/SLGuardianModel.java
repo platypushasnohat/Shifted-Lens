@@ -3,7 +3,7 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLGuardianAnimations;
-import com.platypushasnohat.shifted_lens.mixin_utils.GuardianAnimationAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -166,19 +166,13 @@ public class SLGuardianModel extends HierarchicalModel<Guardian> {
 	@Override
 	public void setupAnim(Guardian entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState idleAnimationState = ((GuardianAnimationAccess) entity).getIdleAnimationState();
-		AnimationState eyeAnimationState = ((GuardianAnimationAccess) entity).getEyeAnimationState();
-		AnimationState beamStartAnimationState = ((GuardianAnimationAccess) entity).getBeamStartAnimationState();
-		AnimationState beamAnimationState = ((GuardianAnimationAccess) entity).getBeamAnimationState();
-		AnimationState beamEndAnimationState = ((GuardianAnimationAccess) entity).getBeamEndAnimationState();
+		AnimationState eyeAnimationState = ((AnimationStateAccess) entity).getEyeAnimationState();
+		AnimationState beamAnimationState = ((AnimationStateAccess) entity).getBeamAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
 
-		this.animateWalk(SLGuardianAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
-		this.animate(idleAnimationState, SLGuardianAnimations.IDLE, ageInTicks);
+		this.animate(swimmingAnimationState, SLGuardianAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.2F);
 		this.animate(eyeAnimationState, SLGuardianAnimations.EYE, ageInTicks);
-
-		this.animate(beamStartAnimationState, SLGuardianAnimations.BEAM_START, ageInTicks);
 		this.animate(beamAnimationState, SLGuardianAnimations.BEAM, ageInTicks);
-		this.animate(beamEndAnimationState, SLGuardianAnimations.BEAM_STOP, ageInTicks);
 
 		if (entity.isInWaterOrBubble()) {
 			this.root.xRot = headPitch * (Mth.DEG_TO_RAD);

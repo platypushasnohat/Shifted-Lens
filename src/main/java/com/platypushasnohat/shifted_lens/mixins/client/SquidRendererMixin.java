@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(SquidRenderer.class)
+@Mixin(value = SquidRenderer.class, priority = 1001)
 public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel> implements VariantAccess {
 
     @Shadow
@@ -52,6 +52,12 @@ public abstract class SquidRendererMixin extends MobRenderer<Squid, SLSquidModel
     public void render(Squid entity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         this.model = this.shiftedLens$remodel;
         super.render(entity, f, g, poseStack, multiBufferSource, i);
+    }
+
+    @Inject(method = "getBob(Lnet/minecraft/world/entity/animal/Squid;F)F", at = @At("HEAD"), cancellable = true)
+    protected void getBob(Squid squid, float f, CallbackInfoReturnable<Float> cir) {
+        cir.cancel();
+        cir.setReturnValue(super.getBob(squid, f));
     }
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/animal/Squid;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)

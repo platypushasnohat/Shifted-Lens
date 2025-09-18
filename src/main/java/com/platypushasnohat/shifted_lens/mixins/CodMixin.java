@@ -1,13 +1,14 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
-import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
@@ -30,17 +31,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 @Mixin(Cod.class)
-public abstract class CodMixin extends AbstractSchoolingFish implements FishAnimationAccess, VariantAccess {
+public abstract class CodMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Cod.class, EntityDataSerializers.INT);
 
-    @Unique
-    private final AnimationState shiftedLens$flopAnimationState = new AnimationState();
+    private @Unique final AnimationState flopAnimationState = new AnimationState();
+    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
 
-    @Unique
+    @Override
+    public AnimationState getSwimmingAnimationState() {
+        return swimmingAnimationState;
+    }
+
+    @Override
     public AnimationState getFlopAnimationState() {
-        return shiftedLens$flopAnimationState;
+        return flopAnimationState;
     }
 
     protected CodMixin(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
@@ -68,13 +74,13 @@ public abstract class CodMixin extends AbstractSchoolingFish implements FishAnim
     }
 
     @Override
-    public void travel(Vec3 travelVec) {
+    public void travel(Vec3 travelVector) {
         if (this.isEffectiveAi() && this.isInWater()) {
-            this.moveRelative(this.getSpeed(), travelVec);
+            this.moveRelative(this.getSpeed(), travelVector);
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
         } else {
-            super.travel(travelVec);
+            super.travel(travelVector);
         }
     }
 
@@ -82,13 +88,21 @@ public abstract class CodMixin extends AbstractSchoolingFish implements FishAnim
     public void tick() {
         super.tick();
         if (this.level().isClientSide()) {
-            shiftedLens$setupAnimationStates();
+            setupAnimationStates();
         }
     }
 
     @Unique
-    private void shiftedLens$setupAnimationStates() {
-        shiftedLens$flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
+    private void setupAnimationStates() {
+        this.flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+    }
+
+    @Override
+    public void calculateEntityAnimation(boolean flying) {
+        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+        float f2 = Math.min(f1 * 10.0F, 1.0F);
+        this.walkAnimation.update(f2, 0.4F);
     }
 
     @Override

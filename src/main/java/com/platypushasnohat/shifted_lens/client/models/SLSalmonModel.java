@@ -3,8 +3,8 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLSalmonAnimations;
-import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -82,15 +82,19 @@ public class SLSalmonModel extends HierarchicalModel<Salmon> {
 	@Override
 	public void setupAnim(Salmon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState flopAnimationState = ((FishAnimationAccess) entity).getFlopAnimationState();
+		AnimationState flopAnimationState = ((AnimationStateAccess) entity).getFlopAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
 
-		if (entity.isInWaterOrBubble()) {
-			this.animateWalk(SLSalmonAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);
-		} else {
-			this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
-		}
+		this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
+		this.animate(swimmingAnimationState, SLSalmonAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
+
+		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
+		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+		float partialTicks = ageInTicks - entity.tickCount;
+		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 
 		this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
+		this.root.zRot += landProgress * ((float) Math.toRadians(-90) / 5F);
 	}
 
 	@Override

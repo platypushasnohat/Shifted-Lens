@@ -1,16 +1,16 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
-import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SalmonLeapGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
-import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
@@ -33,17 +33,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 
 @Mixin(Salmon.class)
-public abstract class SalmonMixin extends AbstractSchoolingFish implements AbstractFishAccess, FishAnimationAccess, VariantAccess {
+public abstract class SalmonMixin extends AbstractSchoolingFish implements AbstractFishAccess, AnimationStateAccess, VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Salmon.class, EntityDataSerializers.INT);
 
-    @Unique
-    public final AnimationState shiftedLens$flopAnimationState = new AnimationState();
+    private @Unique final AnimationState flopAnimationState = new AnimationState();
+    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
+
+    @Override
+    public AnimationState getSwimmingAnimationState() {
+        return swimmingAnimationState;
+    }
 
     @Unique
     public AnimationState getFlopAnimationState() {
-        return shiftedLens$flopAnimationState;
+        return flopAnimationState;
     }
 
     @Override
@@ -53,7 +58,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
 
     @Override
     public float flopChance() {
-        return 0.4F;
+        return 0.2F;
     }
 
     protected SalmonMixin(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
@@ -97,13 +102,21 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
         super.tick();
 
         if (this.level().isClientSide()) {
-            shiftedLens$setupAnimationStates();
+            setupAnimationStates();
         }
     }
 
     @Unique
-    private void shiftedLens$setupAnimationStates() {
-        shiftedLens$flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
+    private void setupAnimationStates() {
+        this.flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+    }
+
+    @Override
+    public void calculateEntityAnimation(boolean flying) {
+        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+        float f2 = Math.min(f1 * 10.0F, 1.0F);
+        this.walkAnimation.update(f2, 0.4F);
     }
 
     @Override

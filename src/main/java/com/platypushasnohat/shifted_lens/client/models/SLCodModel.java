@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLCodAnimations;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
-import com.platypushasnohat.shifted_lens.mixin_utils.FishAnimationAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -72,18 +72,16 @@ public class SLCodModel extends HierarchicalModel<Cod> {
 	@Override
 	public void setupAnim(Cod entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState flopAnimationState = ((FishAnimationAccess) entity).getFlopAnimationState();
+		AnimationState flopAnimationState = ((AnimationStateAccess) entity).getFlopAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
 
 		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
 		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
 		float partialTicks = ageInTicks - entity.tickCount;
 		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 
-		if (entity.isInWaterOrBubble()) {
-			this.animateWalk(SLCodAnimations.SWIM, limbSwing, limbSwingAmount, 4, 8);
-		} else {
-			this.animate(flopAnimationState, SLCodAnimations.FLOP, ageInTicks);
-		}
+		this.animate(swimmingAnimationState, SLCodAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
+		this.animate(flopAnimationState, SLCodAnimations.FLOP, ageInTicks);
 
 		this.root.xRot = headPitch * (Mth.DEG_TO_RAD);
 		this.root.zRot += landProgress * ((float) Math.toRadians(-90) / 5F);

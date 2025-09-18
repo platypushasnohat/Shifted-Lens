@@ -1,6 +1,5 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
-import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
@@ -24,6 +23,22 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
     @Shadow
     protected abstract SoundEvent getFlopSound();
 
+    @Unique
+    public float prevOnLandProgress;
+
+    @Unique
+    public float onLandProgress;
+
+    @Override
+    public float getPrevOnLandProgress() {
+        return prevOnLandProgress;
+    }
+
+    @Override
+    public float getOnLandProgress() {
+        return onLandProgress;
+    }
+
     @Override
     public boolean onlyFlopOnGround() {
         return false;
@@ -36,40 +51,24 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
 
     @Inject(method = "aiStep()V", at = @At("HEAD"), cancellable = true)
     private void aiStep(CallbackInfo ci) {
-        if (SLConfig.BETTER_FISH_FLOPPING.get()) {
-            ci.cancel();
+        ci.cancel();
 
-            this.prevOnLandProgress = onLandProgress;
-            boolean onLand = this.onlyFlopOnGround() ? !this.isInWaterOrBubble() && this.onGround() : !this.isInWaterOrBubble();
-            if (onLand && onLandProgress < 5F) {
-                onLandProgress++;
-            }
-            if (!onLand && onLandProgress > 0F) {
-                onLandProgress--;
-            }
-
-            if (!isInWaterOrBubble() && this.isAlive()) {
-                if (this.onGround() && random.nextFloat() < this.flopChance()) {
-                    this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
-                    this.setYRot(this.random.nextFloat() * 360.0F);
-                    this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
-                }
-            }
-            super.aiStep();
+        this.prevOnLandProgress = onLandProgress;
+        boolean onLand = this.onlyFlopOnGround() ? !this.isInWaterOrBubble() && this.onGround() : !this.isInWaterOrBubble();
+        if (onLand && onLandProgress < 5F) {
+            onLandProgress++;
         }
-    }
+        if (!onLand && onLandProgress > 0F) {
+            onLandProgress--;
+        }
 
-    @Unique
-    public float prevOnLandProgress;
-    @Unique
-    public float onLandProgress;
-
-    @Override
-    public float getPrevOnLandProgress() {
-        return prevOnLandProgress;
-    }
-    @Override
-    public float getOnLandProgress() {
-        return onLandProgress;
+        if (!isInWaterOrBubble() && this.isAlive()) {
+            if (this.onGround() && random.nextFloat() < this.flopChance()) {
+                this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
+                this.setYRot(this.random.nextFloat() * 360.0F);
+                this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+            }
+        }
+        super.aiStep();
     }
 }

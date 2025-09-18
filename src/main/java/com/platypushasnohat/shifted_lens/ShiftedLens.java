@@ -1,7 +1,5 @@
 package com.platypushasnohat.shifted_lens;
 
-import com.platypushasnohat.shifted_lens.config.SLClientConfig;
-import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.data.*;
 import com.platypushasnohat.shifted_lens.events.MiscEvents;
 import com.platypushasnohat.shifted_lens.registry.*;
@@ -39,8 +37,8 @@ public class ShiftedLens {
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::dataSetup);
 
-        context.registerConfig(ModConfig.Type.COMMON, SLConfig.COMMON);
-        context.registerConfig(ModConfig.Type.CLIENT, SLClientConfig.COMMON);
+        context.registerConfig(ModConfig.Type.COMMON, ShiftedLensConfig.COMMON_CONFIG);
+        context.registerConfig(ModConfig.Type.CLIENT, ShiftedLensConfig.CLIENT_CONFIG);
 
         SLItems.ITEMS.register(modEventBus);
         SLBlocks.BLOCKS.register(modEventBus);

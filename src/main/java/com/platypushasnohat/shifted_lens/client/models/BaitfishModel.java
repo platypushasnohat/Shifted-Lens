@@ -52,11 +52,8 @@ public class BaitfishModel extends HierarchicalModel<Baitfish> {
 	public void setupAnim(Baitfish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 
-		if (entity.isInWaterOrBubble()) {
-			this.animateWalk(BaitfishAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
-		} else {
-			this.animate(entity.flopAnimationState, BaitfishAnimations.FLOP, ageInTicks);
-		}
+		this.animate(entity.flopAnimationState, BaitfishAnimations.FLOP, ageInTicks);
+		this.animate(entity.swimmingAnimationState, BaitfishAnimations.SWIM, ageInTicks);
 
 		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
 		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();

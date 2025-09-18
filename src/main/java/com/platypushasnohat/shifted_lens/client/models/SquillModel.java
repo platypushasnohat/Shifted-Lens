@@ -86,7 +86,7 @@ public class SquillModel extends HierarchicalModel<Squill> {
 	public void setupAnim(Squill entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		this.animateWalk(SquillAnimations.PROPELLAR_OVERLAY, limbSwing, limbSwingAmount, 8, 12);
-		this.animate(entity.idleAnimationState, SquillAnimations.PUSH, ageInTicks,(0.5F + (limbSwingAmount * 2.0F)));
+		this.animate(entity.idleAnimationState, SquillAnimations.PUSH, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
 		this.animate(entity.aggroAnimationState, SquillAnimations.AGGRO, ageInTicks);
 	}
 

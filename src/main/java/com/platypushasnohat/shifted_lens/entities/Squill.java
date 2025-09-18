@@ -1,6 +1,6 @@
 package com.platypushasnohat.shifted_lens.entities;
 
-import com.platypushasnohat.shifted_lens.config.SLConfig;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
 import com.platypushasnohat.shifted_lens.entities.ai.utils.SquillMoveControl;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
@@ -188,7 +188,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        int spawnHeight = Math.min((this.blockPosition().getY() + SLConfig.SQUILL_SPAWN_HEIGHT.get()), this.level().getMaxBuildHeight());
+        int spawnHeight = Math.min((this.blockPosition().getY() + ShiftedLensConfig.SQUILL_SPAWN_HEIGHT.get()), this.level().getMaxBuildHeight());
         if (spawnType == MobSpawnType.NATURAL || spawnType == MobSpawnType.CHUNK_GENERATION) {
             this.moveTo(this.getX(), spawnHeight, this.getZ(), this.getYRot(), this.getXRot());
         }
@@ -219,7 +219,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
 
     @Override
     public int getMaxSpawnClusterSize() {
-        return 96;
+        return 48;
     }
 
     @Override
@@ -254,8 +254,15 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
     }
 
     public void setupAnimationStates() {
-        this.idleAnimationState.animateWhen(this.isAlive() && !this.isAttacking(), this.tickCount);
-        this.aggroAnimationState.animateWhen(this.isAlive() && this.isAttacking(), this.tickCount);
+        this.idleAnimationState.animateWhen(!this.isAttacking(), this.tickCount);
+        this.aggroAnimationState.animateWhen(this.isAttacking(), this.tickCount);
+    }
+
+    @Override
+    public void calculateEntityAnimation(boolean flying) {
+        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+        float f2 = Math.min(f1 * 10.0F, 1.0F);
+        this.walkAnimation.update(f2, 0.4F);
     }
 
     public float getAlphaProgress(float partialTicks) {

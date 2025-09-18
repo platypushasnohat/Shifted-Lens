@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.config.SLConfig;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.*;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
@@ -44,12 +44,10 @@ public class ServerEvents {
             }
 
             if (mob instanceof Guardian guardian) {
-                guardian.goalSelector.addGoal(2, new SLGuardianAttackGoal(guardian));
-                guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 20, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 7.0D));
+                guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 20, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 9.0D));
             }
-            if (mob instanceof ElderGuardian guardian) {
-                guardian.goalSelector.addGoal(2, new SLGuardianAttackGoal(guardian));
-                guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 20, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 7.0D));
+            if (mob instanceof ElderGuardian elderGuardian) {
+                elderGuardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(elderGuardian, LivingEntity.class, 20, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(elderGuardian) > 9.0D));
             }
         }
     }
@@ -60,7 +58,7 @@ public class ServerEvents {
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
 
-        if (stack.getItem() == Items.WATER_BUCKET && entity.isAlive() && entity instanceof Squid squid && SLConfig.BUCKETABLE_SQUIDS.get()) {
+        if (stack.getItem() == Items.WATER_BUCKET && entity.isAlive() && entity instanceof Squid squid && ShiftedLensConfig.BUCKETABLE_SQUIDS.get()) {
             squid.playSound(SoundEvents.BUCKET_FILL_FISH, 1.0F, 1.0F);
             ItemStack bucket;
             if (squid.getType() == EntityType.SQUID) {

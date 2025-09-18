@@ -1,6 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
-import com.platypushasnohat.shifted_lens.mixin_utils.GhastAnimationStateAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.*;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = Ghast.class, priority = 1001)
-public abstract class GhastMixin extends FlyingMob implements Enemy, GhastAnimationStateAccess {
+public abstract class GhastMixin extends FlyingMob implements Enemy, AnimationStateAccess {
 
     @Shadow public abstract boolean isCharging();
 

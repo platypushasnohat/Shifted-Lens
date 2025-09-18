@@ -3,7 +3,7 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLGhastAnimations;
-import com.platypushasnohat.shifted_lens.mixin_utils.GhastAnimationStateAccess;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -94,8 +94,8 @@ public class SLGhastModel extends HierarchicalModel<Ghast> {
 	@Override
 	public void setupAnim(Ghast entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState idleAnimationState = ((GhastAnimationStateAccess) entity).getIdleAnimationState();
-		AnimationState shootAnimationState = ((GhastAnimationStateAccess) entity).getShootAnimationState();
+		AnimationState idleAnimationState = ((AnimationStateAccess) entity).getIdleAnimationState();
+		AnimationState shootAnimationState = ((AnimationStateAccess) entity).getShootAnimationState();
 
 		this.animate(idleAnimationState, SLGhastAnimations.IDLE, ageInTicks, 1.75F);
 		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks);

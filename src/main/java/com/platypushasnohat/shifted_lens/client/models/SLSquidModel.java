@@ -3,10 +3,12 @@ package com.platypushasnohat.shifted_lens.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLSquidAnimations;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -79,7 +81,13 @@ public class SLSquidModel extends HierarchicalModel<Squid> {
 	@Override
 	public void setupAnim(Squid entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		this.animateWalk(SLSquidAnimations.PUSH, limbSwing, limbSwingAmount, 2, 4);
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
+		this.animate(swimmingAnimationState, SLSquidAnimations.PUSH, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
+
+		float partialTicks = ageInTicks - entity.tickCount;
+		if (entity.isInWaterOrBubble()) {
+			this.root.yRot = (entity.tickCount + partialTicks) * 0.02F % ((float) Math.PI * 2F);
+		}
 	}
 
 	@Override

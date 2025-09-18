@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -46,6 +47,7 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
 
     public final AnimationState flopAnimationState = new AnimationState();
     public final AnimationState glidingAnimationState = new AnimationState();
+    public final AnimationState swimmingAnimationState = new AnimationState();
 
     public int glideCooldown = random.nextInt(50 * 8 * 4) + 180;
 
@@ -176,6 +178,14 @@ public class FlyingFish extends WaterAnimal implements FlyingAnimal, Bucketable 
     private void setupAnimationStates() {
         this.flopAnimationState.animateWhen(!this.isGliding() && !this.isInWaterOrBubble(), this.tickCount);
         this.glidingAnimationState.animateWhen(this.isGliding() && !this.isInWaterOrBubble(), this.tickCount);
+        this.swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+    }
+
+    @Override
+    public void calculateEntityAnimation(boolean flying) {
+        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+        float f2 = Math.min(f1 * 10.0F, 1.0F);
+        this.walkAnimation.update(f2, 0.4F);
     }
 
     public void aiStep() {

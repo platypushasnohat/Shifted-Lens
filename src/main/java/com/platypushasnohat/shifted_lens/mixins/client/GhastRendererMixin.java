@@ -2,9 +2,9 @@ package com.platypushasnohat.shifted_lens.mixins.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
 import com.platypushasnohat.shifted_lens.client.renderer.layers.SLGhastGlowLayer;
-import com.platypushasnohat.shifted_lens.config.SLClientConfig;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(GhastRenderer.class)
+@Mixin(value = GhastRenderer.class, priority = 1001)
 public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel> {
 
     @Shadow
@@ -58,7 +58,7 @@ public abstract class GhastRendererMixin extends MobRenderer<Ghast, SLGhastModel
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/monster/Ghast;)Lnet/minecraft/resources/ResourceLocation;", at = @At("RETURN"), cancellable = true)
     private void getTextureLocation(Ghast ghast, CallbackInfoReturnable<ResourceLocation> cir) {
-        cir.setReturnValue(SLClientConfig.RETRO_GHAST.get() ? RETRO_GHAST_TEXTURE : GHAST_TEXTURE);
+        cir.setReturnValue(ShiftedLensConfig.RETRO_GHAST.get() ? RETRO_GHAST_TEXTURE : GHAST_TEXTURE);
     }
 
     @Inject(method = "scale(Lnet/minecraft/world/entity/monster/Ghast;Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)

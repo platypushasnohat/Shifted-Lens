@@ -85,12 +85,9 @@ public class FlyingFishModel extends HierarchicalModel<FlyingFish> {
 	public void setupAnim(FlyingFish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 
-		if (entity.isInWaterOrBubble()) {
-			this.animateWalk(FlyingFishAnimations.SWIM, limbSwing, limbSwingAmount, 2, 4);
-		} else {
-			this.animate(entity.flopAnimationState, FlyingFishAnimations.FLOP, ageInTicks);
-			this.animate(entity.glidingAnimationState, FlyingFishAnimations.SKIM, ageInTicks);
-		}
+		this.animate(entity.flopAnimationState, FlyingFishAnimations.FLOP, ageInTicks);
+		this.animate(entity.glidingAnimationState, FlyingFishAnimations.SKIM, ageInTicks);
+		this.animate(entity.swimmingAnimationState, FlyingFishAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
 
 		float prevOnLandProgress = entity.prevOnLandProgress;
 		float onLandProgress = entity.onLandProgress;

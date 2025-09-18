@@ -1,9 +1,11 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
-import com.platypushasnohat.shifted_lens.config.SLConfig;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SquidPanicGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.utils.SquidLookControl;
+import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
+import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -43,9 +45,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-@Mixin(Squid.class)
-@SuppressWarnings("FieldCanBeLocal, unused")
-public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
+@Mixin(value = Squid.class, priority = 1001)
+public abstract class SquidMixin extends WaterAnimal implements VariantAccess, AnimationStateAccess {
 
     @Shadow
     protected abstract SoundEvent getSquirtSound();
@@ -55,6 +56,13 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
 
     @Unique
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.INT);
+
+    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
+
+    @Override
+    public AnimationState getSwimmingAnimationState() {
+        return swimmingAnimationState;
+    }
 
     protected SquidMixin(EntityType<? extends WaterAnimal> entityType, Level level) {
         super(entityType, level);
@@ -114,11 +122,28 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
                 this.hasImpulse = true;
             }
         }
+
+        if (!isInWaterOrBubble() && this.isAlive()) {
+            if (this.onGround() && random.nextFloat() < 0.2F) {
+                this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
+                this.setYRot(this.random.nextFloat() * 360.0F);
+                this.playSound(SLSoundEvents.FISH_FLOP.get(), this.getSoundVolume(), this.getVoicePitch() * 0.8F);
+            }
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
+
+        if (this.level().isClientSide()) {
+            this.setupAnimationStates();
+        }
+    }
+
+    @Unique
+    private void setupAnimationStates() {
+        this.swimmingAnimationState.animateWhen(this.isAlive(), this.tickCount);
     }
 
     @Override
@@ -132,7 +157,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
-        if (itemstack.is(Items.BUCKET) && SLConfig.MILKABLE_SQUIDS.get()) {
+        if (itemstack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
             player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
             ItemStack result = ItemUtils.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
             player.setItemInHand(hand, result);
