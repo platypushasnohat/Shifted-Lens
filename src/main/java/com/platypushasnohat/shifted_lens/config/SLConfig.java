@@ -20,7 +20,7 @@ public class SLConfig {
         builder.pop();
 
         builder.push("tweaks");
-        BETTER_FISH_FLOPPING = builder.comment("Whether or not fish flopping is more realistic").define("better-fish-flopping", true);
+        BETTER_FISH_FLOPPING = builder.comment("Whether or not fish flopping is a bit more realistic").define("better-fish-flopping", true);
         MILKABLE_SQUIDS = builder.comment("Whether or squids can be milked with buckets").define("milkable-squids", true);
         builder.pop();
 

@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 public class SquidLookControl extends SmoothSwimmingLookControl {
 
     public SquidLookControl(Mob mob) {
-        super(mob, 4);
+        super(mob, 10);
     }
 
     @Override

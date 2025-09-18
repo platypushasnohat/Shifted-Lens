@@ -38,6 +38,15 @@
     ],
     "subtitle": "subtitles.shifted_lens.fish_hurt"
   },
+  "squill_chatter": {
+    "sounds": [
+      {
+        "name": "shifted_lens:entity/squill/chatter1",
+        "volume": 0.9
+      }
+    ],
+    "subtitle": "subtitles.shifted_lens.squill_chatter"
+  },
   "squill_death": {
     "sounds": [
       {

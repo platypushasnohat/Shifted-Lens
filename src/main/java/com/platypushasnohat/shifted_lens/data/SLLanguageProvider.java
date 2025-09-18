@@ -51,6 +51,7 @@ public class SLLanguageProvider extends LanguageProvider {
         this.sound(SLSoundEvents.SQUILL_DEATH, "Squill dies");
         this.sound(SLSoundEvents.SQUILL_HURT, "Squill hurts");
         this.sound(SLSoundEvents.SQUILL_SQUIRT, "Squill squirts");
+        this.sound(SLSoundEvents.SQUILL_CHATTER, "Squill chatters");
 
         this.potion(SLPotions.LEVITATION_POTION, "Levitation", "levitation");
 

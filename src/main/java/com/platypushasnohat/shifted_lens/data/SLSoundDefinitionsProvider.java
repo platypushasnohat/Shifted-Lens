@@ -59,10 +59,9 @@ public class SLSoundDefinitionsProvider extends SoundDefinitionsProvider {
                 sound("entity/squid/squirt3").pitch(1.5F)
         );
 
-//        this.sound(SLSoundEvents.SQUILL_IDLE,
-//                sound(ShiftedLens.modPrefix("entity/squill/idle1")).volume(0.9F),
-//                sound(ShiftedLens.modPrefix("entity/squill/idle2")).volume(0.9F)
-//        );
+        this.sound(SLSoundEvents.SQUILL_CHATTER,
+                sound(ShiftedLens.modPrefix("entity/squill/chatter1")).volume(0.9F)
+        );
     }
 
     private void soundDefinition(Supplier<SoundEvent> soundEvent, String subtitle, SoundDefinition.Sound... sounds) {

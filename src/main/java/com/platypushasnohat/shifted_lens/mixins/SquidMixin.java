@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.config.SLConfig;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SquidPanicGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.utils.SquidLookControl;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
@@ -61,14 +62,14 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends WaterAnimal> entityType, Level level, CallbackInfo callbackInfo) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 45, 5, 0.02F, 0.1F, false);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 45, 10, 0.02F, 0.1F, false);
         this.lookControl = new SquidLookControl(this);
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 2.0D));
+        this.goalSelector.addGoal(1, new SquidPanicGoal(this, 2.0D));
         this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1, 40));
     }
 
@@ -144,16 +145,16 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess {
     private void spawnInk(CallbackInfo ci) {
         ci.cancel();
         this.playSound(this.getSquirtSound(), this.getSoundVolume(), this.getVoicePitch());
-        Vec3 vec3 = getDeltaMovement();
-
-        for (int i = 0; i < 30; ++i) {
-            Vec3 vec31 = this.getDeltaMovement();
-            Vec3 vec32 = vec31.scale(0.3D + (double) (this.random.nextFloat() * 2.0F));
-            ((ServerLevel) this.level()).sendParticles(this.getInkParticle(), vec3.x, vec3.y + 0.5D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+        if (!this.level().isClientSide) {
+            Vec3 inkDirection = new Vec3(0, 0, -1.2F).xRot(-this.getXRot() * Mth.DEG_TO_RAD).yRot(-this.yBodyRot * Mth.DEG_TO_RAD);
+            Vec3 vec3 = this.position().add(inkDirection);
+            for (int i = 0; i < 30; ++i) {
+                Vec3 vec32 = inkDirection.add(random.nextFloat() - 0.5F, random.nextFloat() - 0.5F, random.nextFloat() - 0.5F).scale(0.8D + (double) (this.random.nextFloat() * 2.0F));
+                ((ServerLevel) this.level()).sendParticles(this.getInkParticle(), vec3.x, vec3.y + 0.5D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+            }
         }
-
-        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.0F))) {
-            if (!(entity instanceof Squid)) {
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.5F))) {
+            if (!(entity instanceof Squid) && !(entity instanceof Player player && player.getAbilities().instabuild)) {
                 if (((Squid) (Object) this) instanceof GlowSquid) {
                     entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
                 } else {
