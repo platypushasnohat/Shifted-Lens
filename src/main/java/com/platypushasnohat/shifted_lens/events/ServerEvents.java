@@ -1,6 +1,7 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
+import com.platypushasnohat.shifted_lens.config.SLConfig;
 import com.platypushasnohat.shifted_lens.entities.*;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
@@ -59,7 +60,7 @@ public class ServerEvents {
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
 
-        if (stack.getItem() == Items.WATER_BUCKET && entity.isAlive() && entity instanceof Squid squid) {
+        if (stack.getItem() == Items.WATER_BUCKET && entity.isAlive() && entity instanceof Squid squid && SLConfig.BUCKETABLE_SQUIDS.get()) {
             squid.playSound(SoundEvents.BUCKET_FILL_FISH, 1.0F, 1.0F);
             ItemStack bucket;
             if (squid.getType() == EntityType.SQUID) {
@@ -85,5 +86,32 @@ public class ServerEvents {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
         }
+
+//        if (stack.getItem() == Items.BUCKET && entity.isAlive() && entity instanceof Squid squid && SLConfig.MILKABLE_SQUIDS.get()) {
+//            squid.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+//            ItemStack bucket;
+//            if (squid.getType() == EntityType.SQUID) {
+//                bucket = new ItemStack(SLItems.SQUID_BUCKET.get());
+//            } else {
+//                return;
+//            }
+//
+//            Bucketable.saveDefaultDataToBucketTag(squid, bucket);
+//            CompoundTag compoundnbt = bucket.getOrCreateTag();
+//            compoundnbt.putInt("Variant", ((VariantAccess) squid).getVariant());
+//            if (squid.hasCustomName()) {
+//                bucket.setHoverName(squid.getCustomName());
+//            }
+//
+//            ItemStack itemstack2 = ItemUtils.createFilledResult(stack, player, bucket, false);
+//            player.setItemInHand(event.getHand(), itemstack2);
+//            if (!event.getLevel().isClientSide()) {
+//                CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, bucket);
+//            }
+//
+//            entity.discard();
+//            event.setCanceled(true);
+//            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
+//        }
     }
 }

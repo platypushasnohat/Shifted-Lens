@@ -71,13 +71,13 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends Guardian> entityType, Level level, CallbackInfo callbackInfo) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, false);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
     @Inject(method = "registerGoals()V", at = @At("TAIL"))
     private void registerGoals(CallbackInfo ci) {
-        this.randomStrollGoal = new RandomSwimmingGoal(this, 1.0D, 80);
+        this.randomStrollGoal = new RandomSwimmingGoal(this, 1.0D, 40);
     }
 
     @Override
@@ -120,29 +120,30 @@ public abstract class GuardianMixin extends Monster implements GuardianAnimation
         } else {
             --this.idleAnimationTimeout;
         }
-        this.eyeAnimationState.animateWhen(this.isAlive() && this.getTarget() == null && !this.hasActiveAttackTarget(), this.tickCount);
+        this.eyeAnimationState.animateWhen(this.getTarget() == null && !this.hasActiveAttackTarget(), this.tickCount);
+        this.beamAnimationState.animateWhen(this.hasActiveAttackTarget(), this.tickCount);
     }
 
-    @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("TAIL"))
-    public void onSyncedDataUpdated(EntityDataAccessor<?> accessor, CallbackInfo ci) {
-        if (this.getPose() == SLPoses.BEAM_START.get()) {
-            this.beamStartAnimationState.start(this.tickCount);
-        }
-        else if (this.getPose() == SLPoses.BEAM.get()) {
-            this.beamStartAnimationState.stop();
-            this.beamAnimationState.start(this.tickCount);
-        }
-        else if (this.getPose() == SLPoses.BEAM_END.get()) {
-            this.beamAnimationState.stop();
-            this.beamStartAnimationState.stop();
-            this.beamEndAnimationState.start(this.tickCount);
-        }
-        else if (this.getPose() == Pose.SWIMMING) {
-            this.beamStartAnimationState.stop();
-            this.beamAnimationState.stop();
-            this.beamEndAnimationState.stop();
-        }
-    }
+//    @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("TAIL"))
+//    public void onSyncedDataUpdated(EntityDataAccessor<?> accessor, CallbackInfo ci) {
+//        if (this.getPose() == SLPoses.BEAM_START.get()) {
+//            this.beamStartAnimationState.start(this.tickCount);
+//        }
+//        else if (this.getPose() == SLPoses.BEAM.get()) {
+//            this.beamStartAnimationState.stop();
+//            this.beamAnimationState.start(this.tickCount);
+//        }
+//        else if (this.getPose() == SLPoses.BEAM_END.get()) {
+//            this.beamAnimationState.stop();
+//            this.beamStartAnimationState.stop();
+//            this.beamEndAnimationState.start(this.tickCount);
+//        }
+//        else if (this.getPose() == Pose.SWIMMING) {
+//            this.beamStartAnimationState.stop();
+//            this.beamAnimationState.stop();
+//            this.beamEndAnimationState.stop();
+//        }
+//    }
 
     @Mixin(targets = "net.minecraft.world.entity.monster.Guardian$GuardianAttackGoal")
     public abstract static class GuardianAttackGoal extends Goal {
