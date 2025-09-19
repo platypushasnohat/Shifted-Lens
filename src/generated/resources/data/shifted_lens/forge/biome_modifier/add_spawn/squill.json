@@ -5,6 +5,6 @@
     "type": "shifted_lens:squill",
     "maxCount": 48,
     "minCount": 48,
-    "weight": 2
+    "weight": 1
   }
 }

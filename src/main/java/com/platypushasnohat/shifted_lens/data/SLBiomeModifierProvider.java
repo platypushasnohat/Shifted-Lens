@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = ShiftedLens.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class SLBiomeModifiers {
+public class SLBiomeModifierProvider {
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
         // add spawns
         addSpawn(context, "baitfish", SLBiomeTags.HAS_BAITFISH, new MobSpawnSettings.SpawnerData(SLEntities.BAITFISH.get(), 1, 1, 1));
         addSpawn(context, "camel", SLBiomeTags.HAS_CAMELS, new MobSpawnSettings.SpawnerData(EntityType.CAMEL, 1, 1, 2));
         addSpawn(context, "flying_fish", SLBiomeTags.HAS_FLYING_FISH, new MobSpawnSettings.SpawnerData(SLEntities.FLYING_FISH.get(), 3, 2, 2));
-        addSpawn(context, "squill", SLBiomeTags.HAS_SQUILL, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 2, 48, 48));
+        addSpawn(context, "squill", SLBiomeTags.HAS_SQUILL, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 1, 48, 48));
 
         // remove spawns
         removeSpawn(context, "squid", BiomeTags.IS_RIVER, EntityType.SQUID);

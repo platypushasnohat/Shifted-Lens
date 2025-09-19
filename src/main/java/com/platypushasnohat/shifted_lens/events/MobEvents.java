@@ -11,6 +11,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -19,10 +20,14 @@ public class MobEvents {
 
     @SubscribeEvent
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-        event.register(SLEntities.BAITFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Baitfish::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
-        event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CamelExtension::checkCamelSpawnRules, SpawnPlacementRegisterEvent.Operation.AND);
-        event.register(SLEntities.FLYING_FISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingFish::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
-        event.register(SLEntities.SQUILL.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Squill::canSpawn, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(SLEntities.BAITFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Baitfish::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(SLEntities.FLYING_FISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingFish::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(SLEntities.SQUILL.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING, Squill::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void registerVanillaSpawnPlacements(SpawnPlacementRegisterEvent event) {
+        event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE_WG, CamelExtension::checkCamelSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
     @SubscribeEvent

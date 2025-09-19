@@ -70,7 +70,7 @@ public class ShiftedLens {
 
         boolean server = data.includeServer();
 
-        SLDatapackBuiltinEntriesProvider datapackEntries = new SLDatapackBuiltinEntriesProvider(output, provider);
+        SLDatapackProvider datapackEntries = new SLDatapackProvider(output, provider);
         generator.addProvider(server, datapackEntries);
         provider = datapackEntries.getRegistryProvider();
 
@@ -85,7 +85,7 @@ public class ShiftedLens {
 
         boolean client = data.includeClient();
         generator.addProvider(client, new SLItemModelProvider(data));
-        generator.addProvider(client, new SLSoundDefinitionsProvider(output, helper));
+        generator.addProvider(client, new SLSoundDefinitionProvider(output, helper));
         generator.addProvider(client, new SLLanguageProvider(data));
     }
 

@@ -11,9 +11,9 @@ import net.minecraftforge.common.data.SoundDefinitionsProvider;
 import java.util.function.Supplier;
 
 @SuppressWarnings("SameParameterValue")
-public class SLSoundDefinitionsProvider extends SoundDefinitionsProvider {
+public class SLSoundDefinitionProvider extends SoundDefinitionsProvider {
 
-    public SLSoundDefinitionsProvider(PackOutput packOutput, ExistingFileHelper helper) {
+    public SLSoundDefinitionProvider(PackOutput packOutput, ExistingFileHelper helper) {
         super(packOutput, ShiftedLens.MOD_ID, helper);
     }
 

@@ -10,12 +10,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class SLDatapackBuiltinEntriesProvider extends DatapackBuiltinEntriesProvider {
+public class SLDatapackProvider extends DatapackBuiltinEntriesProvider {
 
     public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
-            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, SLBiomeModifiers::bootstrap);
+            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, SLBiomeModifierProvider::bootstrap);
 
-    public SLDatapackBuiltinEntriesProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+    public SLDatapackProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries,BUILDER, Set.of(ShiftedLens.MOD_ID));
     }
 }
