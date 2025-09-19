@@ -29,7 +29,7 @@ public class SLGuardianRenderer extends MobRenderer<Guardian, SLGuardianModel> {
         super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
         LivingEntity target = entity.getActiveAttackTarget();
         if (target != null) {
-            GuardianBeamRenderer.render(entity, target, poseStack, bufferSource, partialTicks);
+            GuardianBeamRenderer.render(entity, target, partialTicks, poseStack, bufferSource);
         }
     }
 

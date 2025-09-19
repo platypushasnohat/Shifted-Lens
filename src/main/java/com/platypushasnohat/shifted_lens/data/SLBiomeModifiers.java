@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
@@ -15,9 +16,7 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.common.world.ForgeBiomeModifiers.AddFeaturesBiomeModifier;
-import net.minecraftforge.common.world.ForgeBiomeModifiers.AddSpawnsBiomeModifier;
-import net.minecraftforge.common.world.ForgeBiomeModifiers.RemoveFeaturesBiomeModifier;
+import net.minecraftforge.common.world.ForgeBiomeModifiers.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -31,14 +30,22 @@ import java.util.stream.Stream;
 public class SLBiomeModifiers {
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
+        // add spawns
         addSpawn(context, "baitfish", SLBiomeTags.HAS_BAITFISH, new MobSpawnSettings.SpawnerData(SLEntities.BAITFISH.get(), 1, 1, 1));
         addSpawn(context, "camel", SLBiomeTags.HAS_CAMELS, new MobSpawnSettings.SpawnerData(EntityType.CAMEL, 1, 1, 2));
         addSpawn(context, "flying_fish", SLBiomeTags.HAS_FLYING_FISH, new MobSpawnSettings.SpawnerData(SLEntities.FLYING_FISH.get(), 3, 2, 2));
         addSpawn(context, "squill", SLBiomeTags.HAS_SQUILL, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 2, 48, 48));
+
+        // remove spawns
+        removeSpawn(context, "squid", BiomeTags.IS_RIVER, EntityType.SQUID);
     }
 
     private static void addSpawn(BootstapContext<BiomeModifier> context, String name, TagKey<Biome> biomes, MobSpawnSettings.SpawnerData... spawns) {
         register(context, "add_spawn/" + name, () -> new AddSpawnsBiomeModifier(context.lookup(Registries.BIOME).getOrThrow(biomes), List.of(spawns)));
+    }
+
+    private static void removeSpawn(BootstapContext<BiomeModifier> context, String name, TagKey<Biome> biomes, EntityType<?>... types) {
+        register(context, "remove_spawn/" + name, () -> new RemoveSpawnsBiomeModifier(context.lookup(Registries.BIOME).getOrThrow(biomes), HolderSet.direct(Stream.of(types).map(type -> ForgeRegistries.ENTITY_TYPES.getHolder(type).get()).collect(Collectors.toList()))));
     }
 
     @SafeVarargs
