@@ -11,6 +11,7 @@ public class ShiftedLensConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> SQUILL_SPAWN_HEIGHT;
     public static ForgeConfigSpec.ConfigValue<Boolean> MILKABLE_SQUIDS;
     public static ForgeConfigSpec.ConfigValue<Boolean> BUCKETABLE_SQUIDS;
+    public static ForgeConfigSpec.ConfigValue<Boolean> BLINDING_SQUIDS;
 
     // client
     public static ForgeConfigSpec.ConfigValue<Boolean> RETRO_GHAST;
@@ -31,13 +32,17 @@ public class ShiftedLensConfig {
                 .comment("If squids can be bucketed with water buckets")
                 .define("bucketableSquids", true);
 
+        BLINDING_SQUIDS = COMMON_BUILDER
+                .comment("If squid ink applies blindness or glowing")
+                .define("blindingSquids", true);
+
         COMMON_CONFIG = COMMON_BUILDER.build();
 
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
         RETRO_GHAST = CLIENT_BUILDER
                 .comment("If Ghasts have a more vanilla faithful texture")
-                .define("retroGhasts", true);
+                .define("retroGhasts", false);
 
         STAINLESS_GUARDIANS = CLIENT_BUILDER
                 .comment("If Guardians have a cleaner looking texture")

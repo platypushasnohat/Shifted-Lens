@@ -14,11 +14,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -29,9 +26,6 @@ import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -153,19 +147,6 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
         this.walkAnimation.update(f2, 0.4F);
     }
 
-//    @Override
-//    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-//        ItemStack itemstack = player.getItemInHand(hand);
-//        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
-//        if (itemstack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
-//            player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
-//            ItemStack result = ItemUtils.createFilledResult(itemstack, player, Items.MILK_BUCKET.getDefaultInstance());
-//            player.setItemInHand(hand, result);
-//            return InteractionResult.sidedSuccess(this.level().isClientSide);
-//        }
-//        else return InteractionResult.FAIL;
-//    }
-
     @Inject(at = @At("HEAD"), method = "spawnInk", cancellable = true)
     private void spawnInk(CallbackInfo ci) {
         ci.cancel();
@@ -178,12 +159,14 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
                 ((ServerLevel) this.level()).sendParticles(this.getInkParticle(), vec3.x, vec3.y + 0.5D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
             }
         }
-        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.5F))) {
-            if (!(entity instanceof Squid) && !(entity instanceof Player player && player.getAbilities().instabuild)) {
-                if (((Squid) (Object) this) instanceof GlowSquid) {
-                    entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
-                } else {
-                    entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60));
+        if (ShiftedLensConfig.BLINDING_SQUIDS.get()) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.5F))) {
+                if (!(entity instanceof Squid) && !(entity instanceof Player player && player.getAbilities().instabuild)) {
+                    if (((Squid) (Object) this) instanceof GlowSquid) {
+                        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
+                    } else {
+                        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60));
+                    }
                 }
             }
         }

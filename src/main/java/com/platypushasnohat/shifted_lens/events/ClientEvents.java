@@ -12,6 +12,7 @@ import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import com.platypushasnohat.shifted_lens.registry.SLParticles;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -33,8 +34,19 @@ public final class ClientEvents {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(SLEntities.BAITFISH.get(), BaitfishRenderer::new);
         event.registerEntityRenderer(SLEntities.FLYING_FISH.get(), FlyingFishRenderer::new);
+        event.registerEntityRenderer(EntityType.SQUID, SLSquidRenderer::new);
         event.registerEntityRenderer(SLEntities.SQUILL.get(), SquillRenderer::new);
         event.registerEntityRenderer(SLEntities.TOOTHED_SNOWBALL.get(), ThrownItemRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerVanillaEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(EntityType.ELDER_GUARDIAN, SLElderGuardianRenderer::new);
+        event.registerEntityRenderer(EntityType.GHAST, SLGhastRenderer::new);
+        event.registerEntityRenderer(EntityType.GLOW_SQUID, SLGlowSquidRenderer::new);
+        event.registerEntityRenderer(EntityType.GUARDIAN, SLGuardianRenderer::new);
+        event.registerEntityRenderer(EntityType.SALMON, SLSalmonRenderer::new);
+        event.registerEntityRenderer(EntityType.SQUID, SLSquidRenderer::new);
     }
 
     @SubscribeEvent
@@ -46,9 +58,10 @@ public final class ClientEvents {
     public static void registerEntityLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(SLModelLayers.BAITFISH, BaitfishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.COD, SLCodModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.ELDER_GUARDIAN, SLElderGuardianModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.FLYING_FISH, FlyingFishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
-        event.registerLayerDefinition(SLModelLayers.FLYING_FISH, FlyingFishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SQUID, SLSquidModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);

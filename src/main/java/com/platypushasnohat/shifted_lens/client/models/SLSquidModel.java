@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
-public class SLSquidModel extends HierarchicalModel<Squid> {
+public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 
 	private final ModelPart root;
 	private final ModelPart body;
@@ -79,7 +79,7 @@ public class SLSquidModel extends HierarchicalModel<Squid> {
 	}
 
 	@Override
-	public void setupAnim(Squid entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
 		this.animate(swimmingAnimationState, SLSquidAnimations.PUSH, ageInTicks, 0.5F + limbSwingAmount * 1.5F);

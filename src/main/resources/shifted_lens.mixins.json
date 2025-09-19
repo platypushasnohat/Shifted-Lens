@@ -21,15 +21,9 @@
     "TropicalFishMixin"
   ],
   "client": [
-    "client.CodRendererMixin",
-    "client.ElderGuardianRendererMixin",
-    "client.GhastRendererMixin",
-    "client.GuardianRendererMixin",
     "client.PufferfishBigModelMixin",
     "client.PufferfishMidModelMixin",
     "client.PufferfishSmallModelMixin",
-    "client.SalmonRendererMixin",
-    "client.SquidRendererMixin",
     "client.TadpoleModelMixin",
     "client.TropicalFishModelAMixin",
     "client.TropicalFishModelBMixin",

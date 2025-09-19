@@ -3,8 +3,8 @@
   "biomes": "#shifted_lens:has_mob/squill",
   "spawners": {
     "type": "shifted_lens:squill",
-    "maxCount": 64,
-    "minCount": 32,
+    "maxCount": 48,
+    "minCount": 48,
     "weight": 2
   }
 }

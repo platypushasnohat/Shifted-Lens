@@ -181,6 +181,7 @@ public class SLGuardianModel extends HierarchicalModel<Guardian> {
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		poseStack.translate(0.0F, 0.05F, -0.025F);
 		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
