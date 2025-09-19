@@ -41,6 +41,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void registerVanillaEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(EntityType.COD, SLCodRenderer::new);
         event.registerEntityRenderer(EntityType.ELDER_GUARDIAN, SLElderGuardianRenderer::new);
         event.registerEntityRenderer(EntityType.GHAST, SLGhastRenderer::new);
         event.registerEntityRenderer(EntityType.GLOW_SQUID, SLGlowSquidRenderer::new);

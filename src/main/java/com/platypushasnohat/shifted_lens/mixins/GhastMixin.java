@@ -9,7 +9,10 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -44,11 +47,10 @@ public abstract class GhastMixin extends FlyingMob implements Enemy, AnimationSt
     @Override
     public void travel(Vec3 vec3) {
         if (this.isControlledByLocalInstance()) {
-            if (this.isInWater()) {
+            if (this.isInWaterOrBubble()) {
                 this.moveRelative(0.02F, vec3);
                 this.move(MoverType.SELF, this.getDeltaMovement());
-                this.setDeltaMovement(this.getDeltaMovement().scale(0.6F));
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.05D, 0.0D));
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.8F));
             } else if (this.isInLava()) {
                 this.moveRelative(0.02F, vec3);
                 this.move(MoverType.SELF, this.getDeltaMovement());
@@ -67,7 +69,6 @@ public abstract class GhastMixin extends FlyingMob implements Enemy, AnimationSt
                 if (this.onGround()) {
                     f = this.level().getBlockState(ground).getFriction(this.level(), ground, this) * 0.91F;
                 }
-
                 this.moveRelative(this.onGround() ? 0.1F * f1 : 0.02F, vec3);
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().scale(f));
