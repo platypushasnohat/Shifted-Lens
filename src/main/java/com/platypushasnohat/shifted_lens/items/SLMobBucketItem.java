@@ -37,8 +37,8 @@ public class SLMobBucketItem extends MobBucketItem {
         ChatFormatting[] chatFormatting = new ChatFormatting[]{ChatFormatting.ITALIC, ChatFormatting.GRAY};
         if (getFishType() == EntityType.SQUID) {
             CompoundTag compoundtag = stack.getTag();
-            if (compoundtag != null && compoundtag.contains("Variant", 3)) {
-                int i = compoundtag.getInt("Variant");
+            if (compoundtag != null && compoundtag.contains("BucketVariantTag", 3)) {
+                int i = compoundtag.getInt("BucketVariantTag");
 
                 String variant = "shifted_lens.squid.variant" + i;
 

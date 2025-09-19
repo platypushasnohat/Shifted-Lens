@@ -5,6 +5,7 @@ import com.platypushasnohat.shifted_lens.entities.ai.goals.SquidPanicGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.utils.SquidLookControl;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
+import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.core.particles.ParticleOptions;
@@ -14,8 +15,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -27,6 +31,7 @@ import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -42,6 +47,9 @@ import javax.annotation.Nullable;
 
 @Mixin(value = Squid.class, priority = 1001)
 public abstract class SquidMixin extends WaterAnimal implements VariantAccess, AnimationStateAccess, Bucketable {
+
+    @Unique
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.BOOLEAN);
 
     @Shadow
     protected abstract SoundEvent getSquirtSound();
@@ -174,21 +182,64 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
     }
 
     @Override
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
+    }
+
+    @Override
+    public void setFromBucket(boolean fromBucket) {
+        this.entityData.set(FROM_BUCKET, fromBucket);
+    }
+
+    @Override
+    public void saveToBucketTag(ItemStack bucket) {
+        Bucketable.saveDefaultDataToBucketTag(this, bucket);
+        CompoundTag compoundTag = bucket.getOrCreateTag();
+        compoundTag.putInt("BucketVariantTag", this.getVariant());
+    }
+
+    @Override
+    public void loadFromBucketTag(CompoundTag compoundTag) {
+        Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
+        if (compoundTag.contains("BucketVariantTag", 3)) {
+            this.setVariant(compoundTag.getInt("BucketVariantTag"));
+        }
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return this.getType() == EntityType.GLOW_SQUID ? ItemStack.EMPTY : new ItemStack(SLItems.SQUID_BUCKET.get());
+    }
+
+    @Override
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(VARIANT, 0);
+        this.entityData.define(FROM_BUCKET, false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("Variant", this.getVariant());
+        compoundTag.putBoolean("FromBucket", this.fromBucket());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.setVariant(compoundTag.getInt("Variant"));
+        this.setFromBucket(compoundTag.getBoolean("FromBucket"));
     }
 
     @Override

@@ -58,41 +58,40 @@ public class ServerEvents {
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
 
-        if (entity instanceof Squid squid && squid.isAlive()) {
-            if (stack.getItem() == Items.WATER_BUCKET && ShiftedLensConfig.BUCKETABLE_SQUIDS.get()) {
-                squid.playSound(SoundEvents.BUCKET_FILL_FISH, 1.0F, 1.0F);
-                ItemStack bucket;
-                if (squid.getType() == EntityType.SQUID) {
-                    bucket = new ItemStack(SLItems.SQUID_BUCKET.get());
-                } else {
-                    return;
-                }
+//        if (entity instanceof Squid squid && squid.isAlive()) {
+//            if (stack.getItem() == Items.WATER_BUCKET && ShiftedLensConfig.BUCKETABLE_SQUIDS.get()) {
+//                squid.playSound(SoundEvents.BUCKET_FILL_FISH, 1.0F, 1.0F);
+//                ItemStack bucket;
+//                if (squid.getType() == EntityType.SQUID) {
+//                    bucket = new ItemStack(SLItems.SQUID_BUCKET.get());
+//                } else {
+//                    return;
+//                }
+//
+//                Bucketable.saveDefaultDataToBucketTag(squid, bucket);
+//                CompoundTag compoundnbt = bucket.getOrCreateTag();
+//                compoundnbt.putInt("Variant", ((VariantAccess) squid).getVariant());
+//                if (squid.hasCustomName()) {
+//                    bucket.setHoverName(squid.getCustomName());
+//                }
+//
+//                ItemStack result = ItemUtils.createFilledResult(stack, player, bucket, false);
+//                player.setItemInHand(event.getHand(), result);
+//                if (!event.getLevel().isClientSide()) {
+//                    CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, bucket);
+//                }
+//
+//                entity.discard();
+//                event.setCanceled(true);
+//                event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
+//            }
 
-                Bucketable.saveDefaultDataToBucketTag(squid, bucket);
-                CompoundTag compoundnbt = bucket.getOrCreateTag();
-                compoundnbt.putInt("Variant", ((VariantAccess) squid).getVariant());
-                if (squid.hasCustomName()) {
-                    bucket.setHoverName(squid.getCustomName());
-                }
-
-                ItemStack result = ItemUtils.createFilledResult(stack, player, bucket, false);
-                player.setItemInHand(event.getHand(), result);
-                if (!event.getLevel().isClientSide()) {
-                    CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, bucket);
-                }
-
-                entity.discard();
-                event.setCanceled(true);
-                event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
-            }
-
-            if (stack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
-                player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
-                ItemStack result = ItemUtils.createFilledResult(stack, player, Items.MILK_BUCKET.getDefaultInstance());
-                player.setItemInHand(event.getHand(), result);
-                event.setCanceled(true);
-                event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
-            }
+        if (stack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
+            player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+            ItemStack result = ItemUtils.createFilledResult(stack, player, Items.MILK_BUCKET.getDefaultInstance());
+            player.setItemInHand(event.getHand(), result);
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
         }
     }
 }
