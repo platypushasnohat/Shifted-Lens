@@ -28,8 +28,8 @@ public abstract class MobBucketItemMixin {
         ChatFormatting[] chatFormatting = new ChatFormatting[]{ChatFormatting.ITALIC, ChatFormatting.GRAY};
         if (getFishType() == EntityType.COD) {
             CompoundTag compoundtag = stack.getTag();
-            if (compoundtag != null && compoundtag.contains("Variant", 3)) {
-                int i = compoundtag.getInt("Variant");
+            if (compoundtag != null && compoundtag.contains("BucketVariantTag", 3)) {
+                int i = compoundtag.getInt("BucketVariantTag");
 
                 String variant = "shifted_lens.cod.variant" + i;
 
@@ -40,8 +40,8 @@ public abstract class MobBucketItemMixin {
         }
         if (getFishType() == EntityType.SALMON) {
             CompoundTag compoundtag = stack.getTag();
-            if (compoundtag != null && compoundtag.contains("Variant", 3)) {
-                int i = compoundtag.getInt("Variant");
+            if (compoundtag != null && compoundtag.contains("BucketVariantTag", 3)) {
+                int i = compoundtag.getInt("BucketVariantTag");
 
                 String variant = "shifted_lens.salmon.variant" + i;
 

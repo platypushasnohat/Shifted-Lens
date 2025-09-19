@@ -125,12 +125,16 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
 
     @Override
     public void saveToBucketTag(ItemStack bucket) {
-        CompoundTag compoundnbt = bucket.getOrCreateTag();
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
-        compoundnbt.putFloat("Health", this.getHealth());
-        compoundnbt.putInt("Variant", this.getVariant());
-        if (this.hasCustomName()) {
-            bucket.setHoverName(this.getCustomName());
+        CompoundTag compoundTag = bucket.getOrCreateTag();
+        compoundTag.putInt("BucketVariantTag", this.getVariant());
+    }
+
+    @Override
+    public void loadFromBucketTag(CompoundTag compoundTag) {
+        Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
+        if (compoundTag.contains("BucketVariantTag", 3)) {
+            this.setVariant(compoundTag.getInt("BucketVariantTag"));
         }
     }
 
