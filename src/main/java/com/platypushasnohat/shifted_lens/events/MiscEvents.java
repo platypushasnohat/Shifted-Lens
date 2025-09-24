@@ -3,10 +3,14 @@ package com.platypushasnohat.shifted_lens.events;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -53,6 +57,18 @@ public class MiscEvents {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntitySize(EntityEvent.Size event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Rabbit rabbit) {
+            if (rabbit.isBaby()) {
+                event.setNewSize(EntityDimensions.scalable(0.3F, 0.4F), true);
+            } else {
+                event.setNewSize(EntityDimensions.scalable(0.6F, 0.7F), true);
             }
         }
     }

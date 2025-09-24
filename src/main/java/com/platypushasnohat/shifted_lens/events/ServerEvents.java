@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,10 +38,17 @@ public class ServerEvents {
             }
 
             if (mob instanceof Guardian guardian) {
-                guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 20, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 9.0D));
+                guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 9.0D));
             }
             if (mob instanceof ElderGuardian elderGuardian) {
-                elderGuardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(elderGuardian, LivingEntity.class, 20, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(elderGuardian) > 9.0D));
+                elderGuardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(elderGuardian, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(elderGuardian) > 9.0D));
+            }
+
+            if (mob instanceof Rabbit rabbit) {
+                rabbit.goalSelector.addGoal(1, new SLRabbitPanicGoal(rabbit, 2.2D));
+                rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, Player.class, 4.0F));
+                rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, LivingEntity.class, livingEntity -> livingEntity.getType().is(SLEntityTags.RABBIT_AVOIDS)));
+                rabbit.goalSelector.addGoal(5, new RabbitRaidGardenGoal(rabbit));
             }
         }
     }

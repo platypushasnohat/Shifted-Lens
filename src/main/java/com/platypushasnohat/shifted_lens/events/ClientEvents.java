@@ -11,6 +11,7 @@ import com.platypushasnohat.shifted_lens.registry.SLBlockEntities;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import com.platypushasnohat.shifted_lens.registry.SLParticles;
+import net.minecraft.client.model.RabbitModel;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,6 +47,7 @@ public final class ClientEvents {
         event.registerEntityRenderer(EntityType.GHAST, SLGhastRenderer::new);
         event.registerEntityRenderer(EntityType.GLOW_SQUID, SLGlowSquidRenderer::new);
         event.registerEntityRenderer(EntityType.GUARDIAN, SLGuardianRenderer::new);
+        event.registerEntityRenderer(EntityType.RABBIT, SLRabbitRenderer::new);
         event.registerEntityRenderer(EntityType.SALMON, SLSalmonRenderer::new);
         event.registerEntityRenderer(EntityType.SQUID, SLSquidRenderer::new);
     }
@@ -63,6 +65,7 @@ public final class ClientEvents {
         event.registerLayerDefinition(SLModelLayers.FLYING_FISH, FlyingFishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.RABBIT, RabbitModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SQUID, SLSquidModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SQUILL, SquillModel::createBodyLayer);

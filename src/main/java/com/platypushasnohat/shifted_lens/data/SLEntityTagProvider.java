@@ -33,5 +33,53 @@ public class SLEntityTagProvider extends EntityTypeTagsProvider {
         tag(SLEntityTags.SQUILL_TARGETS).add(
                 EntityType.PHANTOM
         );
+
+        tag(SLEntityTags.RABBIT_AVOIDS).add(
+                EntityType.WOLF,
+                EntityType.ZOMBIE,
+                EntityType.CREEPER,
+                EntityType.SKELETON,
+                EntityType.SPIDER,
+                EntityType.HUSK,
+                EntityType.STRAY,
+                EntityType.CAVE_SPIDER,
+                EntityType.CREEPER,
+                EntityType.ZOMBIE_VILLAGER,
+                EntityType.ZOMBIFIED_PIGLIN,
+                EntityType.PIGLIN,
+                EntityType.PIGLIN_BRUTE,
+                EntityType.SLIME,
+                EntityType.MAGMA_CUBE,
+                EntityType.BLAZE,
+                EntityType.POLAR_BEAR,
+                EntityType.FOX,
+                EntityType.CAT,
+                EntityType.OCELOT,
+                EntityType.DROWNED,
+                EntityType.GUARDIAN,
+                EntityType.ELDER_GUARDIAN,
+                EntityType.ENDERMAN,
+                EntityType.EVOKER,
+                EntityType.GHAST,
+                EntityType.PHANTOM,
+                EntityType.PILLAGER,
+                EntityType.SHULKER,
+                EntityType.VEX,
+                EntityType.VILLAGER,
+                EntityType.VINDICATOR,
+                EntityType.WANDERING_TRADER,
+                EntityType.WARDEN,
+                EntityType.WITCH,
+                EntityType.WITHER_SKELETON,
+                EntityType.ZOGLIN
+        );
+
+        tag(SLEntityTags.KILLER_RABBIT_TARGETS).add(
+                EntityType.WOLF,
+                EntityType.FOX,
+                EntityType.CAT,
+                EntityType.OCELOT,
+                EntityType.RAVAGER
+        );
     }
 }

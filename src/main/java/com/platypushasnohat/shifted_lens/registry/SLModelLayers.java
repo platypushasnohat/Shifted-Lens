@@ -15,6 +15,7 @@ public class SLModelLayers {
     public static final ModelLayerLocation FLYING_FISH = main("flying_fish");
     public static final ModelLayerLocation GHAST = main("ghast");
     public static final ModelLayerLocation GUARDIAN = main("guardian");
+    public static final ModelLayerLocation RABBIT = main("rabbit");
     public static final ModelLayerLocation SALMON = main("salmon");
     public static final ModelLayerLocation SQUID = main("squid");
     public static final ModelLayerLocation SQUILL = main("squill");

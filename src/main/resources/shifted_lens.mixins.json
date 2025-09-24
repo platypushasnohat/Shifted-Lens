@@ -15,6 +15,7 @@
     "MobBucketItemMixin",
     "PoseMixin",
     "PufferfishMixin",
+    "RabbitMixin",
     "SalmonMixin",
     "SnowballMixin",
     "SquidMixin",

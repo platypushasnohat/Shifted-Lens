@@ -17,7 +17,7 @@ import org.joml.Matrix4f;
 
 public class GuardianBeamRenderer {
 
-    public static final RenderType BEAM_RENDER = SLRenderTypes.guardianBeam(new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/beam.png"));
+    public static final RenderType BEAM_RENDER = RenderType.entityCutoutNoCull(new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/beam.png"));
 
     private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float f, float g, float h, int red, int green, int blue, float k, float l) {
         consumer.vertex(matrix4f, f, g, h).color(red, green, blue, 255).uv(k, l).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
