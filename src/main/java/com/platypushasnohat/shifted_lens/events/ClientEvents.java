@@ -18,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -40,7 +41,7 @@ public final class ClientEvents {
         event.registerEntityRenderer(SLEntities.TOOTHED_SNOWBALL.get(), ThrownItemRenderer::new);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void registerVanillaEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EntityType.COD, SLCodRenderer::new);
         event.registerEntityRenderer(EntityType.ELDER_GUARDIAN, SLElderGuardianRenderer::new);

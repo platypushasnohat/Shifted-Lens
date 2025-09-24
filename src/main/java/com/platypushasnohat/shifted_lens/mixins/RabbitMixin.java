@@ -90,15 +90,16 @@ public abstract class RabbitMixin extends Animal implements VariantHolder<Rabbit
         return super.calculateFallDamage(f, f1) - 12;
     }
 
-    @Override
-    public void setVariant(Rabbit.Variant variant) {
+    @Inject(method = "setVariant(Lnet/minecraft/world/entity/animal/Rabbit$Variant;)V", at = @At("HEAD"), cancellable = true)
+    public void setVariant(Rabbit.Variant variant, CallbackInfo ci) {
+        ci.cancel();
         Rabbit rabbit = (Rabbit) (Object) this;
         if (variant == Rabbit.Variant.EVIL) {
             this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
             this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0D);
             this.heal(this.getMaxHealth());
             this.goalSelector.addGoal(4, new MeleeAttackGoal(rabbit, 1.75D, false));
-            this.targetSelector.addGoal(1, (new HurtByTargetGoal(rabbit)).setAlertOthers());
+            this.targetSelector.addGoal(1, new HurtByTargetGoal(rabbit).setAlertOthers());
             this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(rabbit, Player.class, true));
             this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(rabbit, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.KILLER_RABBIT_TARGETS)));
         }
