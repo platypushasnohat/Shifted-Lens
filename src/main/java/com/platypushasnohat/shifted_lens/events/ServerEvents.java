@@ -47,7 +47,7 @@ public class ServerEvents {
 
             if (mob instanceof Rabbit rabbit) {
                 rabbit.goalSelector.addGoal(1, new SLRabbitPanicGoal(rabbit, 2.2D));
-                rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, Player.class, 4.0F));
+                rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, Player.class));
                 rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, LivingEntity.class, livingEntity -> livingEntity.getType().is(SLEntityTags.RABBIT_AVOIDS)));
                 rabbit.goalSelector.addGoal(5, new RabbitRaidGardenGoal(rabbit));
             }

@@ -11,13 +11,13 @@ public class SLRabbitAvoidEntityGoal<T extends LivingEntity> extends AvoidEntity
 
     private final Rabbit rabbit;
 
-    public SLRabbitAvoidEntityGoal(Rabbit rabbit, Class<T> entity, float distance) {
-        super(rabbit, entity, distance, 2.2D, 2.2D);
+    public SLRabbitAvoidEntityGoal(Rabbit rabbit, Class<T> entity) {
+        super(rabbit, entity, 8.0F, 2.2D, 2.2D);
         this.rabbit = rabbit;
     }
 
     public SLRabbitAvoidEntityGoal(Rabbit rabbit, Class<T> entity, Predicate<LivingEntity> predicate) {
-        super(rabbit, entity, predicate, 10.0F, 2.2D, 2.2D, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
+        super(rabbit, entity, predicate, 8.0F, 2.2D, 2.2D, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
         this.rabbit = rabbit;
     }
 
