@@ -1,4 +1,6 @@
-// 1.20.1	2025-08-20T19:02:15.8867394	Tags for minecraft:entity_type mod id shifted_lens
+// 1.20.1	2025-09-25T22:31:28.9618052	Tags for minecraft:entity_type mod id shifted_lens
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/shifted_lens/tags/entity_types/ghast_targets.json
 06c5b062546fe5cf2ec7d8293dc018cd0d1ed528 data/shifted_lens/tags/entity_types/guardian_targets.json
+d2b4e53e29686ac752b62990021ec280454b932c data/shifted_lens/tags/entity_types/killer_rabbit_targets.json
+bda372acc0bf457784d65806c8f38bf754e7b16b data/shifted_lens/tags/entity_types/rabbit_avoids.json
 5bd4a93460d1b11374db58ba8722ea5c95017c90 data/shifted_lens/tags/entity_types/squill_targets.json

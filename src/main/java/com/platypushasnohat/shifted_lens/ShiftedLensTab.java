@@ -43,7 +43,6 @@ public class ShiftedLensTab {
                         output.accept(FLYING_FISH.get());
                         output.accept(FLYING_FISH_BUCKET.get());
 
-                        output.accept(INFERNO_CHARGE.get());
                         output.accept(SQUID_BUCKET.get());
 
 

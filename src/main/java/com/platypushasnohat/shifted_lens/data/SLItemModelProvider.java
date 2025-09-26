@@ -35,7 +35,6 @@ public class SLItemModelProvider extends ItemModelProvider {
         this.item(FLYING_FISH);
         this.item(FLYING_FISH_BUCKET);
 
-        this.item(INFERNO_CHARGE);
         this.item(SQUID_BUCKET);
 
         for (Item item : BuiltInRegistries.ITEM) {

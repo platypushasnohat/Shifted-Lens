@@ -20,7 +20,6 @@ public class SLItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ShiftedLens.MOD_ID);
     public static List<RegistryObject<? extends Item>> AUTO_TRANSLATE = new ArrayList<>();
 
-    public static final RegistryObject<Item> INFERNO_CHARGE = registerItem("inferno_charge", () -> new InfernoChargeItem(new Item.Properties()));
     public static final RegistryObject<Item> SQUILL_TOOTH = registerItem("squill_tooth", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TOOTHED_SNOWBALL = registerItem("toothed_snowball", () -> new ToothedSnowballItem(new Item.Properties().stacksTo(16)));
 

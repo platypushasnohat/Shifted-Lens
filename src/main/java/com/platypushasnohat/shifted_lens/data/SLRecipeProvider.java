@@ -33,7 +33,6 @@ public class SLRecipeProvider extends RecipeProvider implements IConditionBuilde
     protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
         cookingRecipes(SLItems.RAW_BAITFISH.get(), SLItems.COOKED_BAITFISH.get(), consumer);
 
-        shapeless(MISC, SLItems.INFERNO_CHARGE.get()).requires(Items.GUNPOWDER).requires(Items.BLAZE_POWDER).requires(Items.GHAST_TEAR).requires(ItemTags.COALS).unlockedBy("has_ghast_tear", has(Items.GHAST_TEAR)).save(consumer);
         shaped(COMBAT, SLItems.WHIRLICAP.get()).define('#', Items.LEATHER_HELMET).define('X', SLBlocks.WHIRLIGIG.get()).pattern(" X ").pattern(" # ").unlockedBy("has_whirligig", has(SLBlocks.WHIRLIGIG.get())).save(consumer);
         shaped(COMBAT, SLItems.TOOTHED_SNOWBALL.get(), 4).define('#', Items.SNOWBALL).define('X', SLItems.SQUILL_TOOTH.get()).pattern(" # ").pattern("#X#").pattern(" # ").unlockedBy("has_squill_tooth", has(SLItems.SQUILL_TOOTH.get())).save(consumer);
         shaped(REDSTONE, SLBlocks.WHIRLIBOX.get()).define('#', ItemTags.STONE_TOOL_MATERIALS).define('X', SLBlocks.WHIRLIGIG.get()).define('Y', Tags.Items.DUSTS_REDSTONE).pattern("###").pattern("#X#").pattern("#Y#").unlockedBy("has_whirligig", has(SLBlocks.WHIRLIGIG.get())).save(consumer);
