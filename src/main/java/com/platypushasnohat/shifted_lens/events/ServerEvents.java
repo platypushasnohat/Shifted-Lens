@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +60,7 @@ public class ServerEvents {
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
 
-        if (stack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get()) {
+        if (stack.is(Items.BUCKET) && ShiftedLensConfig.MILKABLE_SQUIDS.get() && event.getTarget() instanceof Squid) {
             player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
             ItemStack result = ItemUtils.createFilledResult(stack, player, Items.MILK_BUCKET.getDefaultInstance());
             player.setItemInHand(event.getHand(), result);
