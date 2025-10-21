@@ -1,7 +1,8 @@
 package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.blocks.blockentity.*;
+import com.platypushasnohat.shifted_lens.blocks.blockentity.WhirliboxBlockEntity;
+import com.platypushasnohat.shifted_lens.blocks.blockentity.WhirligigBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

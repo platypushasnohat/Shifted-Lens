@@ -12,7 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.platypushasnohat.shifted_lens.registry.SLBlocks.*;
+import static com.platypushasnohat.shifted_lens.registry.SLBlocks.WHIRLIBOX;
+import static com.platypushasnohat.shifted_lens.registry.SLBlocks.WHIRLIGIG;
 
 public class SLBlockTagProvider extends BlockTagsProvider {
 

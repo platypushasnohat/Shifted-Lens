@@ -1,6 +1,8 @@
 package com.platypushasnohat.shifted_lens.data;
 
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -14,7 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.platypushasnohat.shifted_lens.registry.SLBlocks.*;
+import static com.platypushasnohat.shifted_lens.registry.SLBlocks.WHIRLIBOX;
+import static com.platypushasnohat.shifted_lens.registry.SLBlocks.WHIRLIGIG;
 
 public class SLBlockLootTableProvider extends BlockLootSubProvider {
 

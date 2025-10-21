@@ -1,8 +1,6 @@
 package com.platypushasnohat.shifted_lens.entities.ai.goals;
 
-import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.level.Level;
