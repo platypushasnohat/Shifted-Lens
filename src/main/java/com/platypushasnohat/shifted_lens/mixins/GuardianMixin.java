@@ -28,17 +28,17 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
     private @Unique final AnimationState swimmingAnimationState = new AnimationState();
 
     @Override
-    public AnimationState getSwimmingAnimationState() {
+    public AnimationState shiftedLens$getSwimmingAnimationState() {
         return swimmingAnimationState;
     }
 
     @Override
-    public AnimationState getEyeAnimationState() {
+    public AnimationState shiftedLens$getEyeAnimationState() {
         return eyeAnimationState;
     }
 
     @Override
-    public AnimationState getBeamAnimationState() {
+    public AnimationState shiftedLens$getBeamAnimationState() {
         return beamAnimationState;
     }
 

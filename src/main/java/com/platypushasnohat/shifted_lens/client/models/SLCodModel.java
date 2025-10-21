@@ -72,8 +72,8 @@ public class SLCodModel extends HierarchicalModel<Cod> {
 	@Override
 	public void setupAnim(Cod entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState flopAnimationState = ((AnimationStateAccess) entity).getFlopAnimationState();
-		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
+		AnimationState flopAnimationState = ((AnimationStateAccess) entity).shiftedLens$getFlopAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
 
 		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
 		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();

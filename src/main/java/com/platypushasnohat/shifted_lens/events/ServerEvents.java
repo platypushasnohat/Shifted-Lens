@@ -33,11 +33,6 @@ public class ServerEvents {
         }
 
         if (entity instanceof Mob mob) {
-            if (mob instanceof Ghast ghast) {
-                ghast.goalSelector.addGoal(0, new SLGhastWanderGoal(ghast));
-                ghast.goalSelector.addGoal(1, new Ghast.GhastLookGoal(ghast));
-                ghast.goalSelector.addGoal(2, new SLGhastAttackGoal(ghast));
-            }
 
             if (mob instanceof Guardian guardian) {
                 guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 9.0D));

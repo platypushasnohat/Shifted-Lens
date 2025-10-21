@@ -18,7 +18,7 @@ public class SLGlowSquidRenderer extends MobRenderer<GlowSquid, SLSquidModel<Glo
     private static final ResourceLocation GLOW_SQUID = new ResourceLocation("textures/entity/squid/glow_squid.png");
 
     public SLGlowSquidRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLSquidModel<>(context.bakeLayer(SLModelLayers.SQUID)), 0.7F);
+        super(context, new SLSquidModel<>(context.bakeLayer(SLModelLayers.GLOW_SQUID)), 0.7F);
     }
 
     @Override

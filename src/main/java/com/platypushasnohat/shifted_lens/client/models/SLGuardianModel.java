@@ -166,9 +166,9 @@ public class SLGuardianModel extends HierarchicalModel<Guardian> {
 	@Override
 	public void setupAnim(Guardian entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState eyeAnimationState = ((AnimationStateAccess) entity).getEyeAnimationState();
-		AnimationState beamAnimationState = ((AnimationStateAccess) entity).getBeamAnimationState();
-		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
+		AnimationState eyeAnimationState = ((AnimationStateAccess) entity).shiftedLens$getEyeAnimationState();
+		AnimationState beamAnimationState = ((AnimationStateAccess) entity).shiftedLens$getBeamAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
 
 		this.animate(swimmingAnimationState, SLGuardianAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.2F);
 		this.animate(eyeAnimationState, SLGuardianAnimations.EYE, ageInTicks);

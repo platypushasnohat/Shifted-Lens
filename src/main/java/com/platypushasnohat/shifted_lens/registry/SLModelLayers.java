@@ -18,6 +18,7 @@ public class SLModelLayers {
     public static final ModelLayerLocation RABBIT = main("rabbit");
     public static final ModelLayerLocation SALMON = main("salmon");
     public static final ModelLayerLocation SQUID = main("squid");
+    public static final ModelLayerLocation GLOW_SQUID = main("glow_squid");
     public static final ModelLayerLocation SQUILL = main("squill");
 
     public static final ModelLayerLocation WHIRLICAP = main("whirlicap");

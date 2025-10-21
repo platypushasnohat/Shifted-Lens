@@ -82,8 +82,8 @@ public class SLSalmonModel extends HierarchicalModel<Salmon> {
 	@Override
 	public void setupAnim(Salmon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState flopAnimationState = ((AnimationStateAccess) entity).getFlopAnimationState();
-		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
+		AnimationState flopAnimationState = ((AnimationStateAccess) entity).shiftedLens$getFlopAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
 
 		this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
 		this.animate(swimmingAnimationState, SLSalmonAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.5F);

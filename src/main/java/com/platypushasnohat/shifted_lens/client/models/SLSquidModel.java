@@ -81,7 +81,7 @@ public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).getSwimmingAnimationState();
+		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
 		this.animate(swimmingAnimationState, SLSquidAnimations.PUSH, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
 
 		float partialTicks = ageInTicks - entity.tickCount;

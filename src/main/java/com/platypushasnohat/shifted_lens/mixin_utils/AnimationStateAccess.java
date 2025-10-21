@@ -5,14 +5,14 @@ import net.minecraft.world.entity.AnimationState;
 public interface AnimationStateAccess {
 
     // fish
-    AnimationState getFlopAnimationState();
-    AnimationState getSwimmingAnimationState();
+    AnimationState shiftedLens$getFlopAnimationState();
+    AnimationState shiftedLens$getSwimmingAnimationState();
 
     // guardians
-    AnimationState getEyeAnimationState();
-    AnimationState getBeamAnimationState();
+    AnimationState shiftedLens$getEyeAnimationState();
+    AnimationState shiftedLens$getBeamAnimationState();
 
     // ghast
-    AnimationState getIdleAnimationState();
-    AnimationState getShootAnimationState();
+    AnimationState shiftedLens$getIdleAnimationState();
+    AnimationState shiftedLens$getShootAnimationState();
 }

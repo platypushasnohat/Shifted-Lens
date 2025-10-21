@@ -42,12 +42,12 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
     private @Unique final AnimationState swimmingAnimationState = new AnimationState();
 
     @Override
-    public AnimationState getSwimmingAnimationState() {
+    public AnimationState shiftedLens$getSwimmingAnimationState() {
         return swimmingAnimationState;
     }
 
     @Unique
-    public AnimationState getFlopAnimationState() {
+    public AnimationState shiftedLens$getFlopAnimationState() {
         return flopAnimationState;
     }
 

@@ -47,6 +47,7 @@ public class MobEvents {
 
         event.add(EntityType.GHAST, Attributes.MAX_HEALTH, 20.0D);
         event.add(EntityType.GHAST, Attributes.FLYING_SPEED, 0.11D);
+        event.add(EntityType.GHAST, Attributes.FOLLOW_RANGE, 64.0D);
 
         event.add(EntityType.GUARDIAN, Attributes.MOVEMENT_SPEED, 1.0D);
         event.add(EntityType.GUARDIAN, Attributes.FOLLOW_RANGE, 24.0D);

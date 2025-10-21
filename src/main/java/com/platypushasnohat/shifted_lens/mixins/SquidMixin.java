@@ -63,7 +63,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
     private @Unique final AnimationState swimmingAnimationState = new AnimationState();
 
     @Override
-    public AnimationState getSwimmingAnimationState() {
+    public AnimationState shiftedLens$getSwimmingAnimationState() {
         return swimmingAnimationState;
     }
 

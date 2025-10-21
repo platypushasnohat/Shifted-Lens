@@ -35,7 +35,6 @@ public class SLGhastModel extends HierarchicalModel<Ghast> {
 		this.Brow = this.Head.getChild("Brow");
 		this.SadBrow = this.Brow.getChild("SadBrow");
 		this.Eyes = this.Head.getChild("Eyes");
-
 		for (int i = 0; i < this.tentacles.length; i++) {
 			this.tentacles[i] = this.Ghast.getChild("Tentacle" + i);
 		}
@@ -94,14 +93,14 @@ public class SLGhastModel extends HierarchicalModel<Ghast> {
 	@Override
 	public void setupAnim(Ghast entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState idleAnimationState = ((AnimationStateAccess) entity).getIdleAnimationState();
-		AnimationState shootAnimationState = ((AnimationStateAccess) entity).getShootAnimationState();
+		AnimationState idleAnimationState = ((AnimationStateAccess) entity).shiftedLens$getIdleAnimationState();
+		AnimationState shootAnimationState = ((AnimationStateAccess) entity).shiftedLens$getShootAnimationState();
 
 		this.animate(idleAnimationState, SLGhastAnimations.IDLE, ageInTicks, 1.75F);
 		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks);
 
-		for (int i = 0; i < 8; ++i) {
-			this.tentacles[i].xRot = 0.12F * Mth.sin(limbSwing * 0.2F + i) + 0.4F;
+		for (int i = 0; i < 8; i++) {
+			this.tentacles[i].xRot = 0.12F * Mth.sin(ageInTicks * 0.3F + i) + 0.4F;
 		}
 
 		this.Ghast.xRot = headPitch / (180F / (float) Math.PI);

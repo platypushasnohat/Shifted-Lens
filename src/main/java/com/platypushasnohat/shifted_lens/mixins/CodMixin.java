@@ -40,12 +40,12 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
     private @Unique final AnimationState swimmingAnimationState = new AnimationState();
 
     @Override
-    public AnimationState getSwimmingAnimationState() {
+    public AnimationState shiftedLens$getSwimmingAnimationState() {
         return swimmingAnimationState;
     }
 
     @Override
-    public AnimationState getFlopAnimationState() {
+    public AnimationState shiftedLens$getFlopAnimationState() {
         return flopAnimationState;
     }
 

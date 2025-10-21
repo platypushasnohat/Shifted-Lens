@@ -65,6 +65,7 @@ public final class ClientEvents {
         event.registerLayerDefinition(SLModelLayers.ELDER_GUARDIAN, SLElderGuardianModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.FLYING_FISH, FlyingFishModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GHAST, SLGhastModel::createBodyLayer);
+        event.registerLayerDefinition(SLModelLayers.GLOW_SQUID, SLSquidModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.GUARDIAN, SLGuardianModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.RABBIT, RabbitModel::createBodyLayer);
         event.registerLayerDefinition(SLModelLayers.SALMON, SLSalmonModel::createBodyLayer);
