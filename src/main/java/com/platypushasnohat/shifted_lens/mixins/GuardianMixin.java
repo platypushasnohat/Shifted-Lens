@@ -1,13 +1,16 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
+import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -25,23 +28,26 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
 
     @Shadow public abstract boolean hasActiveAttackTarget();
 
-    private @Unique final AnimationState eyeAnimationState = new AnimationState();
-    private @Unique final AnimationState beamAnimationState = new AnimationState();
-    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$eyeAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$beamAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$swimmingAnimationState = new AnimationState();
 
     @Override
     public AnimationState shiftedLens$getSwimmingAnimationState() {
-        return swimmingAnimationState;
+        return shiftedLens$swimmingAnimationState;
     }
 
     @Override
     public AnimationState shiftedLens$getEyeAnimationState() {
-        return eyeAnimationState;
+        return shiftedLens$eyeAnimationState;
     }
 
     @Override
     public AnimationState shiftedLens$getBeamAnimationState() {
-        return beamAnimationState;
+        return shiftedLens$beamAnimationState;
     }
 
     protected GuardianMixin(EntityType<? extends Monster> entityType, Level level) {
@@ -52,6 +58,11 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
     private void init(EntityType<? extends Guardian> entityType, Level level, CallbackInfo callbackInfo) {
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
+    }
+
+    @Inject(method = "registerGoals()V", at = @At("TAIL"))
+    protected void registerGoals(CallbackInfo ci) {
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(this) > 9.0D));
     }
 
     @Override
@@ -70,7 +81,7 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
         super.tick();
 
         if (this.level().isClientSide()) {
-            this.setupAnimationStates();
+            this.shiftedLens$setupAnimationStates();
             if (this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.01D) {
                 Vec3 vec31 = this.getViewVector(0.0F);
                 this.level().addParticle(ParticleTypes.BUBBLE, this.getRandomX(0.5D) - vec31.x * 1.5D, this.getRandomY() - vec31.y * 1.5D, this.getRandomZ(0.5D) - vec31.z * 1.5D, 0.0D, 0.0D, 0.0D);
@@ -79,10 +90,10 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
     }
 
     @Unique
-    private void setupAnimationStates() {
-        this.swimmingAnimationState.animateWhen(this.isAlive(), this.tickCount);
-        this.eyeAnimationState.animateWhen(this.getTarget() == null && !this.hasActiveAttackTarget(), this.tickCount);
-        this.beamAnimationState.animateWhen(this.hasActiveAttackTarget(), this.tickCount);
+    private void shiftedLens$setupAnimationStates() {
+        this.shiftedLens$swimmingAnimationState.animateWhen(this.isAlive(), this.tickCount);
+        this.shiftedLens$eyeAnimationState.animateWhen(this.getTarget() == null && !this.hasActiveAttackTarget(), this.tickCount);
+        this.shiftedLens$beamAnimationState.animateWhen(this.hasActiveAttackTarget(), this.tickCount);
     }
 
     @Override

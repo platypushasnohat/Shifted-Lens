@@ -21,6 +21,7 @@
     "TropicalFishMixin"
   ],
   "client": [
+    "client.MobAppearanceParticleMixin",
     "client.PufferfishBigModelMixin",
     "client.PufferfishMidModelMixin",
     "client.PufferfishSmallModelMixin",

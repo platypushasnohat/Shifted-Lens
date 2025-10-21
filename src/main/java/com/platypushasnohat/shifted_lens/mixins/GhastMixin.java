@@ -59,7 +59,7 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
         this.xpReward = 10;
     }
 
-    @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "registerGoals()V", at = @At("TAIL"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
         ci.cancel();
         this.goalSelector.addGoal(0, new SLGhastLookGoal((Ghast) (Object) this));

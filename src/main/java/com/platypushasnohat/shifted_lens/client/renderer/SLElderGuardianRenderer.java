@@ -17,8 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SLElderGuardianRenderer extends MobRenderer<ElderGuardian, SLElderGuardianModel> {
 
-    private static final ResourceLocation ELDER_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/elder_guardian.png");
-    private static final ResourceLocation STAINLESS_ELDER_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/stainless_elder_guardian.png");
+    public static final ResourceLocation ELDER_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/elder_guardian.png");
+    public static final ResourceLocation STAINLESS_ELDER_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/stainless_elder_guardian.png");
 
     public SLElderGuardianRenderer(EntityRendererProvider.Context context) {
         super(context, new SLElderGuardianModel(context.bakeLayer(SLModelLayers.ELDER_GUARDIAN)), 1.2F);

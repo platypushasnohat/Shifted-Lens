@@ -1,6 +1,9 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.RabbitBreedGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.RabbitRaidGardenGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SLRabbitAvoidEntityGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SLRabbitPanicGoal;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -52,12 +55,17 @@ public abstract class RabbitMixin extends Animal implements VariantHolder<Rabbit
         this.setMaxUpStep(1);
     }
 
-    @Override
-    protected void registerGoals() {
+    @Inject(method = "registerGoals()V", at = @At("TAIL"), cancellable = true)
+    protected void registerGoals(CallbackInfo ci) {
+        ci.cancel();
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new SLRabbitPanicGoal((Rabbit) (Object) this, 2.2D));
         this.goalSelector.addGoal(1, new ClimbOnTopOfPowderSnowGoal(this, this.level()));
         this.goalSelector.addGoal(2, new RabbitBreedGoal(this));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.2D, Ingredient.of(Items.CARROT, Items.GOLDEN_CARROT, Blocks.DANDELION), false));
+        this.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>((Rabbit) (Object) this, LivingEntity.class, livingEntity -> livingEntity.getType().is(SLEntityTags.RABBIT_AVOIDS)));
+        this.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>((Rabbit) (Object) this, Player.class));
+        this.goalSelector.addGoal(5, new RabbitRaidGardenGoal((Rabbit) (Object) this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10.0F));
     }

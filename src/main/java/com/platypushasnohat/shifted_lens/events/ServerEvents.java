@@ -12,11 +12,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.Squid;
-import net.minecraft.world.entity.monster.ElderGuardian;
-import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -35,23 +32,6 @@ public class ServerEvents {
         Entity entity = event.getEntity();
         if (entity.level().isClientSide && entity instanceof Squill squill) {
             squill.updatePull(entity.position());
-        }
-
-        if (entity instanceof Mob mob) {
-
-            if (mob instanceof Guardian guardian) {
-                guardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(guardian, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(guardian) > 9.0D));
-            }
-            if (mob instanceof ElderGuardian elderGuardian) {
-                elderGuardian.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(elderGuardian, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.GUARDIAN_TARGETS) && livingEntity.distanceToSqr(elderGuardian) > 9.0D));
-            }
-
-            if (mob instanceof Rabbit rabbit) {
-                rabbit.goalSelector.addGoal(1, new SLRabbitPanicGoal(rabbit, 2.2D));
-                rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, Player.class));
-                rabbit.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>(rabbit, LivingEntity.class, livingEntity -> livingEntity.getType().is(SLEntityTags.RABBIT_AVOIDS)));
-                rabbit.goalSelector.addGoal(5, new RabbitRaidGardenGoal(rabbit));
-            }
         }
     }
 
