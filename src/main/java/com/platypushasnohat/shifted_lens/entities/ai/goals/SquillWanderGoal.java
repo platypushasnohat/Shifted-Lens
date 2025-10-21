@@ -1,22 +1,15 @@
 package com.platypushasnohat.shifted_lens.entities.ai.goals;
 
 import com.platypushasnohat.shifted_lens.entities.Squill;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
-import java.util.Objects;
 
 public class SquillWanderGoal extends Goal {
 

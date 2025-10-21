@@ -4,7 +4,10 @@ import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.registry.SLBlocks;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -18,9 +21,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
-import static net.minecraft.data.recipes.RecipeCategory.*;
-import static net.minecraft.data.recipes.ShapedRecipeBuilder.*;
-import static net.minecraft.data.recipes.ShapelessRecipeBuilder.*;
+import static net.minecraft.data.recipes.RecipeCategory.COMBAT;
+import static net.minecraft.data.recipes.RecipeCategory.REDSTONE;
+import static net.minecraft.data.recipes.ShapedRecipeBuilder.shaped;
 import static net.minecraft.data.recipes.SimpleCookingRecipeBuilder.*;
 
 public class SLRecipeProvider extends RecipeProvider implements IConditionBuilder {

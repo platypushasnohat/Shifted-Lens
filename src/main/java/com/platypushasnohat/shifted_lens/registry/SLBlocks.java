@@ -1,7 +1,8 @@
 package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.blocks.*;
+import com.platypushasnohat.shifted_lens.blocks.WhirliboxBlock;
+import com.platypushasnohat.shifted_lens.blocks.WhirligigBlock;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

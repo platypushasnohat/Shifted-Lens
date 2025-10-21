@@ -1,6 +1,8 @@
 package com.platypushasnohat.shifted_lens.entities;
 
-import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.FlyingFishFollowLeaderGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.FlyingFishGlideGoal;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLSoundEvents;
@@ -22,10 +24,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.Bucketable;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

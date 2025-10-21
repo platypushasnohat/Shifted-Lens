@@ -1,7 +1,9 @@
 package com.platypushasnohat.shifted_lens.entities;
 
 import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
-import com.platypushasnohat.shifted_lens.entities.ai.goals.*;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SquillAttackGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SquillPanicGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SquillWanderGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.utils.SquillMoveControl;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLParticles;
@@ -68,7 +70,7 @@ public class Squill extends PathfinderMob implements FlyingAnimal, Bucketable {
         super(entityType, level);
         this.moveControl = new SquillMoveControl(this);
         this.xpReward = 5;
-        setPersistenceRequired();
+        this.setPersistenceRequired();
     }
 
     public static AttributeSupplier.Builder createAttributes() {

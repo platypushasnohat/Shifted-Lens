@@ -2,11 +2,11 @@ package com.platypushasnohat.shifted_lens.mixins;
 
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGhastAttackGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGhastFlightGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGhastLookGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.navigation.SLGhastMoveControl;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -29,6 +29,9 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Shadow
     public abstract boolean isCharging();
+
+    @Shadow
+    public abstract int getExplosionPower();
 
     @Unique
     private final AnimationState shiftedLens$ghastIdleAnimationState = new AnimationState();
@@ -53,16 +56,28 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends FlyingMob> entityType, Level level, CallbackInfo ci) {
         this.moveControl = new SLGhastMoveControl(this);
+        this.xpReward = 10;
     }
 
     @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
         ci.cancel();
-        this.goalSelector.addGoal(0, new Ghast.GhastLookGoal((Ghast) (Object) this));
+        this.goalSelector.addGoal(0, new SLGhastLookGoal((Ghast) (Object) this));
         this.goalSelector.addGoal(1, new SLGhastAttackGoal((Ghast) (Object) this));
-        this.goalSelector.addGoal(2, new SLGhastFlightGoal((Ghast) (Object) this, 20, 20, 10, 1.0F));
+        this.goalSelector.addGoal(2, new SLGhastFlightGoal((Ghast) (Object) this, 10, 10, 10, 1.0F));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, (entity) -> entity.getType().is(SLEntityTags.GHAST_TARGETS)));
+    }
+
+    @Override
+    public void travel(@NotNull Vec3 travelVector) {
+        if (this.isEffectiveAi()) {
+            this.moveRelative(0.1F, travelVector);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.8D));
+        } else {
+            super.travel(travelVector);
+        }
     }
 
     @Override
@@ -89,11 +104,6 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
     }
 
     @Override
-    public void travel(@NotNull Vec3 vec3) {
-        super.travel(vec3);
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -108,10 +118,14 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
         this.shiftedLens$ghastShootAnimationState.animateWhen(this.isAlive() && this.isCharging(), this.tickCount);
     }
 
-    @Override
-    public void calculateEntityAnimation(boolean flying) {
-        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
-        float f2 = Math.min(f1 * 10.0F, 1.0F);
-        this.walkAnimation.update(f2, 1.0F);
-    }
+//    @Override
+//    protected void tickDeath() {
+//        boolean flag = ForgeEventFactory.getMobGriefingEvent(this.level(), this);
+//        this.deathTime++;
+//        if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
+//            this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float) this.getExplosionPower(), flag, Level.ExplosionInteraction.MOB);
+//            this.level().broadcastEntityEvent(this, (byte) 60);
+//            this.remove(Entity.RemovalReason.KILLED);
+//        }
+//    }
 }

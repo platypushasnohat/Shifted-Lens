@@ -1,7 +1,9 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.entities.*;
+import com.platypushasnohat.shifted_lens.entities.Baitfish;
+import com.platypushasnohat.shifted_lens.entities.FlyingFish;
+import com.platypushasnohat.shifted_lens.entities.Squill;
 import com.platypushasnohat.shifted_lens.entities.utils.CamelExtension;
 import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import net.minecraft.world.entity.EntityType;

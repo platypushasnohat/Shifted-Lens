@@ -23,7 +23,7 @@ public class SLGhastMoveControl extends MoveControl {
                 mob.setDeltaMovement(mob.getDeltaMovement().add(vector3d.scale(this.speedModifier * 0.05D / length).multiply(0.5F, 0.5F, 0.5F)));
                 final Vec3 vector3d1 = mob.getDeltaMovement();
                 float f = -((float) Mth.atan2(vector3d1.x, vector3d1.z)) * 180.0F / (float) Math.PI;
-                mob.setYRot(Mth.approachDegrees(mob.getYRot(), f, 20));
+                mob.setYRot(Mth.approachDegrees(mob.getYRot(), f, 1.0F));
                 mob.yBodyRot = mob.getYRot();
             }
         }

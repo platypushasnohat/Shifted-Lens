@@ -1,7 +1,9 @@
 package com.platypushasnohat.shifted_lens.registry;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.entities.*;
+import com.platypushasnohat.shifted_lens.entities.Baitfish;
+import com.platypushasnohat.shifted_lens.entities.FlyingFish;
+import com.platypushasnohat.shifted_lens.entities.Squill;
 import com.platypushasnohat.shifted_lens.entities.projectile.ToothedSnowball;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;

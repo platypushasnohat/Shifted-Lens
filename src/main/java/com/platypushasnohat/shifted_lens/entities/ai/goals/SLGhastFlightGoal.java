@@ -18,9 +18,7 @@ public class SLGhastFlightGoal extends Goal {
     private final int rangeY;
     private final int chance;
     private final float speed;
-    private double x;
-    private double y;
-    private double z;
+    private Vec3 moveToPoint = null;
 
     public SLGhastFlightGoal(Ghast ghast, int rangeXZ, int rangeY, int chance, float speed) {
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -33,39 +31,25 @@ public class SLGhastFlightGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (ghast.isVehicle() || (ghast.getTarget() != null && ghast.getTarget().isAlive()) || ghast.isPassenger()) {
-            return false;
-        } else if (ghast.getRandom().nextInt(chance) == 0) {
-            Vec3 target = this.getRandomLocation();
-            if (target == null) {
-                return false;
-            } else  {
-                this.x = target.x;
-                this.y = target.y;
-                this.z = target.z;
-                return true;
-            }
-        } else {
-            return false;
-        }
+        return ghast.getRandom().nextInt(chance) == 0 && !ghast.getMoveControl().hasWanted();
     }
 
     @Override
     public void stop() {
-        this.ghast.getNavigation().stop();
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        moveToPoint = null;
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !ghast.getNavigation().isDone();
+        return ghast.getMoveControl().hasWanted() && ghast.distanceToSqr(moveToPoint) > 1F;
     }
 
     @Override
     public void start() {
-        this.ghast.getNavigation().moveTo(this.x, this.y, this.z, this.speed);
+        moveToPoint = this.getRandomLocation();
+        if (moveToPoint != null) {
+            ghast.getMoveControl().setWantedPosition(moveToPoint.x, moveToPoint.y, moveToPoint.z, (ghast.getTarget() != null && ghast.getTarget().isAlive()) ? speed * 1.5F : speed);
+        }
     }
 
     @Nullable

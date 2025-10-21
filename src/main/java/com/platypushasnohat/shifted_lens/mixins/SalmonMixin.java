@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
-import com.platypushasnohat.shifted_lens.entities.ai.goals.SalmonLeapGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
+import com.platypushasnohat.shifted_lens.entities.ai.goals.SalmonLeapGoal;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
@@ -15,7 +15,10 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Salmon;
