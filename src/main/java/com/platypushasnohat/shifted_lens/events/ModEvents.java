@@ -1,16 +1,11 @@
 package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.entities.Baitfish;
-import com.platypushasnohat.shifted_lens.entities.FlyingFish;
-import com.platypushasnohat.shifted_lens.entities.Squill;
-import com.platypushasnohat.shifted_lens.entities.utils.CamelExtension;
-import com.platypushasnohat.shifted_lens.registry.SLEntities;
+import com.platypushasnohat.shifted_lens.mixin_utils.CamelExtension;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -18,25 +13,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ShiftedLens.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class MobEvents {
-
-    @SubscribeEvent
-    public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-        event.register(SLEntities.BAITFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Baitfish::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(SLEntities.FLYING_FISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingFish::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(SLEntities.SQUILL.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING, Squill::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
-    }
+public class ModEvents {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void registerVanillaSpawnPlacements(SpawnPlacementRegisterEvent event) {
         event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE_WG, CamelExtension::checkCamelSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-    }
-
-    @SubscribeEvent
-    public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(SLEntities.BAITFISH.get(), Baitfish.createAttributes().build());
-        event.put(SLEntities.FLYING_FISH.get(), FlyingFish.createAttributes().build());
-        event.put(SLEntities.SQUILL.get(), Squill.createAttributes().build());
     }
 
     @SubscribeEvent

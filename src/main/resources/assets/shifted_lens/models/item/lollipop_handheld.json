@@ -1,7 +1,0 @@
-{
-  "parent": "shifted_lens:item/handheld_large",
-  "textures": {
-    "layer0": "shifted_lens:item/giant_lollipop",
-    "particle": "shifted_lens:item/lollipop"
-  }
-}

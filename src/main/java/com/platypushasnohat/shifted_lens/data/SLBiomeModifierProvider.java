@@ -1,7 +1,6 @@
 package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.registry.SLEntities;
 import com.platypushasnohat.shifted_lens.registry.tags.SLBiomeTags;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -34,10 +33,7 @@ public class SLBiomeModifierProvider {
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
         // add spawns
-        addSpawn(context, "baitfish", SLBiomeTags.HAS_BAITFISH, new MobSpawnSettings.SpawnerData(SLEntities.BAITFISH.get(), 1, 1, 1));
         addSpawn(context, "camel", SLBiomeTags.HAS_CAMELS, new MobSpawnSettings.SpawnerData(EntityType.CAMEL, 1, 1, 2));
-        addSpawn(context, "flying_fish", SLBiomeTags.HAS_FLYING_FISH, new MobSpawnSettings.SpawnerData(SLEntities.FLYING_FISH.get(), 3, 2, 2));
-        addSpawn(context, "squill", SLBiomeTags.HAS_SQUILL, new MobSpawnSettings.SpawnerData(SLEntities.SQUILL.get(), 1, 48, 48));
 
         // remove spawns
         removeSpawn(context, "squid", BiomeTags.IS_RIVER, EntityType.SQUID);

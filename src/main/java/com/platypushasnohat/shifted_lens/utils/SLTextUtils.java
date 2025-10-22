@@ -1,4 +1,4 @@
-package com.platypushasnohat.shifted_lens.data;
+package com.platypushasnohat.shifted_lens.utils;
 
 public class SLTextUtils {
 

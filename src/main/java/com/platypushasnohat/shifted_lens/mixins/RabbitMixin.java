@@ -55,7 +55,7 @@ public abstract class RabbitMixin extends Animal implements VariantHolder<Rabbit
         this.setMaxUpStep(1);
     }
 
-    @Inject(method = "registerGoals()V", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
         ci.cancel();
         this.goalSelector.addGoal(1, new FloatGoal(this));

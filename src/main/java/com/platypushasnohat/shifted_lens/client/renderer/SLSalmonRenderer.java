@@ -25,7 +25,7 @@ public class SLSalmonRenderer extends MobRenderer<Salmon, SLSalmonModel> {
 
     @Override
     public ResourceLocation getTextureLocation(Salmon entity) {
-        int variant = ((VariantAccess) entity).getVariant();
+        int variant = ((VariantAccess) entity).shiftedLens$getVariant();
         ResourceLocation texture = RIVER_SALMON;
         if (variant == 1) {
             texture = OCEAN_SALMON;

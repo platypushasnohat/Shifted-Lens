@@ -9,6 +9,7 @@ import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,7 +29,7 @@ public abstract class PufferfishMixin extends AbstractFish {
     }
 
     @Override
-    public void travel(Vec3 travelVec) {
+    public void travel(@NotNull Vec3 travelVec) {
         if (this.isEffectiveAi() && this.isInWater()) {
             this.moveRelative(this.getSpeed(), travelVec);
             this.move(MoverType.SELF, this.getDeltaMovement());

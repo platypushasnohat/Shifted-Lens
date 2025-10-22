@@ -30,22 +30,22 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
     public float onLandProgress;
 
     @Override
-    public float getPrevOnLandProgress() {
+    public float shiftedLens$getPrevOnLandProgress() {
         return prevOnLandProgress;
     }
 
     @Override
-    public float getOnLandProgress() {
+    public float shiftedLens$getOnLandProgress() {
         return onLandProgress;
     }
 
     @Override
-    public boolean onlyFlopOnGround() {
+    public boolean shiftedLens$onlyFlopOnGround() {
         return false;
     }
 
     @Override
-    public float flopChance() {
+    public float shiftedLens$flopChance() {
         return 0.5F;
     }
 
@@ -54,7 +54,7 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
         ci.cancel();
 
         this.prevOnLandProgress = onLandProgress;
-        boolean onLand = this.onlyFlopOnGround() ? !this.isInWaterOrBubble() && this.onGround() : !this.isInWaterOrBubble();
+        boolean onLand = this.shiftedLens$onlyFlopOnGround() ? !this.isInWaterOrBubble() && this.onGround() : !this.isInWaterOrBubble();
         if (onLand && onLandProgress < 5F) {
             onLandProgress++;
         }
@@ -63,7 +63,7 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
         }
 
         if (!isInWaterOrBubble() && this.isAlive()) {
-            if (this.onGround() && random.nextFloat() < this.flopChance()) {
+            if (this.onGround() && random.nextFloat() < this.shiftedLens$flopChance()) {
                 this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
                 this.setYRot(this.random.nextFloat() * 360.0F);
                 this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());

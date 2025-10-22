@@ -10,8 +10,4 @@ public class CommonProxy {
 
     public void clientInit() {
     }
-
-    public Object getArmorRenderProperties() {
-        return null;
-    }
 }

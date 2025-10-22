@@ -75,8 +75,8 @@ public class SLCodModel extends HierarchicalModel<Cod> {
 		AnimationState flopAnimationState = ((AnimationStateAccess) entity).shiftedLens$getFlopAnimationState();
 		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
 
-		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
-		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+		float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
+		float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
 		float partialTicks = ageInTicks - entity.tickCount;
 		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 

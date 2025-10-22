@@ -1,7 +1,7 @@
 package com.platypushasnohat.shifted_lens;
 
 import com.platypushasnohat.shifted_lens.data.*;
-import com.platypushasnohat.shifted_lens.events.MiscEvents;
+import com.platypushasnohat.shifted_lens.events.ForgeEvents;
 import com.platypushasnohat.shifted_lens.registry.*;
 import com.platypushasnohat.shifted_lens.utils.ClientProxy;
 import com.platypushasnohat.shifted_lens.utils.CommonProxy;
@@ -42,21 +42,13 @@ public class ShiftedLens {
         context.registerConfig(ModConfig.Type.CLIENT, ShiftedLensConfig.CLIENT_CONFIG);
 
         SLItems.ITEMS.register(modEventBus);
-        SLBlocks.BLOCKS.register(modEventBus);
-        SLBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-        SLEntities.ENTITY_TYPES.register(modEventBus);
-        SLPotions.POTIONS.register(modEventBus);
         SLSoundEvents.SOUND_EVENTS.register(modEventBus);
-        SLParticles.PARTICLE_TYPES.register(modEventBus);
-        SLPaintings.PAINTING_VARIANTS.register(modEventBus);
-        ShiftedLensTab.CREATIVE_TAB.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new MiscEvents());
+        MinecraftForge.EVENT_BUS.register(new ForgeEvents());
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(SLBrewingRecipes::registerPotionRecipes);
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
@@ -75,14 +67,10 @@ public class ShiftedLens {
         generator.addProvider(server, datapackEntries);
         provider = datapackEntries.getRegistryProvider();
 
-        SLBlockTagProvider blockTags = new SLBlockTagProvider(output, provider, helper);
-        generator.addProvider(server, blockTags);
         generator.addProvider(server, new SLEntityTagProvider(output, provider, helper));
         generator.addProvider(server, new SLBiomeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLDamageTypeTagProvider(output, provider, helper));
         generator.addProvider(server, new SLRecipeProvider(output));
-        generator.addProvider(server, new SLPaintingTagProvider(output, provider, helper));
-        generator.addProvider(server, SLLootProvider.register(output));
 
         boolean client = data.includeClient();
         generator.addProvider(client, new SLItemModelProvider(data));

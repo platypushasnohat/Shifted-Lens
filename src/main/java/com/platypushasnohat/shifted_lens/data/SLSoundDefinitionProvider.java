@@ -39,29 +39,6 @@ public class SLSoundDefinitionProvider extends SoundDefinitionsProvider {
                 sound("entity/fish/flop3").volume(0.3F),
                 sound("entity/fish/flop4").volume(0.3F)
         );
-
-        this.sound(SLSoundEvents.SQUILL_HURT,
-                sound("entity/squid/hurt1").pitch(1.5F),
-                sound("entity/squid/hurt2").pitch(1.5F),
-                sound("entity/squid/hurt3").pitch(1.5F),
-                sound("entity/squid/hurt4").pitch(1.5F)
-        );
-
-        this.sound(SLSoundEvents.SQUILL_DEATH,
-                sound("entity/squid/death1").pitch(1.5F),
-                sound("entity/squid/death2").pitch(1.5F),
-                sound("entity/squid/death3").pitch(1.5F)
-        );
-
-        this.sound(SLSoundEvents.SQUILL_SQUIRT,
-                sound("entity/squid/squirt1").pitch(1.5F),
-                sound("entity/squid/squirt2").pitch(1.5F),
-                sound("entity/squid/squirt3").pitch(1.5F)
-        );
-
-        this.sound(SLSoundEvents.SQUILL_CHATTER,
-                sound(ShiftedLens.modPrefix("entity/squill/chatter1")).volume(0.9F)
-        );
     }
 
     private void soundDefinition(Supplier<SoundEvent> soundEvent, String subtitle, SoundDefinition.Sound... sounds) {

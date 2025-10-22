@@ -8,7 +8,7 @@ license = "MIT"
     logoFile = "shifted_lens.png"
     authors = ".magmastrider., -Ghoul-, platypushasnohat"
     displayName = "Shifted Lens"
-    description = '''Aims to improve many of Minecraft's mobs with new mechanics and features, while also introducing entirely new mobs and other miscellaneous additions.'''
+    description = '''Aims to improve many of Minecraft's mobs with new mechanics and features.'''
 
 [[dependencies.shifted_lens]]
     modId = "minecraft"

@@ -1,7 +1,6 @@
 package com.platypushasnohat.shifted_lens.utils;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.client.renderer.items.SLArmorRenderProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Mod;
@@ -14,10 +13,5 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void clientInit() {
-    }
-
-    @Override
-    public Object getArmorRenderProperties() {
-        return new SLArmorRenderProperties();
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Camel.class)
@@ -16,7 +17,7 @@ public abstract class CamelMixin extends Entity {
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource source) {
+    public boolean isInvulnerableTo(@NotNull DamageSource source) {
         return super.isInvulnerableTo(source) || source.is(SLDamageTypeTags.CAMEL_IMMUNE_TO);
     }
 }

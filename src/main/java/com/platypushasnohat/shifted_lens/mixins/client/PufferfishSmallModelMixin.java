@@ -78,8 +78,8 @@ public abstract class PufferfishSmallModelMixin<T extends Entity> extends Hierar
         this.right_fin.zRot = -0.2F + 0.4F * Mth.sin(ageInTicks * 0.2F);
         this.left_fin.zRot = 0.2F - 0.4F * Mth.sin(ageInTicks * 0.2F);
 
-        float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
-        float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+        float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
+        float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
         float partialTicks = ageInTicks - entity.tickCount;
         float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 

@@ -66,8 +66,8 @@ public abstract class TadpoleModelMixin<T extends Tadpole> extends AgeableListMo
         float f = entity.isInWater() ? 1.0F : 1.5F;
         this.tail.yRot = -f * 0.25F * Mth.sin(0.3F * ageInTicks);
 
-        float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
-        float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+        float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
+        float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
         float partialTicks = ageInTicks - entity.tickCount;
         float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 

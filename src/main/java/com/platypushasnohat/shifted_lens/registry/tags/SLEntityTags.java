@@ -7,7 +7,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
 public class SLEntityTags {
-    public static final TagKey<EntityType<?>> SQUILL_TARGETS = modEntityTag("squill_targets");
+
     public static final TagKey<EntityType<?>> GUARDIAN_TARGETS = modEntityTag("guardian_targets");
     public static final TagKey<EntityType<?>> GHAST_TARGETS = modEntityTag("ghast_targets");
     public static final TagKey<EntityType<?>> RABBIT_AVOIDS = modEntityTag("rabbit_avoids");

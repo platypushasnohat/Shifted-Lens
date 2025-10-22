@@ -83,8 +83,8 @@ public abstract class TropicalFishModelBMixin<T extends Entity> extends Colorabl
         }
         this.tailFin.yRot = -f * 0.45F * Mth.sin(0.6F * ageInTicks);
 
-        float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
-        float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+        float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
+        float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
         float partialTicks = ageInTicks - entity.tickCount;
         float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 

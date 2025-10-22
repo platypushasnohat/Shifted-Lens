@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,19 +38,21 @@ import javax.annotation.Nullable;
 public abstract class CodMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
 
     @Unique
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Cod.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> COD_VARIANT = SynchedEntityData.defineId(Cod.class, EntityDataSerializers.INT);
 
-    private @Unique final AnimationState flopAnimationState = new AnimationState();
-    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$flopAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$swimmingAnimationState = new AnimationState();
 
     @Override
     public AnimationState shiftedLens$getSwimmingAnimationState() {
-        return swimmingAnimationState;
+        return shiftedLens$swimmingAnimationState;
     }
 
     @Override
     public AnimationState shiftedLens$getFlopAnimationState() {
-        return flopAnimationState;
+        return shiftedLens$flopAnimationState;
     }
 
     protected CodMixin(EntityType<? extends AbstractSchoolingFish> entityType, Level level) {
@@ -77,7 +80,7 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
     }
 
     @Override
-    public void travel(Vec3 travelVector) {
+    public void travel(@NotNull Vec3 travelVector) {
         if (this.isEffectiveAi() && this.isInWater()) {
             this.moveRelative(this.getSpeed(), travelVector);
             this.move(MoverType.SELF, this.getDeltaMovement());
@@ -91,14 +94,14 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
     public void tick() {
         super.tick();
         if (this.level().isClientSide()) {
-            setupAnimationStates();
+            shiftedLens$setupAnimationStates();
         }
     }
 
     @Unique
-    private void setupAnimationStates() {
-        this.flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
-        this.swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+    private void shiftedLens$setupAnimationStates() {
+        this.shiftedLens$flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
+        this.shiftedLens$swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -111,51 +114,51 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
+        this.entityData.define(COD_VARIANT, 0);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putInt("Variant", this.getVariant());
+        compoundTag.putInt("Variant", this.shiftedLens$getVariant());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.setVariant(compoundTag.getInt("Variant"));
+        this.shiftedLens$setVariant(compoundTag.getInt("Variant"));
     }
 
     @Override
     public void saveToBucketTag(ItemStack bucket) {
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
         CompoundTag compoundTag = bucket.getOrCreateTag();
-        compoundTag.putInt("BucketVariantTag", this.getVariant());
+        compoundTag.putInt("BucketVariantTag", this.shiftedLens$getVariant());
     }
 
     @Override
     public void loadFromBucketTag(CompoundTag compoundTag) {
         Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
         if (compoundTag.contains("BucketVariantTag", 3)) {
-            this.setVariant(compoundTag.getInt("BucketVariantTag"));
+            this.shiftedLens$setVariant(compoundTag.getInt("BucketVariantTag"));
         }
     }
 
     @Override
-    public int getVariant() {
-        return this.entityData.get(VARIANT);
+    public int shiftedLens$getVariant() {
+        return this.entityData.get(COD_VARIANT);
     }
 
     @Override
-    public void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+    public void shiftedLens$setVariant(int variant) {
+        this.entityData.set(COD_VARIANT, variant);
     }
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.setVariant(1);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.setVariant(2);
-        else this.setVariant(0);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.shiftedLens$setVariant(1);
+        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.shiftedLens$setVariant(2);
+        else this.shiftedLens$setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 }

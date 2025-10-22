@@ -8,7 +8,6 @@ public class ShiftedLensConfig {
     public static ForgeConfigSpec CLIENT_CONFIG;
 
     // common
-    public static ForgeConfigSpec.ConfigValue<Integer> SQUILL_SPAWN_HEIGHT;
     public static ForgeConfigSpec.ConfigValue<Boolean> MILKABLE_SQUIDS;
     public static ForgeConfigSpec.ConfigValue<Boolean> BUCKETABLE_SQUIDS;
     public static ForgeConfigSpec.ConfigValue<Boolean> BLINDING_SQUIDS;
@@ -19,10 +18,6 @@ public class ShiftedLensConfig {
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
-
-        SQUILL_SPAWN_HEIGHT = COMMON_BUILDER
-                .comment("Spawn height for Squills")
-                .define("squillSpawnHeight", 128);
 
         MILKABLE_SQUIDS = COMMON_BUILDER
                 .comment("If squids are milkable with buckets")

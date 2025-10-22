@@ -17,11 +17,6 @@ public class SLSoundEvents {
     public static final RegistryObject<SoundEvent> FISH_DEATH = registerSoundEvent("fish_death");
     public static final RegistryObject<SoundEvent> FISH_FLOP = registerSoundEvent("fish_flop");
 
-    public static final RegistryObject<SoundEvent> SQUILL_HURT = registerSoundEvent("squill_hurt");
-    public static final RegistryObject<SoundEvent> SQUILL_DEATH = registerSoundEvent("squill_death");
-    public static final RegistryObject<SoundEvent> SQUILL_SQUIRT = registerSoundEvent("squill_squirt");
-    public static final RegistryObject<SoundEvent> SQUILL_CHATTER = registerSoundEvent("squill_chatter");
-
     private static RegistryObject<SoundEvent> registerSoundEvent(final String soundName) {
         return SOUND_EVENTS.register(soundName, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ShiftedLens.MOD_ID, soundName)));
     }

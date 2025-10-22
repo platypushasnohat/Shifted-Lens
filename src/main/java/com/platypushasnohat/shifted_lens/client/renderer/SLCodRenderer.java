@@ -24,7 +24,7 @@ public class SLCodRenderer extends MobRenderer<Cod, SLCodModel> {
 
     @Override
     public ResourceLocation getTextureLocation(Cod entity) {
-        int variant = ((VariantAccess) entity).getVariant();
+        int variant = ((VariantAccess) entity).shiftedLens$getVariant();
         ResourceLocation texture = COD;
         if (variant == 1) {
             texture = COLD_COD;

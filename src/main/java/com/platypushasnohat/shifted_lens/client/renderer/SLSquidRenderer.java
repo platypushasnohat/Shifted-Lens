@@ -26,7 +26,7 @@ public class SLSquidRenderer extends MobRenderer<Squid, SLSquidModel<Squid>> {
 
     @Override
     public ResourceLocation getTextureLocation(Squid entity) {
-        int variant = ((VariantAccess) entity).getVariant();
+        int variant = ((VariantAccess) entity).shiftedLens$getVariant();
         return variant == 1 ? COLD_SQUID : SQUID;
     }
 

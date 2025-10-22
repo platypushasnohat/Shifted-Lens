@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,28 +40,30 @@ import javax.annotation.Nullable;
 public abstract class SalmonMixin extends AbstractSchoolingFish implements AbstractFishAccess, AnimationStateAccess, VariantAccess {
 
     @Unique
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Salmon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> shiftedLens$SALMON_VARIANT = SynchedEntityData.defineId(Salmon.class, EntityDataSerializers.INT);
 
-    private @Unique final AnimationState flopAnimationState = new AnimationState();
-    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$flopAnimationState = new AnimationState();
+    @Unique
+    private final AnimationState shiftedLens$swimmingAnimationState = new AnimationState();
 
     @Override
     public AnimationState shiftedLens$getSwimmingAnimationState() {
-        return swimmingAnimationState;
+        return shiftedLens$swimmingAnimationState;
     }
 
     @Unique
     public AnimationState shiftedLens$getFlopAnimationState() {
-        return flopAnimationState;
+        return shiftedLens$flopAnimationState;
     }
 
     @Override
-    public boolean onlyFlopOnGround() {
+    public boolean shiftedLens$onlyFlopOnGround() {
         return true;
     }
 
     @Override
-    public float flopChance() {
+    public float shiftedLens$flopChance() {
         return 0.2F;
     }
 
@@ -69,7 +72,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void init(EntityType<? extends AbstractSchoolingFish> entityType, Level level, CallbackInfo callbackInfo) {
+    private void init(EntityType<? extends AbstractSchoolingFish> entityType, Level level, CallbackInfo ci) {
         this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
@@ -90,7 +93,7 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
     }
 
     @Override
-    public void travel(Vec3 travelVec) {
+    public void travel(@NotNull Vec3 travelVec) {
         if (this.isEffectiveAi() && this.isInWater()) {
             this.moveRelative(this.getSpeed(), travelVec);
             this.move(MoverType.SELF, this.getDeltaMovement());
@@ -105,14 +108,14 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
         super.tick();
 
         if (this.level().isClientSide()) {
-            setupAnimationStates();
+            shiftedLens$setupAnimationStates();
         }
     }
 
     @Unique
-    private void setupAnimationStates() {
-        this.flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
-        this.swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
+    private void shiftedLens$setupAnimationStates() {
+        this.shiftedLens$flopAnimationState.animateWhen(!this.isInWaterOrBubble(), this.tickCount);
+        this.shiftedLens$swimmingAnimationState.animateWhen(this.isInWaterOrBubble(), this.tickCount);
     }
 
     @Override
@@ -125,52 +128,52 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
+        this.entityData.define(shiftedLens$SALMON_VARIANT, 0);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putInt("Variant", this.getVariant());
+        compoundTag.putInt("Variant", this.shiftedLens$getVariant());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.setVariant(compoundTag.getInt("Variant"));
+        this.shiftedLens$setVariant(compoundTag.getInt("Variant"));
     }
 
     @Override
     public void saveToBucketTag(ItemStack bucket) {
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
         CompoundTag compoundTag = bucket.getOrCreateTag();
-        compoundTag.putInt("BucketVariantTag", this.getVariant());
+        compoundTag.putInt("BucketVariantTag", this.shiftedLens$getVariant());
     }
 
     @Override
     public void loadFromBucketTag(CompoundTag compoundTag) {
         Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
         if (compoundTag.contains("BucketVariantTag", 3)) {
-            this.setVariant(compoundTag.getInt("BucketVariantTag"));
+            this.shiftedLens$setVariant(compoundTag.getInt("BucketVariantTag"));
         }
     }
 
     @Override
-    public int getVariant() {
-        return this.entityData.get(VARIANT);
+    public int shiftedLens$getVariant() {
+        return this.entityData.get(shiftedLens$SALMON_VARIANT);
     }
 
     @Override
-    public void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+    public void shiftedLens$setVariant(int variant) {
+        this.entityData.set(shiftedLens$SALMON_VARIANT, variant);
     }
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.setVariant(1);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) this.setVariant(2);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) this.setVariant(3);
-        else this.setVariant(0);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.shiftedLens$setVariant(1);
+        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) this.shiftedLens$setVariant(2);
+        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) this.shiftedLens$setVariant(3);
+        else this.shiftedLens$setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 }

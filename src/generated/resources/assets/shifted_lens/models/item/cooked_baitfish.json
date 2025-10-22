@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "shifted_lens:item/cooked_baitfish"
-  }
-}

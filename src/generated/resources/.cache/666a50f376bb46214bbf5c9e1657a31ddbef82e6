@@ -1,14 +1,2 @@
-// 1.20.1	2025-09-25T22:31:28.9608068	Item Models: shifted_lens
-3a129c5e8c23f5e2454746d52b13fe5fa19900d4 assets/shifted_lens/models/item/baitfish.json
-6e20ef396bd61e4f95ba290290c962103e80684f assets/shifted_lens/models/item/baitfish_bucket.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shifted_lens/models/item/baitfish_spawn_egg.json
-94b5014bae9485999ed8696c4d48b1239f7c7807 assets/shifted_lens/models/item/cooked_baitfish.json
-6b3f66df757e57834e532882e77a98714c8c56dc assets/shifted_lens/models/item/flying_fish.json
-b4605c15001d483477dbb9dec4651578844f69d6 assets/shifted_lens/models/item/flying_fish_bucket.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shifted_lens/models/item/flying_fish_spawn_egg.json
+// 1.20.1	2025-10-21T20:48:48.6433759	Item Models: shifted_lens
 aff4f939a002b152db420884f567d673eafb7509 assets/shifted_lens/models/item/squid_bucket.json
-7c0da7df49275becc0071c773645f014e7905cc0 assets/shifted_lens/models/item/squill_bucket.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shifted_lens/models/item/squill_spawn_egg.json
-f1b56de8578b9c992955befb778be5289e986313 assets/shifted_lens/models/item/squill_tooth.json
-f05541c357f7ceeb41c6073bd08cc82881c583dc assets/shifted_lens/models/item/toothed_snowball.json
-7b867fffe615617ad89fec22b2da1402642a5f15 assets/shifted_lens/models/item/whirlicap.json

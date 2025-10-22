@@ -88,8 +88,8 @@ public class SLSalmonModel extends HierarchicalModel<Salmon> {
 		this.animate(flopAnimationState, SLSalmonAnimations.FLOP, ageInTicks);
 		this.animate(swimmingAnimationState, SLSalmonAnimations.SWIM, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
 
-		float prevOnLandProgress = ((AbstractFishAccess) entity).getPrevOnLandProgress();
-		float onLandProgress = ((AbstractFishAccess) entity).getOnLandProgress();
+		float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
+		float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
 		float partialTicks = ageInTicks - entity.tickCount;
 		float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
 

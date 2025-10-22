@@ -1,19 +1,14 @@
 package com.platypushasnohat.shifted_lens.data;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.registry.SLBlocks;
-import com.platypushasnohat.shifted_lens.registry.SLItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -21,9 +16,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
-import static net.minecraft.data.recipes.RecipeCategory.COMBAT;
-import static net.minecraft.data.recipes.RecipeCategory.REDSTONE;
-import static net.minecraft.data.recipes.ShapedRecipeBuilder.shaped;
 import static net.minecraft.data.recipes.SimpleCookingRecipeBuilder.*;
 
 public class SLRecipeProvider extends RecipeProvider implements IConditionBuilder {
@@ -34,11 +26,6 @@ public class SLRecipeProvider extends RecipeProvider implements IConditionBuilde
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        cookingRecipes(SLItems.RAW_BAITFISH.get(), SLItems.COOKED_BAITFISH.get(), consumer);
-
-        shaped(COMBAT, SLItems.WHIRLICAP.get()).define('#', Items.LEATHER_HELMET).define('X', SLBlocks.WHIRLIGIG.get()).pattern(" X ").pattern(" # ").unlockedBy("has_whirligig", has(SLBlocks.WHIRLIGIG.get())).save(consumer);
-        shaped(COMBAT, SLItems.TOOTHED_SNOWBALL.get(), 4).define('#', Items.SNOWBALL).define('X', SLItems.SQUILL_TOOTH.get()).pattern(" # ").pattern("#X#").pattern(" # ").unlockedBy("has_squill_tooth", has(SLItems.SQUILL_TOOTH.get())).save(consumer);
-        shaped(REDSTONE, SLBlocks.WHIRLIBOX.get()).define('#', ItemTags.STONE_TOOL_MATERIALS).define('X', SLBlocks.WHIRLIGIG.get()).define('Y', Tags.Items.DUSTS_REDSTONE).pattern("###").pattern("#X#").pattern("#Y#").unlockedBy("has_whirligig", has(SLBlocks.WHIRLIGIG.get())).save(consumer);
     }
 
     private static void cookingRecipes(ItemLike ingredient, ItemLike result, Consumer<FinishedRecipe> consumer) {

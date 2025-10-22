@@ -1,4 +1,4 @@
-package com.platypushasnohat.shifted_lens.entities.utils;
+package com.platypushasnohat.shifted_lens.mixin_utils;
 
 import com.platypushasnohat.shifted_lens.registry.tags.SLBlockTags;
 import net.minecraft.core.BlockPos;

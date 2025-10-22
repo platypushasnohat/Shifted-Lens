@@ -50,7 +50,7 @@ import javax.annotation.Nullable;
 public abstract class SquidMixin extends WaterAnimal implements VariantAccess, AnimationStateAccess, Bucketable {
 
     @Unique
-    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SQUID_FROM_BUCKET = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.BOOLEAN);
 
     @Shadow
     protected abstract SoundEvent getSquirtSound();
@@ -59,13 +59,13 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
     protected abstract ParticleOptions getInkParticle();
 
     @Unique
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SQUID_VARIANT = SynchedEntityData.defineId(Squid.class, EntityDataSerializers.INT);
 
-    private @Unique final AnimationState swimmingAnimationState = new AnimationState();
+    private @Unique final AnimationState shiftedLens$swimmingAnimationState = new AnimationState();
 
     @Override
     public AnimationState shiftedLens$getSwimmingAnimationState() {
-        return swimmingAnimationState;
+        return shiftedLens$swimmingAnimationState;
     }
 
     protected SquidMixin(EntityType<? extends WaterAnimal> entityType, Level level) {
@@ -86,7 +86,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
     }
 
     @Override
-    protected PathNavigation createNavigation(Level level) {
+    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
         return new WaterBoundPathNavigation(this, level);
     }
 
@@ -141,13 +141,13 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
         super.tick();
 
         if (this.level().isClientSide()) {
-            this.setupAnimationStates();
+            this.shiftedLens$setupAnimationStates();
         }
     }
 
     @Unique
-    private void setupAnimationStates() {
-        this.swimmingAnimationState.animateWhen(this.isAlive(), this.tickCount);
+    private void shiftedLens$setupAnimationStates() {
+        this.shiftedLens$swimmingAnimationState.animateWhen(this.isAlive(), this.tickCount);
     }
 
     @Override
@@ -184,26 +184,26 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Override
     public boolean fromBucket() {
-        return this.entityData.get(FROM_BUCKET);
+        return this.entityData.get(SQUID_FROM_BUCKET);
     }
 
     @Override
     public void setFromBucket(boolean fromBucket) {
-        this.entityData.set(FROM_BUCKET, fromBucket);
+        this.entityData.set(SQUID_FROM_BUCKET, fromBucket);
     }
 
     @Override
     public void saveToBucketTag(ItemStack bucket) {
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
         CompoundTag compoundTag = bucket.getOrCreateTag();
-        compoundTag.putInt("BucketVariantTag", this.getVariant());
+        compoundTag.putInt("BucketVariantTag", this.shiftedLens$getVariant());
     }
 
     @Override
     public void loadFromBucketTag(CompoundTag compoundTag) {
         Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
         if (compoundTag.contains("BucketVariantTag", 3)) {
-            this.setVariant(compoundTag.getInt("BucketVariantTag"));
+            this.shiftedLens$setVariant(compoundTag.getInt("BucketVariantTag"));
         }
     }
 
@@ -225,38 +225,38 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(VARIANT, 0);
-        this.entityData.define(FROM_BUCKET, false);
+        this.entityData.define(SQUID_VARIANT, 0);
+        this.entityData.define(SQUID_FROM_BUCKET, false);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putInt("Variant", this.getVariant());
+        compoundTag.putInt("Variant", this.shiftedLens$getVariant());
         compoundTag.putBoolean("FromBucket", this.fromBucket());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        this.setVariant(compoundTag.getInt("Variant"));
+        this.shiftedLens$setVariant(compoundTag.getInt("Variant"));
         this.setFromBucket(compoundTag.getBoolean("FromBucket"));
     }
 
     @Override
-    public int getVariant() {
-        return this.entityData.get(VARIANT);
+    public int shiftedLens$getVariant() {
+        return this.entityData.get(SQUID_VARIANT);
     }
 
     @Override
-    public void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+    public void shiftedLens$setVariant(int variant) {
+        this.entityData.set(SQUID_VARIANT, variant);
     }
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_SQUID)) this.setVariant(1);
-        else this.setVariant(0);
+        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_SQUID)) this.shiftedLens$setVariant(1);
+        else this.shiftedLens$setVariant(0);
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 }

@@ -20,26 +20,7 @@ public class SLItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ShiftedLens.MOD_ID);
     public static List<RegistryObject<? extends Item>> AUTO_TRANSLATE = new ArrayList<>();
 
-    public static final RegistryObject<Item> SQUILL_TOOTH = registerItem("squill_tooth", () -> new Item(new Item.Properties()));
-    public static final RegistryObject<Item> TOOTHED_SNOWBALL = registerItem("toothed_snowball", () -> new ToothedSnowballItem(new Item.Properties().stacksTo(16)));
-
-    public static final RegistryObject<Item> WHIRLICAP = registerItem("whirlicap", () -> new WhirlicapItem(new Item.Properties().stacksTo(1)));
-
-    public static final RegistryObject<Item> LOLLIPOP = registerItem("lollipop", () -> new LollipopItem(foodItem(SLFoodValues.LOLLIPOP).stacksTo(1)));
-
-    public static final RegistryObject<Item> RAW_BAITFISH = registerItemNoLang("baitfish", () -> new Item(foodItem(SLFoodValues.RAW_BAITFISH)));
-    public static final RegistryObject<Item> COOKED_BAITFISH = registerItem("cooked_baitfish", () -> new Item(foodItem(SLFoodValues.COOKED_BAITFISH)));
-    public static final RegistryObject<Item> BAITFISH_BUCKET = registerItemNoLang("baitfish_bucket", () -> new SLMobBucketItem(SLEntities.BAITFISH, Fluids.WATER, new Item.Properties().stacksTo(1)));
-
-    public static final RegistryObject<Item> FLYING_FISH = registerItem("flying_fish", () -> new Item(foodItem(SLFoodValues.FLYING_FISH)));
-    public static final RegistryObject<Item> FLYING_FISH_BUCKET = registerItemNoLang("flying_fish_bucket", () -> new SLMobBucketItem(SLEntities.FLYING_FISH, Fluids.WATER, new Item.Properties().stacksTo(1)));
-
     public static final RegistryObject<Item> SQUID_BUCKET = registerItemNoLang("squid_bucket", () -> new SLMobBucketItem(() -> EntityType.SQUID, Fluids.WATER, new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> SQUILL_BUCKET = registerItemNoLang("squill_bucket", () -> new SquillBucketItem(new Item.Properties().stacksTo(1)));
-
-    public static final RegistryObject<Item> BAITFISH_SPAWN_EGG = registerSpawnEggItem("baitfish", SLEntities.BAITFISH, 0xe0e0e0, 0x757575);
-    public static final RegistryObject<Item> FLYING_FISH_SPAWN_EGG = registerSpawnEggItem("flying_fish", SLEntities.FLYING_FISH, 0x147bb5, 0xffe0db);
-    public static final RegistryObject<Item> SQUILL_SPAWN_EGG = registerSpawnEggItem("squill", SLEntities.SQUILL, 0xe1f7fe, 0x95c0d7);
 
     private static <I extends Item> RegistryObject<I> registerItem(String name, Supplier<? extends I> supplier) {
         RegistryObject<I> item = ITEMS.register(name, supplier);

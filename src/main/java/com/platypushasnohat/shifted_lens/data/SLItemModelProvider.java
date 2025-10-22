@@ -23,18 +23,6 @@ public class SLItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        this.item(SQUILL_TOOTH);
-        this.item(TOOTHED_SNOWBALL);
-        this.item(SQUILL_BUCKET);
-        this.item(WHIRLICAP);
-
-        this.item(RAW_BAITFISH);
-        this.item(COOKED_BAITFISH);
-        this.item(BAITFISH_BUCKET);
-
-        this.item(FLYING_FISH);
-        this.item(FLYING_FISH_BUCKET);
-
         this.item(SQUID_BUCKET);
 
         for (Item item : BuiltInRegistries.ITEM) {
