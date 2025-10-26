@@ -1,4 +1,4 @@
-package com.platypushasnohat.shifted_lens.client.renderer;
+package com.platypushasnohat.shifted_lens.client.renderer.remodels;
 
 import com.platypushasnohat.shifted_lens.client.models.SLRabbitModel;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Rabbit;
 
-public class SLRabbitRenderer extends MobRenderer<Rabbit, SLRabbitModel> {
+public class RabbitRemodelRenderer extends MobRenderer<Rabbit, SLRabbitModel> {
 
     private static final ResourceLocation BROWN_RABBIT = new ResourceLocation("textures/entity/rabbit/brown.png");
     private static final ResourceLocation WHITE_RABBIT = new ResourceLocation("textures/entity/rabbit/white.png");
@@ -19,7 +19,7 @@ public class SLRabbitRenderer extends MobRenderer<Rabbit, SLRabbitModel> {
     private static final ResourceLocation TOAST = new ResourceLocation("textures/entity/rabbit/toast.png");
     private static final ResourceLocation KILLER_RABBIT = new ResourceLocation("textures/entity/rabbit/caerbannog.png");
 
-    public SLRabbitRenderer(EntityRendererProvider.Context context) {
+    public RabbitRemodelRenderer(EntityRendererProvider.Context context) {
         super(context, new SLRabbitModel(context.bakeLayer(SLModelLayers.RABBIT)), 0.4F);
     }
 

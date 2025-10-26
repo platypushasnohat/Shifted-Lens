@@ -15,12 +15,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SLGhastGlowLayer extends RenderLayer<Ghast, SLGhastModel> {
+public class GhastGlowLayer extends RenderLayer<Ghast, SLGhastModel> {
 
     private static final RenderType GLOW_TEXTURE = RenderType.entityTranslucentEmissive(new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast/ghast_glow.png"));
     private static final RenderType RETRO_GLOW_TEXTURE = RenderType.entityTranslucentEmissive(new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast/retro_ghast_glow.png"));
 
-    public SLGhastGlowLayer(RenderLayerParent<Ghast, SLGhastModel> parent) {
+    public GhastGlowLayer(RenderLayerParent<Ghast, SLGhastModel> parent) {
         super(parent);
     }
 

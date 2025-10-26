@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.client.models.SLElderGuardianModel;
-import com.platypushasnohat.shifted_lens.client.renderer.SLElderGuardianRenderer;
+import com.platypushasnohat.shifted_lens.client.renderer.remodels.ElderGuardianRemodelRenderer;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -44,23 +44,27 @@ public abstract class MobAppearanceParticleMixin extends Particle {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(ClientLevel level, double x, double y, double z, CallbackInfo ci) {
-        this.model = new SLElderGuardianModel(Minecraft.getInstance().getEntityModels().bakeLayer(SLModelLayers.ELDER_GUARDIAN));
-        this.renderType = RenderType.entityTranslucent(ShiftedLensConfig.STAINLESS_GUARDIANS.get() ? SLElderGuardianRenderer.STAINLESS_ELDER_GUARDIAN : SLElderGuardianRenderer.ELDER_GUARDIAN);
+        if (ShiftedLensConfig.ELDER_GUARDIAN_REMODEL.get()) {
+            this.model = new SLElderGuardianModel(Minecraft.getInstance().getEntityModels().bakeLayer(SLModelLayers.ELDER_GUARDIAN));
+            this.renderType = RenderType.entityTranslucent(ShiftedLensConfig.STAINLESS_GUARDIANS.get() ? ElderGuardianRemodelRenderer.STAINLESS_ELDER_GUARDIAN : ElderGuardianRemodelRenderer.ELDER_GUARDIAN);
+        }
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V", at = @At("TAIL"), cancellable = true)
     public void render(VertexConsumer consumer, Camera camera, float partialTicks, CallbackInfo ci) {
-        ci.cancel();
-        float f = ((float)this.age + partialTicks) / (float) this.lifetime;
-        float f1 = 0.05F + 0.5F * Mth.sin(f * (float) Math.PI);
-        PoseStack posestack = new PoseStack();
-        posestack.mulPose(camera.rotation());
-        posestack.mulPose(Axis.XP.rotationDegrees(150.0F * f - 60.0F));
-        posestack.scale(-1.0F, -1.0F, 1.0F);
-        posestack.translate(0.0F, -1.101F, 1.5F);
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(this.renderType);
-        this.model.renderToBuffer(posestack, vertexconsumer, 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, f1);
-        bufferSource.endBatch();
+        if (ShiftedLensConfig.ELDER_GUARDIAN_REMODEL.get()) {
+            ci.cancel();
+            float f = ((float) this.age + partialTicks) / (float) this.lifetime;
+            float f1 = 0.05F + 0.5F * Mth.sin(f * (float) Math.PI);
+            PoseStack posestack = new PoseStack();
+            posestack.mulPose(camera.rotation());
+            posestack.mulPose(Axis.XP.rotationDegrees(150.0F * f - 60.0F));
+            posestack.scale(-1.0F, -1.0F, 1.0F);
+            posestack.translate(0.0F, -1.101F, 1.5F);
+            MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+            VertexConsumer vertexconsumer = bufferSource.getBuffer(this.renderType);
+            this.model.renderToBuffer(posestack, vertexconsumer, 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, f1);
+            bufferSource.endBatch();
+        }
     }
 }

@@ -1,30 +1,38 @@
 package com.platypushasnohat.shifted_lens.client.renderer;
 
-import com.platypushasnohat.shifted_lens.ShiftedLens;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
-import com.platypushasnohat.shifted_lens.client.models.SLGhastModel;
-import com.platypushasnohat.shifted_lens.client.renderer.layers.SLGhastGlowLayer;
-import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
+import com.platypushasnohat.shifted_lens.client.renderer.remodels.GhastRemodelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.GhastRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Ghast;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
-public class SLGhastRenderer extends MobRenderer<Ghast, SLGhastModel> {
+public class SLGhastRenderer extends EntityRenderer<Ghast> {
 
-    private static final ResourceLocation GHAST = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast/ghast.png");
-    private static final ResourceLocation RETRO_GHAST = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/ghast/retro_ghast.png");
+    private final GhastRenderer vanilla;
+    private final GhastRemodelRenderer remodel;
 
     public SLGhastRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLGhastModel(context.bakeLayer(SLModelLayers.GHAST)), 1.5F);
-        this.addLayer(new SLGhastGlowLayer(this));
+        super(context);
+        this.vanilla = new GhastRenderer(context);
+        this.remodel = new GhastRemodelRenderer(context);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Ghast entity) {
-        return ShiftedLensConfig.RETRO_GHAST.get() ? RETRO_GHAST : GHAST;
+    public void render(@NotNull Ghast ghast, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+        if (ShiftedLensConfig.GHAST_REMODEL.get()) {
+            this.remodel.render(ghast, yaw, partialTicks, poseStack, bufferSource, packedLight);
+        } else {
+            this.vanilla.render(ghast, yaw, partialTicks, poseStack, bufferSource, packedLight);
+        }
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull Ghast ghast) {
+        return ShiftedLensConfig.GHAST_REMODEL.get() ? this.remodel.getTextureLocation(ghast) : this.vanilla.getTextureLocation(ghast);
     }
 }

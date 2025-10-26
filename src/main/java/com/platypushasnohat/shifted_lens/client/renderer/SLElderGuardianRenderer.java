@@ -1,40 +1,38 @@
 package com.platypushasnohat.shifted_lens.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
-import com.platypushasnohat.shifted_lens.client.models.SLElderGuardianModel;
-import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
+import com.platypushasnohat.shifted_lens.client.renderer.remodels.ElderGuardianRemodelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ElderGuardianRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ElderGuardian;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
-public class SLElderGuardianRenderer extends MobRenderer<ElderGuardian, SLElderGuardianModel> {
+public class SLElderGuardianRenderer extends EntityRenderer<ElderGuardian> {
 
-    public static final ResourceLocation ELDER_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/elder_guardian.png");
-    public static final ResourceLocation STAINLESS_ELDER_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/stainless_elder_guardian.png");
+    private final ElderGuardianRenderer vanilla;
+    private final ElderGuardianRemodelRenderer remodel;
 
     public SLElderGuardianRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLElderGuardianModel(context.bakeLayer(SLModelLayers.ELDER_GUARDIAN)), 1.2F);
+        super(context);
+        this.vanilla = new ElderGuardianRenderer(context);
+        this.remodel = new ElderGuardianRemodelRenderer(context);
     }
 
     @Override
-    public void render(ElderGuardian entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
-        LivingEntity target = entity.getActiveAttackTarget();
-        if (target != null) {
-            GuardianBeamRenderer.render(entity, target, partialTicks, poseStack, bufferSource);
+    public void render(@NotNull ElderGuardian elderGuardian, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+        if (ShiftedLensConfig.ELDER_GUARDIAN_REMODEL.get()) {
+            this.remodel.render(elderGuardian, yaw, partialTicks, poseStack, bufferSource, packedLight);
+        } else {
+            this.vanilla.render(elderGuardian, yaw, partialTicks, poseStack, bufferSource, packedLight);
         }
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ElderGuardian entity) {
-        return ShiftedLensConfig.STAINLESS_GUARDIANS.get() ? STAINLESS_ELDER_GUARDIAN : ELDER_GUARDIAN;
+    public @NotNull ResourceLocation getTextureLocation(@NotNull ElderGuardian elderGuardian) {
+        return ShiftedLensConfig.ELDER_GUARDIAN_REMODEL.get() ? this.remodel.getTextureLocation(elderGuardian) : this.vanilla.getTextureLocation(elderGuardian);
     }
 }

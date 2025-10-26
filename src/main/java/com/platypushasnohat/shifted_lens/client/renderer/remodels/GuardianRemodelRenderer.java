@@ -1,9 +1,10 @@
-package com.platypushasnohat.shifted_lens.client.renderer;
+package com.platypushasnohat.shifted_lens.client.renderer.remodels;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.client.models.SLGuardianModel;
+import com.platypushasnohat.shifted_lens.client.renderer.layers.GuardianBeamRenderer;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -15,12 +16,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SLGuardianRenderer extends MobRenderer<Guardian, SLGuardianModel> {
+public class GuardianRemodelRenderer extends MobRenderer<Guardian, SLGuardianModel> {
 
     private static final ResourceLocation GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/guardian.png");
     private static final ResourceLocation STAINLESS_GUARDIAN = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/guardian/stainless_guardian.png");
 
-    public SLGuardianRenderer(EntityRendererProvider.Context context) {
+    public GuardianRemodelRenderer(EntityRendererProvider.Context context) {
         super(context, new SLGuardianModel(context.bakeLayer(SLModelLayers.GUARDIAN)), 0.5F);
     }
 

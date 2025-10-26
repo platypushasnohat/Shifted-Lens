@@ -1,37 +1,38 @@
 package com.platypushasnohat.shifted_lens.client.renderer;
 
-import com.platypushasnohat.shifted_lens.ShiftedLens;
-import com.platypushasnohat.shifted_lens.client.models.SLCodModel;
-import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
-import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
+import com.platypushasnohat.shifted_lens.client.renderer.remodels.CodRemodelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.CodRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Cod;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
-public class SLCodRenderer extends MobRenderer<Cod, SLCodModel> {
+public class SLCodRenderer extends EntityRenderer<Cod> {
 
-    private static final ResourceLocation COD = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/cod.png");
-    private static final ResourceLocation COLD_COD = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/cold_cod.png");
-    private static final ResourceLocation WARM_COD = new ResourceLocation(ShiftedLens.MOD_ID, "textures/entity/cod/warm_cod.png");
+    private final CodRenderer vanilla;
+    private final CodRemodelRenderer remodel;
 
     public SLCodRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLCodModel(context.bakeLayer(SLModelLayers.COD)), 0.3F);
+        super(context);
+        this.vanilla = new CodRenderer(context);
+        this.remodel = new CodRemodelRenderer(context);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Cod entity) {
-        int variant = ((VariantAccess) entity).shiftedLens$getVariant();
-        ResourceLocation texture = COD;
-        if (variant == 1) {
-            texture = COLD_COD;
+    public void render(@NotNull Cod cod, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+        if (ShiftedLensConfig.COD_REMODEL.get()) {
+            this.remodel.render(cod, yaw, partialTicks, poseStack, bufferSource, packedLight);
+        } else {
+            this.vanilla.render(cod, yaw, partialTicks, poseStack, bufferSource, packedLight);
         }
-        if (variant == 2) {
-            texture = WARM_COD;
-        }
-        return texture;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull Cod cod) {
+        return ShiftedLensConfig.COD_REMODEL.get() ? this.remodel.getTextureLocation(cod) : this.vanilla.getTextureLocation(cod);
     }
 }

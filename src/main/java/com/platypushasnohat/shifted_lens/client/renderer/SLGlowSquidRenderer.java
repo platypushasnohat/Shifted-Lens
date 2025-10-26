@@ -1,46 +1,40 @@
 package com.platypushasnohat.shifted_lens.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import com.platypushasnohat.shifted_lens.client.models.SLSquidModel;
-import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
+import com.platypushasnohat.shifted_lens.client.renderer.remodels.GlowSquidRemodelRenderer;
+import net.minecraft.client.model.SquidModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.GlowSquidRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.GlowSquid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
-public class SLGlowSquidRenderer extends MobRenderer<GlowSquid, SLSquidModel<GlowSquid>> {
+public class SLGlowSquidRenderer extends EntityRenderer<GlowSquid> {
 
-    private static final ResourceLocation GLOW_SQUID = new ResourceLocation("textures/entity/squid/glow_squid.png");
+    private final GlowSquidRenderer vanilla;
+    private final GlowSquidRemodelRenderer remodel;
 
     public SLGlowSquidRenderer(EntityRendererProvider.Context context) {
-        super(context, new SLSquidModel<>(context.bakeLayer(SLModelLayers.GLOW_SQUID)), 0.7F);
+        super(context);
+        this.vanilla = new GlowSquidRenderer(context, new SquidModel<>(context.bakeLayer(ModelLayers.GLOW_SQUID)));
+        this.remodel = new GlowSquidRemodelRenderer(context);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(GlowSquid entity) {
-        return GLOW_SQUID;
-    }
-
-    @Override
-    protected void setupRotations(GlowSquid entity, PoseStack poseStack, float i, float g, float partialTicks) {
-        if (isEntityUpsideDown(entity)) {
-            poseStack.translate(0.0D, entity.getBbHeight() + 0.1F, 0.0D);
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
+    public void render(@NotNull GlowSquid glowSquid, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+        if (ShiftedLensConfig.GLOW_SQUID_REMODEL.get()) {
+            this.remodel.render(glowSquid, yaw, partialTicks, poseStack, bufferSource, packedLight);
+        } else {
+            this.vanilla.render(glowSquid, yaw, partialTicks, poseStack, bufferSource, packedLight);
         }
-        float translateY = entity.getBbHeight() * 0.5F;
-        poseStack.translate(0.0F, translateY, 0.0F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())));
-        poseStack.mulPose(Axis.XP.rotationDegrees((Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot()) + 90.0F) % 360.0F));
-        poseStack.translate(0.0F, -translateY, 0.0F);
     }
 
     @Override
-    protected float getBob(GlowSquid entity, float f) {
-        return super.getBob(entity, f);
+    public @NotNull ResourceLocation getTextureLocation(@NotNull GlowSquid glowSquid) {
+        return ShiftedLensConfig.GLOW_SQUID_REMODEL.get() ? this.remodel.getTextureLocation(glowSquid) : this.vanilla.getTextureLocation(glowSquid);
     }
 }
