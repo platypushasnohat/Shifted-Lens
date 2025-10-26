@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGhastAttackGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGhastFlightGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SLGhastLookGoal;
@@ -30,9 +31,6 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
     @Shadow
     public abstract boolean isCharging();
 
-    @Shadow
-    public abstract int getExplosionPower();
-
     @Unique
     private final AnimationState shiftedLens$ghastIdleAnimationState = new AnimationState();
 
@@ -55,52 +53,68 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends FlyingMob> entityType, Level level, CallbackInfo ci) {
-        this.moveControl = new SLGhastMoveControl(this);
+        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+            this.moveControl = new SLGhastMoveControl(this);
+        }
         this.xpReward = 10;
     }
 
     @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
-        ci.cancel();
-        this.goalSelector.addGoal(0, new SLGhastLookGoal((Ghast) (Object) this));
-        this.goalSelector.addGoal(1, new SLGhastAttackGoal((Ghast) (Object) this));
-        this.goalSelector.addGoal(2, new SLGhastFlightGoal((Ghast) (Object) this, 10, 10, 10, 1.0F));
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, (entity) -> entity.getType().is(SLEntityTags.GHAST_TARGETS)));
-    }
-
-    @Override
-    public void travel(@NotNull Vec3 travelVector) {
-        if (this.isEffectiveAi()) {
-            this.moveRelative(0.1F, travelVector);
-            this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.8D));
-        } else {
-            super.travel(travelVector);
+        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+            ci.cancel();
+            this.goalSelector.addGoal(0, new SLGhastLookGoal((Ghast) (Object) this));
+            this.goalSelector.addGoal(1, new SLGhastAttackGoal((Ghast) (Object) this));
+            this.goalSelector.addGoal(2, new SLGhastFlightGoal((Ghast) (Object) this, 10, 10, 10, 1.0F));
+            this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
+            this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, (entity) -> entity.getType().is(SLEntityTags.GHAST_TARGETS)));
         }
     }
 
     @Override
-    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
-        FlyingPathNavigation pathNavigation = new FlyingPathNavigation(this, level) {
-            public boolean isStableDestination(@NotNull BlockPos pos) {
-                return this.level.getBlockState(pos).isAir();
+    public void travel(@NotNull Vec3 travelVector) {
+        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+            if (this.isEffectiveAi()) {
+                this.moveRelative(0.1F, travelVector);
+                this.move(MoverType.SELF, this.getDeltaMovement());
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.8D));
+            } else {
+                super.travel(travelVector);
             }
-        };
-        pathNavigation.setCanOpenDoors(false);
-        pathNavigation.setCanFloat(true);
-        pathNavigation.setCanPassDoors(true);
-        return pathNavigation;
+        }
+        super.travel(travelVector);
+    }
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
+        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+            FlyingPathNavigation pathNavigation = new FlyingPathNavigation(this, level) {
+                public boolean isStableDestination(@NotNull BlockPos pos) {
+                    return this.level.getBlockState(pos).isAir();
+                }
+            };
+            pathNavigation.setCanOpenDoors(false);
+            pathNavigation.setCanFloat(true);
+            pathNavigation.setCanPassDoors(true);
+            return pathNavigation;
+        }
+        return super.createNavigation(level);
     }
 
     @Override
     public boolean isNoGravity() {
-        return true;
+        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+            return true;
+        }
+        return super.isNoGravity();
     }
 
     @Override
     public int getMaxHeadXRot() {
-        return 500;
+        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+            return 500;
+        }
+        return super.getMaxHeadXRot();
     }
 
     @Override

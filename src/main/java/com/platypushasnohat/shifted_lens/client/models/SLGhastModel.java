@@ -2,6 +2,7 @@ package com.platypushasnohat.shifted_lens.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.client.animations.SLGhastAnimations;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
@@ -97,7 +98,7 @@ public class SLGhastModel extends HierarchicalModel<Ghast> {
 		AnimationState shootAnimationState = ((AnimationStateAccess) entity).shiftedLens$getShootAnimationState();
 
 		this.animate(idleAnimationState, SLGhastAnimations.IDLE, ageInTicks, 1.75F);
-		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks);
+		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks, ShiftedLensConfig.BETTER_GHAST_AI.get() ? 1.0F : 3.0F);
 
 		for (int i = 0; i < 8; i++) {
 			this.tentacles[i].xRot = 0.12F * Mth.sin(ageInTicks * 0.3F + i) + 0.4F;

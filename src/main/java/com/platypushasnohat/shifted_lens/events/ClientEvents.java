@@ -2,10 +2,7 @@ package com.platypushasnohat.shifted_lens.events;
 
 import com.platypushasnohat.shifted_lens.ShiftedLens;
 import com.platypushasnohat.shifted_lens.client.models.*;
-import com.platypushasnohat.shifted_lens.client.renderer.SLCodRenderer;
-import com.platypushasnohat.shifted_lens.client.renderer.SLElderGuardianRenderer;
-import com.platypushasnohat.shifted_lens.client.renderer.SLGhastRenderer;
-import com.platypushasnohat.shifted_lens.client.renderer.SLGlowSquidRenderer;
+import com.platypushasnohat.shifted_lens.client.renderer.*;
 import com.platypushasnohat.shifted_lens.client.renderer.remodels.*;
 import com.platypushasnohat.shifted_lens.registry.SLItems;
 import com.platypushasnohat.shifted_lens.registry.SLModelLayers;
@@ -32,10 +29,10 @@ public final class ClientEvents {
         event.registerEntityRenderer(EntityType.ELDER_GUARDIAN, SLElderGuardianRenderer::new);
         event.registerEntityRenderer(EntityType.GHAST, SLGhastRenderer::new);
         event.registerEntityRenderer(EntityType.GLOW_SQUID, SLGlowSquidRenderer::new);
-        event.registerEntityRenderer(EntityType.GUARDIAN, GuardianRemodelRenderer::new);
-        event.registerEntityRenderer(EntityType.RABBIT, RabbitRemodelRenderer::new);
-        event.registerEntityRenderer(EntityType.SALMON, SalmonRemodelRenderer::new);
-        event.registerEntityRenderer(EntityType.SQUID, SquidRemodelRenderer::new);
+        event.registerEntityRenderer(EntityType.GUARDIAN, SLGuardianRenderer::new);
+        event.registerEntityRenderer(EntityType.RABBIT, SLRabbitRenderer::new);
+        event.registerEntityRenderer(EntityType.SALMON, SLSalmonRenderer::new);
+        event.registerEntityRenderer(EntityType.SQUID, SLSquidRenderer::new);
     }
 
     @SubscribeEvent

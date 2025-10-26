@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.client.models;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.shifted_lens.client.animations.SLSquidAnimations;
@@ -8,11 +9,14 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
@@ -28,6 +32,7 @@ public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 	private final ModelPart tentacle6;
 	private final ModelPart tentacle7;
 	private final ModelPart tentacle8;
+    private final List<ModelPart> tentacles;
 
 	public SLSquidModel(ModelPart root) {
 		this.root = root.getChild("root");
@@ -40,6 +45,7 @@ public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 		this.tentacle6 = this.body.getChild("tentacle6");
 		this.tentacle7 = this.body.getChild("tentacle7");
 		this.tentacle8 = this.body.getChild("tentacle8");
+        this.tentacles = ImmutableList.of(tentacle1, tentacle2, tentacle3, tentacle4, tentacle5, tentacle6, tentacle7, tentacle8);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -79,15 +85,14 @@ public class SLSquidModel<T extends Squid> extends HierarchicalModel<T> {
 	}
 
 	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
-		this.animate(swimmingAnimationState, SLSquidAnimations.PUSH, ageInTicks, 0.5F + limbSwingAmount * 1.5F);
-
-		float partialTicks = ageInTicks - entity.tickCount;
-		if (entity.isInWaterOrBubble()) {
-			this.root.yRot = (entity.tickCount + partialTicks) * 0.02F % ((float) Math.PI * 2F);
-		}
+        AnimationState swimmingAnimationState = ((AnimationStateAccess) entity).shiftedLens$getSwimmingAnimationState();
+        this.animate(swimmingAnimationState, SLSquidAnimations.PUSH, ageInTicks, 0.75F + (Mth.clamp(limbSwingAmount, 0.25F, 1.0F) * 1.5F));
+        float partialTicks = ageInTicks - entity.tickCount;
+        if (entity.isInWaterOrBubble()) {
+            this.root.yRot = (entity.tickCount + partialTicks) * 0.02F % ((float) Math.PI * 2F);
+        }
 	}
 
 	@Override

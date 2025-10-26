@@ -20,7 +20,7 @@ public class ModEvents {
         event.register(EntityType.CAMEL, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.WORLD_SURFACE_WG, CamelExtension::checkCamelSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void modifyAttributes(EntityAttributeModificationEvent event) {
         event.add(EntityType.COD, Attributes.MAX_HEALTH, 4.0D);
         event.add(EntityType.COD, Attributes.MOVEMENT_SPEED, 0.8D);
@@ -43,6 +43,7 @@ public class ModEvents {
         event.add(EntityType.SALMON, Attributes.MOVEMENT_SPEED, 0.8D);
 
         event.add(EntityType.SQUID, Attributes.MOVEMENT_SPEED, 0.64D);
+        event.add(EntityType.GLOW_SQUID, Attributes.MOVEMENT_SPEED, 0.64D);
 
         event.add(EntityType.TROPICAL_FISH, Attributes.MOVEMENT_SPEED, 0.9D);
     }
