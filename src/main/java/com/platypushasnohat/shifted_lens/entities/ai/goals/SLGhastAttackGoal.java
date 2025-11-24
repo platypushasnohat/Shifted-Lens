@@ -1,6 +1,5 @@
 package com.platypushasnohat.shifted_lens.entities.ai.goals;
 
-import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Ghast;
@@ -79,11 +78,7 @@ public class SLGhastAttackGoal extends Goal {
 
             if (navigationCooldown > 0) this.navigationCooldown--;
 
-            if (ShiftedLensConfig.GHAST_REMODEL.get()) {
-                this.ghast.setCharging(this.chargeTime > 10);
-            } else {
-                this.ghast.setCharging(this.chargeTime > 30);
-            }
+            this.ghast.setCharging(this.chargeTime > 10);
         }
     }
 }

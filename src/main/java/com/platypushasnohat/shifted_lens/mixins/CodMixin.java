@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.mixin_utils.VariantAccess;
@@ -34,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Mixin(Cod.class)
 public abstract class CodMixin extends AbstractSchoolingFish implements AnimationStateAccess, VariantAccess {
 
@@ -61,40 +63,50 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends AbstractSchoolingFish> entityType, Level level, CallbackInfo callbackInfo) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 8, 0.02F, 0.1F, false);
-        this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        if (ShiftedLensConfig.COD_REVAMP.get()) {
+            this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 8, 0.02F, 0.1F, false);
+            this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        }
     }
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
-        this.goalSelector.addGoal(3, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
-        this.goalSelector.addGoal(4, new FollowFlockLeaderGoal(this));
+        if (ShiftedLensConfig.COD_REVAMP.get()) {
+            this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+            this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
+            this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
+            this.goalSelector.addGoal(3, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
+            this.goalSelector.addGoal(4, new FollowFlockLeaderGoal(this));
+        } else {
+            super.registerGoals();
+        }
     }
 
     @Override
     public int getMaxSchoolSize() {
-        return 10;
+        return ShiftedLensConfig.COD_REVAMP.get() ? 10 : super.getMaxSpawnClusterSize();
     }
 
     @Override
-    public void travel(@NotNull Vec3 travelVector) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            this.moveRelative(this.getSpeed(), travelVector);
-            this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+    public void travel(@NotNull Vec3 travelVec) {
+        if (ShiftedLensConfig.COD_REVAMP.get()) {
+            if (this.isEffectiveAi() && this.isInWater()) {
+                this.moveRelative(this.getSpeed(), travelVec);
+                this.move(MoverType.SELF, this.getDeltaMovement());
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+            } else {
+                super.travel(travelVec);
+            }
         } else {
-            super.travel(travelVector);
+            super.travel(travelVec);
         }
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide()) {
-            shiftedLens$setupAnimationStates();
+        if (this.level().isClientSide && ShiftedLensConfig.COD_REVAMP.get()) {
+            this.shiftedLens$setupAnimationStates();
         }
     }
 
@@ -106,9 +118,13 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
 
     @Override
     public void calculateEntityAnimation(boolean flying) {
-        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
-        float f2 = Math.min(f1 * 10.0F, 1.0F);
-        this.walkAnimation.update(f2, 0.4F);
+        if (ShiftedLensConfig.COD_REVAMP.get()) {
+            float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+            float f2 = Math.min(f1 * 10.0F, 1.0F);
+            this.walkAnimation.update(f2, 0.4F);
+        } else {
+            super.calculateEntityAnimation(flying);
+        }
     }
 
     @Override
@@ -118,26 +134,26 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("Variant", this.shiftedLens$getVariant());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.shiftedLens$setVariant(compoundTag.getInt("Variant"));
     }
 
     @Override
-    public void saveToBucketTag(ItemStack bucket) {
+    public void saveToBucketTag(@NotNull ItemStack bucket) {
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
         CompoundTag compoundTag = bucket.getOrCreateTag();
         compoundTag.putInt("BucketVariantTag", this.shiftedLens$getVariant());
     }
 
     @Override
-    public void loadFromBucketTag(CompoundTag compoundTag) {
+    public void loadFromBucketTag(@NotNull CompoundTag compoundTag) {
         Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
         if (compoundTag.contains("BucketVariantTag", 3)) {
             this.shiftedLens$setVariant(compoundTag.getInt("BucketVariantTag"));
@@ -154,11 +170,18 @@ public abstract class CodMixin extends AbstractSchoolingFish implements Animatio
         this.entityData.set(COD_VARIANT, variant);
     }
 
+    @Unique
+    private void shiftedLens$spawnCodVariant() {
+        if (ShiftedLensConfig.COD_REVAMP.get()) {
+            if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.shiftedLens$setVariant(1);
+            else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.shiftedLens$setVariant(2);
+            else this.shiftedLens$setVariant(0);
+        }
+    }
+
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_COD)) this.shiftedLens$setVariant(1);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_WARM_COD)) this.shiftedLens$setVariant(2);
-        else this.shiftedLens$setVariant(0);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
+        this.shiftedLens$spawnCodVariant();
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 }

@@ -24,7 +24,7 @@ public class SLGhastRenderer extends EntityRenderer<Ghast> {
 
     @Override
     public void render(@NotNull Ghast ghast, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (ShiftedLensConfig.GHAST_REMODEL.get()) {
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) {
             this.remodel.render(ghast, yaw, partialTicks, poseStack, bufferSource, packedLight);
         } else {
             this.vanilla.render(ghast, yaw, partialTicks, poseStack, bufferSource, packedLight);
@@ -33,6 +33,6 @@ public class SLGhastRenderer extends EntityRenderer<Ghast> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Ghast ghast) {
-        return ShiftedLensConfig.GHAST_REMODEL.get() ? this.remodel.getTextureLocation(ghast) : this.vanilla.getTextureLocation(ghast);
+        return ShiftedLensConfig.GHAST_REVAMP.get() ? this.remodel.getTextureLocation(ghast) : this.vanilla.getTextureLocation(ghast);
     }
 }

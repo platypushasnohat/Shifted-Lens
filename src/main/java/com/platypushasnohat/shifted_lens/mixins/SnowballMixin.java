@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.phys.EntityHitResult;
@@ -13,7 +14,9 @@ public abstract class SnowballMixin {
 
     @Inject(method = "onHitEntity(Lnet/minecraft/world/phys/EntityHitResult;)V", at = @At("TAIL"))
     protected void onHitEntity(EntityHitResult hitResult, CallbackInfo ci) {
-        Entity entity = hitResult.getEntity();
-        entity.setTicksFrozen(Math.min(entity.getTicksRequiredToFreeze() * 4, entity.getTicksFrozen() + 60));
+        if (ShiftedLensConfig.FREEZING_SNOWBALLS.get()) {
+            Entity entity = hitResult.getEntity();
+            entity.setTicksFrozen(Math.min(entity.getTicksRequiredToFreeze() * 4, entity.getTicksFrozen() + 60));
+        }
     }
 }

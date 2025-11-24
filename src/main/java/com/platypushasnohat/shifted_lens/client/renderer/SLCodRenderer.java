@@ -24,7 +24,7 @@ public class SLCodRenderer extends EntityRenderer<Cod> {
 
     @Override
     public void render(@NotNull Cod cod, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (ShiftedLensConfig.COD_REMODEL.get()) {
+        if (ShiftedLensConfig.COD_REVAMP.get()) {
             this.remodel.render(cod, yaw, partialTicks, poseStack, bufferSource, packedLight);
         } else {
             this.vanilla.render(cod, yaw, partialTicks, poseStack, bufferSource, packedLight);
@@ -33,6 +33,6 @@ public class SLCodRenderer extends EntityRenderer<Cod> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Cod cod) {
-        return ShiftedLensConfig.COD_REMODEL.get() ? this.remodel.getTextureLocation(cod) : this.vanilla.getTextureLocation(cod);
+        return ShiftedLensConfig.COD_REVAMP.get() ? this.remodel.getTextureLocation(cod) : this.vanilla.getTextureLocation(cod);
     }
 }

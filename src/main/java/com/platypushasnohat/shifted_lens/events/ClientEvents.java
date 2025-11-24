@@ -30,7 +30,6 @@ public final class ClientEvents {
         event.registerEntityRenderer(EntityType.GHAST, SLGhastRenderer::new);
         event.registerEntityRenderer(EntityType.GLOW_SQUID, SLGlowSquidRenderer::new);
         event.registerEntityRenderer(EntityType.GUARDIAN, SLGuardianRenderer::new);
-        event.registerEntityRenderer(EntityType.RABBIT, SLRabbitRenderer::new);
         event.registerEntityRenderer(EntityType.SALMON, SLSalmonRenderer::new);
         event.registerEntityRenderer(EntityType.SQUID, SLSquidRenderer::new);
     }

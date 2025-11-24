@@ -13,6 +13,7 @@ import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -25,7 +26,7 @@ public class SLRecipeProvider extends RecipeProvider implements IConditionBuilde
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
     }
 
     private static void cookingRecipes(ItemLike ingredient, ItemLike result, Consumer<FinishedRecipe> consumer) {

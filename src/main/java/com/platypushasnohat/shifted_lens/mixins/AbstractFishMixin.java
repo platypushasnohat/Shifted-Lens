@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
@@ -24,19 +25,19 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
     protected abstract SoundEvent getFlopSound();
 
     @Unique
-    public float prevOnLandProgress;
+    public float shiftedLens$prevOnLandProgress;
 
     @Unique
-    public float onLandProgress;
+    public float shiftedLens$onLandProgress;
 
     @Override
     public float shiftedLens$getPrevOnLandProgress() {
-        return prevOnLandProgress;
+        return shiftedLens$prevOnLandProgress;
     }
 
     @Override
     public float shiftedLens$getOnLandProgress() {
-        return onLandProgress;
+        return shiftedLens$onLandProgress;
     }
 
     @Override
@@ -51,24 +52,24 @@ public abstract class AbstractFishMixin extends WaterAnimal implements AbstractF
 
     @Inject(method = "aiStep()V", at = @At("HEAD"), cancellable = true)
     private void aiStep(CallbackInfo ci) {
-        ci.cancel();
-
-        this.prevOnLandProgress = onLandProgress;
+        this.shiftedLens$prevOnLandProgress = shiftedLens$onLandProgress;
         boolean onLand = this.shiftedLens$onlyFlopOnGround() ? !this.isInWaterOrBubble() && this.onGround() : !this.isInWaterOrBubble();
-        if (onLand && onLandProgress < 5F) {
-            onLandProgress++;
+        if (onLand && shiftedLens$onLandProgress < 5F) {
+            shiftedLens$onLandProgress++;
         }
-        if (!onLand && onLandProgress > 0F) {
-            onLandProgress--;
+        if (!onLand && shiftedLens$onLandProgress > 0F) {
+            shiftedLens$onLandProgress--;
         }
 
-        if (!isInWaterOrBubble() && this.isAlive()) {
-            if (this.onGround() && random.nextFloat() < this.shiftedLens$flopChance()) {
-                this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
-                this.setYRot(this.random.nextFloat() * 360.0F);
-                this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+        if (ShiftedLensConfig.BETTER_FISH_FLOPPING.get()) {
+            ci.cancel();
+            if (!isInWaterOrBubble() && this.isAlive()) {
+                if (this.onGround() && random.nextFloat() < this.shiftedLens$flopChance()) {
+                    this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F, 0.5D, (this.random.nextFloat() * 2.0F - 1.0F) * 0.2F));
+                    this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+                }
             }
+            super.aiStep();
         }
-        super.aiStep();
     }
 }

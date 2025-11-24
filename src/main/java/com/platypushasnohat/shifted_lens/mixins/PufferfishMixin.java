@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
@@ -24,16 +25,22 @@ public abstract class PufferfishMixin extends AbstractFish {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends AbstractSchoolingFish> entityType, Level level, CallbackInfo callbackInfo) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, false);
-        this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        if (ShiftedLensConfig.PUFFERFISH_REVAMP.get()) {
+            this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, false);
+            this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        }
     }
 
     @Override
     public void travel(@NotNull Vec3 travelVec) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            this.moveRelative(this.getSpeed(), travelVec);
-            this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+        if (ShiftedLensConfig.PUFFERFISH_REVAMP.get()) {
+            if (this.isEffectiveAi() && this.isInWater()) {
+                this.moveRelative(this.getSpeed(), travelVec);
+                this.move(MoverType.SELF, this.getDeltaMovement());
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+            } else {
+                super.travel(travelVec);
+            }
         } else {
             super.travel(travelVec);
         }

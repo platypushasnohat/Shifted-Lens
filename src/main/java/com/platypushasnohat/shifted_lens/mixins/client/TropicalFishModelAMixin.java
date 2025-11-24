@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins.client;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
 import net.minecraft.client.model.ColorableHierarchicalModel;
 import net.minecraft.client.model.TropicalFishModelA;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@SuppressWarnings("unused, FieldCanBeLocal")
 @OnlyIn(Dist.CLIENT)
 @Mixin(TropicalFishModelA.class)
 public abstract class TropicalFishModelAMixin<T extends Entity> extends ColorableHierarchicalModel<T> {
@@ -70,21 +72,23 @@ public abstract class TropicalFishModelAMixin<T extends Entity> extends Colorabl
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V", at = @At("HEAD"), cancellable = true)
     private void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
+        if (ShiftedLensConfig.TROPICAL_FISH_REVAMP.get()) {
+            this.root().getAllParts().forEach(ModelPart::resetPose);
 
-        ci.cancel();
-        float f = 1.0F;
-        if (!entity.isInWater()) {
-            f = 1.5F;
+            ci.cancel();
+            float f = 1.0F;
+            if (!entity.isInWater()) {
+                f = 1.5F;
+            }
+            this.tailFin.yRot = -f * 0.45F * Mth.sin(0.6F * ageInTicks);
+
+            float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
+            float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
+            float partialTicks = ageInTicks - entity.tickCount;
+            float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
+
+            this.swim_control.xRot = headPitch * (Mth.DEG_TO_RAD);
+            this.swim_control.zRot += landProgress * ((float) Math.toRadians(-90) / 5F);
         }
-        this.tailFin.yRot = -f * 0.45F * Mth.sin(0.6F * ageInTicks);
-
-        float prevOnLandProgress = ((AbstractFishAccess) entity).shiftedLens$getPrevOnLandProgress();
-        float onLandProgress = ((AbstractFishAccess) entity).shiftedLens$getOnLandProgress();
-        float partialTicks = ageInTicks - entity.tickCount;
-        float landProgress = prevOnLandProgress + (onLandProgress - prevOnLandProgress) * partialTicks;
-
-        this.swim_control.xRot = headPitch * (Mth.DEG_TO_RAD);
-        this.swim_control.zRot += landProgress * ((float) Math.toRadians(-90) / 5F);
     }
 }

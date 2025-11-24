@@ -2,7 +2,6 @@ package com.platypushasnohat.shifted_lens.client.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.client.animations.SLGhastAnimations;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import net.minecraft.client.model.HierarchicalModel;
@@ -14,6 +13,7 @@ import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("FieldCanBeLocal, unused")
@@ -98,7 +98,7 @@ public class SLGhastModel extends HierarchicalModel<Ghast> {
 		AnimationState shootAnimationState = ((AnimationStateAccess) entity).shiftedLens$getShootAnimationState();
 
 		this.animate(idleAnimationState, SLGhastAnimations.IDLE, ageInTicks, 1.75F);
-		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks, ShiftedLensConfig.BETTER_GHAST_AI.get() ? 1.0F : 3.0F);
+		this.animate(shootAnimationState, SLGhastAnimations.ATTACK, ageInTicks);
 
 		for (int i = 0; i < 8; i++) {
 			this.tentacles[i].xRot = 0.12F * Mth.sin(ageInTicks * 0.3F + i) + 0.4F;
@@ -109,12 +109,12 @@ public class SLGhastModel extends HierarchicalModel<Ghast> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 	@Override
-	public ModelPart root() {
+	public @NotNull ModelPart root() {
 		return this.root;
 	}
 }

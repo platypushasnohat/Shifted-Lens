@@ -25,6 +25,7 @@
     "client.PufferfishBigModelMixin",
     "client.PufferfishMidModelMixin",
     "client.PufferfishSmallModelMixin",
+    "client.RabbitRendererMixin",
     "client.TadpoleModelMixin",
     "client.TropicalFishModelAMixin",
     "client.TropicalFishModelBMixin",

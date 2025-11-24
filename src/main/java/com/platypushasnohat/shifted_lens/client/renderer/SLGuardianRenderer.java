@@ -24,7 +24,7 @@ public class SLGuardianRenderer extends EntityRenderer<Guardian> {
 
     @Override
     public void render(@NotNull Guardian guardian, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (ShiftedLensConfig.GUARDIAN_REMODEL.get()) {
+        if (ShiftedLensConfig.GUARDIAN_REVAMP.get()) {
             this.remodel.render(guardian, yaw, partialTicks, poseStack, bufferSource, packedLight);
         } else {
             this.vanilla.render(guardian, yaw, partialTicks, poseStack, bufferSource, packedLight);
@@ -33,6 +33,6 @@ public class SLGuardianRenderer extends EntityRenderer<Guardian> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Guardian guardian) {
-        return ShiftedLensConfig.GUARDIAN_REMODEL.get() ? this.remodel.getTextureLocation(guardian) : this.vanilla.getTextureLocation(guardian);
+        return ShiftedLensConfig.GUARDIAN_REVAMP.get() ? this.remodel.getTextureLocation(guardian) : this.vanilla.getTextureLocation(guardian);
     }
 }

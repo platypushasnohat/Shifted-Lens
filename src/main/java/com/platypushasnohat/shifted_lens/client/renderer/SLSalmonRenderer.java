@@ -24,7 +24,7 @@ public class SLSalmonRenderer extends EntityRenderer<Salmon> {
 
     @Override
     public void render(@NotNull Salmon salmon, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (ShiftedLensConfig.SALMON_REMODEL.get()) {
+        if (ShiftedLensConfig.SALMON_REVAMP.get()) {
             this.remodel.render(salmon, yaw, partialTicks, poseStack, bufferSource, packedLight);
         } else {
             this.vanilla.render(salmon, yaw, partialTicks, poseStack, bufferSource, packedLight);
@@ -33,6 +33,6 @@ public class SLSalmonRenderer extends EntityRenderer<Salmon> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Salmon salmon) {
-        return ShiftedLensConfig.SALMON_REMODEL.get() ? this.remodel.getTextureLocation(salmon) : this.vanilla.getTextureLocation(salmon);
+        return ShiftedLensConfig.SALMON_REVAMP.get() ? this.remodel.getTextureLocation(salmon) : this.vanilla.getTextureLocation(salmon);
     }
 }

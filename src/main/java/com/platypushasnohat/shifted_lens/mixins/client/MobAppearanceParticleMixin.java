@@ -44,7 +44,7 @@ public abstract class MobAppearanceParticleMixin extends Particle {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(ClientLevel level, double x, double y, double z, CallbackInfo ci) {
-        if (ShiftedLensConfig.ELDER_GUARDIAN_REMODEL.get()) {
+        if (ShiftedLensConfig.GUARDIAN_REVAMP.get()) {
             this.model = new SLElderGuardianModel(Minecraft.getInstance().getEntityModels().bakeLayer(SLModelLayers.ELDER_GUARDIAN));
             this.renderType = RenderType.entityTranslucent(ShiftedLensConfig.STAINLESS_GUARDIANS.get() ? ElderGuardianRemodelRenderer.STAINLESS_ELDER_GUARDIAN : ElderGuardianRemodelRenderer.ELDER_GUARDIAN);
         }
@@ -52,7 +52,7 @@ public abstract class MobAppearanceParticleMixin extends Particle {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V", at = @At("TAIL"), cancellable = true)
     public void render(VertexConsumer consumer, Camera camera, float partialTicks, CallbackInfo ci) {
-        if (ShiftedLensConfig.ELDER_GUARDIAN_REMODEL.get()) {
+        if (ShiftedLensConfig.GUARDIAN_REVAMP.get()) {
             ci.cancel();
             float f = ((float) this.age + partialTicks) / (float) this.lifetime;
             float f1 = 0.05F + 0.5F * Mth.sin(f * (float) Math.PI);

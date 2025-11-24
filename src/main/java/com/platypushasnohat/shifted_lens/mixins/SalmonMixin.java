@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.CustomRandomSwimGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SalmonLeapGoal;
 import com.platypushasnohat.shifted_lens.mixin_utils.AbstractFishAccess;
@@ -36,6 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Mixin(Salmon.class)
 public abstract class SalmonMixin extends AbstractSchoolingFish implements AbstractFishAccess, AnimationStateAccess, VariantAccess {
 
@@ -73,31 +75,41 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends AbstractSchoolingFish> entityType, Level level, CallbackInfo ci) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
-        this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        if (ShiftedLensConfig.SALMON_REVAMP.get()) {
+            this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
+            this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        }
     }
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
-        this.goalSelector.addGoal(3, new SalmonLeapGoal(this, 40));
-        this.goalSelector.addGoal(4, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
-        this.goalSelector.addGoal(5, new FollowFlockLeaderGoal(this));
+        if (ShiftedLensConfig.SALMON_REVAMP.get()) {
+            this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+            this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
+            this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.6D, 1.4D, EntitySelector.NO_SPECTATORS::test));
+            this.goalSelector.addGoal(3, new SalmonLeapGoal(this, 40));
+            this.goalSelector.addGoal(4, new CustomRandomSwimGoal(this, 1, 1, 16, 16, 3));
+            this.goalSelector.addGoal(5, new FollowFlockLeaderGoal(this));
+        } else {
+            super.registerGoals();
+        }
     }
 
     @Override
     public int getMaxSchoolSize() {
-        return 8;
+        return ShiftedLensConfig.SALMON_REVAMP.get() ? 8 : super.getMaxSpawnClusterSize();
     }
 
     @Override
     public void travel(@NotNull Vec3 travelVec) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            this.moveRelative(this.getSpeed(), travelVec);
-            this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+        if (ShiftedLensConfig.SALMON_REVAMP.get()) {
+            if (this.isEffectiveAi() && this.isInWater()) {
+                this.moveRelative(this.getSpeed(), travelVec);
+                this.move(MoverType.SELF, this.getDeltaMovement());
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+            } else {
+                super.travel(travelVec);
+            }
         } else {
             super.travel(travelVec);
         }
@@ -107,8 +119,8 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide()) {
-            shiftedLens$setupAnimationStates();
+        if (this.level().isClientSide && ShiftedLensConfig.SALMON_REVAMP.get()) {
+            this.shiftedLens$setupAnimationStates();
         }
     }
 
@@ -120,9 +132,13 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
 
     @Override
     public void calculateEntityAnimation(boolean flying) {
-        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
-        float f2 = Math.min(f1 * 10.0F, 1.0F);
-        this.walkAnimation.update(f2, 0.4F);
+        if (ShiftedLensConfig.SALMON_REVAMP.get()) {
+            float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+            float f2 = Math.min(f1 * 10.0F, 1.0F);
+            this.walkAnimation.update(f2, 0.4F);
+        } else {
+            super.calculateEntityAnimation(flying);
+        }
     }
 
     @Override
@@ -132,26 +148,26 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("Variant", this.shiftedLens$getVariant());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.shiftedLens$setVariant(compoundTag.getInt("Variant"));
     }
 
     @Override
-    public void saveToBucketTag(ItemStack bucket) {
+    public void saveToBucketTag(@NotNull ItemStack bucket) {
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
         CompoundTag compoundTag = bucket.getOrCreateTag();
         compoundTag.putInt("BucketVariantTag", this.shiftedLens$getVariant());
     }
 
     @Override
-    public void loadFromBucketTag(CompoundTag compoundTag) {
+    public void loadFromBucketTag(@NotNull CompoundTag compoundTag) {
         Bucketable.loadDefaultDataFromBucketTag(this, compoundTag);
         if (compoundTag.contains("BucketVariantTag", 3)) {
             this.shiftedLens$setVariant(compoundTag.getInt("BucketVariantTag"));
@@ -168,12 +184,19 @@ public abstract class SalmonMixin extends AbstractSchoolingFish implements Abstr
         this.entityData.set(shiftedLens$SALMON_VARIANT, variant);
     }
 
+    @Unique
+    private void shiftedLens$spawnSalmonVariant() {
+        if (ShiftedLensConfig.SALMON_REVAMP.get()) {
+            if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.shiftedLens$setVariant(1);
+            else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) this.shiftedLens$setVariant(2);
+            else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) this.shiftedLens$setVariant(3);
+            else this.shiftedLens$setVariant(0);
+        }
+    }
+
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_OCEAN_SALMON)) this.shiftedLens$setVariant(1);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_RIVER_SALMON)) this.shiftedLens$setVariant(2);
-        else if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_OCEAN_SALMON)) this.shiftedLens$setVariant(3);
-        else this.shiftedLens$setVariant(0);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
+        this.shiftedLens$spawnSalmonVariant();
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 }

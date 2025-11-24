@@ -10,7 +10,6 @@ import net.minecraftforge.common.data.SoundDefinitionsProvider;
 
 import java.util.function.Supplier;
 
-@SuppressWarnings("SameParameterValue")
 public class SLSoundDefinitionProvider extends SoundDefinitionsProvider {
 
     public SLSoundDefinitionProvider(PackOutput packOutput, ExistingFileHelper helper) {

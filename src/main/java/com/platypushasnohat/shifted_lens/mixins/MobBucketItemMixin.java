@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,7 @@ public abstract class MobBucketItemMixin {
     @Inject(method = "appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V", at = @At("TAIL"))
     public void appendHoverText(ItemStack stack, Level level, List<Component> components, TooltipFlag flag, CallbackInfo ci) {
         ChatFormatting[] chatFormatting = new ChatFormatting[]{ChatFormatting.ITALIC, ChatFormatting.GRAY};
-        if (getFishType() == EntityType.COD) {
+        if (this.getFishType() == EntityType.COD && ShiftedLensConfig.COD_REVAMP.get()) {
             CompoundTag compoundtag = stack.getTag();
             if (compoundtag != null && compoundtag.contains("BucketVariantTag", 3)) {
                 int i = compoundtag.getInt("BucketVariantTag");
@@ -38,7 +39,7 @@ public abstract class MobBucketItemMixin {
                 components.add(mutablecomponent);
             }
         }
-        if (getFishType() == EntityType.SALMON) {
+        if (this.getFishType() == EntityType.SALMON && ShiftedLensConfig.SALMON_REVAMP.get()) {
             CompoundTag compoundtag = stack.getTag();
             if (compoundtag != null && compoundtag.contains("BucketVariantTag", 3)) {
                 int i = compoundtag.getInt("BucketVariantTag");

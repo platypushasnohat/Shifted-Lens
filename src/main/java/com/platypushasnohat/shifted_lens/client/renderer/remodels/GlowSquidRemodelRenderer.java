@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.GlowSquid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class GlowSquidRemodelRenderer extends MobRenderer<GlowSquid, SLSquidModel<GlowSquid>> {
@@ -22,12 +23,12 @@ public class GlowSquidRemodelRenderer extends MobRenderer<GlowSquid, SLSquidMode
     }
 
     @Override
-    public ResourceLocation getTextureLocation(GlowSquid entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull GlowSquid entity) {
         return GLOW_SQUID;
     }
 
     @Override
-    protected void setupRotations(GlowSquid entity, PoseStack poseStack, float i, float g, float partialTicks) {
+    protected void setupRotations(@NotNull GlowSquid entity, @NotNull PoseStack poseStack, float i, float g, float partialTicks) {
         if (isEntityUpsideDown(entity)) {
             poseStack.translate(0.0D, entity.getBbHeight() + 0.1F, 0.0D);
             poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
@@ -40,7 +41,7 @@ public class GlowSquidRemodelRenderer extends MobRenderer<GlowSquid, SLSquidMode
     }
 
     @Override
-    protected float getBob(GlowSquid entity, float f) {
+    protected float getBob(@NotNull GlowSquid entity, float f) {
         return super.getBob(entity, f);
     }
 }

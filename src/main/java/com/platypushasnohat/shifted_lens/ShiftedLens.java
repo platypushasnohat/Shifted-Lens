@@ -38,8 +38,8 @@ public class ShiftedLens {
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::dataSetup);
 
-        context.registerConfig(ModConfig.Type.COMMON, ShiftedLensConfig.COMMON_CONFIG);
-        context.registerConfig(ModConfig.Type.CLIENT, ShiftedLensConfig.CLIENT_CONFIG);
+        context.registerConfig(ModConfig.Type.COMMON, ShiftedLensConfig.COMMON_CONFIG, "shifted-lens-general.toml");
+        context.registerConfig(ModConfig.Type.CLIENT, ShiftedLensConfig.CLIENT_CONFIG, "shifted-lens-client.toml");
 
         SLItems.ITEMS.register(modEventBus);
         SLSoundEvents.SOUND_EVENTS.register(modEventBus);

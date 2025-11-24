@@ -53,15 +53,13 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends FlyingMob> entityType, Level level, CallbackInfo ci) {
-        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
-            this.moveControl = new SLGhastMoveControl(this);
-        }
-        this.xpReward = 10;
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) this.moveControl = new SLGhastMoveControl(this);
+        if (ShiftedLensConfig.MORE_GHAST_XP.get()) this.xpReward = 10;
     }
 
     @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
-        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) {
             ci.cancel();
             this.goalSelector.addGoal(0, new SLGhastLookGoal((Ghast) (Object) this));
             this.goalSelector.addGoal(1, new SLGhastAttackGoal((Ghast) (Object) this));
@@ -73,7 +71,7 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Override
     public void travel(@NotNull Vec3 travelVector) {
-        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) {
             if (this.isEffectiveAi()) {
                 this.moveRelative(0.1F, travelVector);
                 this.move(MoverType.SELF, this.getDeltaMovement());
@@ -87,7 +85,7 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
-        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) {
             FlyingPathNavigation pathNavigation = new FlyingPathNavigation(this, level) {
                 public boolean isStableDestination(@NotNull BlockPos pos) {
                     return this.level.getBlockState(pos).isAir();
@@ -103,7 +101,7 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Override
     public boolean isNoGravity() {
-        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) {
             return true;
         }
         return super.isNoGravity();
@@ -111,7 +109,7 @@ public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAcc
 
     @Override
     public int getMaxHeadXRot() {
-        if (ShiftedLensConfig.BETTER_GHAST_AI.get()) {
+        if (ShiftedLensConfig.GHAST_REVAMP.get()) {
             return 500;
         }
         return super.getMaxHeadXRot();

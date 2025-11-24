@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.RabbitBreedGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.RabbitRaidGardenGoal;
 import com.platypushasnohat.shifted_lens.entities.ai.goals.SLRabbitAvoidEntityGoal;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,70 +54,76 @@ public abstract class RabbitMixin extends Animal implements VariantHolder<Rabbit
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends Rabbit> entityType, Level level, CallbackInfo ci) {
-        this.setMaxUpStep(1);
+        if (ShiftedLensConfig.RABBIT_STEP_UP.get()) this.setMaxUpStep(1);
     }
 
     @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
-        ci.cancel();
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new SLRabbitPanicGoal((Rabbit) (Object) this, 2.2D));
-        this.goalSelector.addGoal(1, new ClimbOnTopOfPowderSnowGoal(this, this.level()));
-        this.goalSelector.addGoal(2, new RabbitBreedGoal(this));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.2D, Ingredient.of(Items.CARROT, Items.GOLDEN_CARROT, Blocks.DANDELION), false));
-        this.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>((Rabbit) (Object) this, LivingEntity.class, livingEntity -> livingEntity.getType().is(SLEntityTags.RABBIT_AVOIDS)));
-        this.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>((Rabbit) (Object) this, Player.class));
-        this.goalSelector.addGoal(5, new RabbitRaidGardenGoal((Rabbit) (Object) this));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        if (ShiftedLensConfig.RABBIT_REVAMP.get()) {
+            ci.cancel();
+            this.goalSelector.addGoal(1, new FloatGoal(this));
+            this.goalSelector.addGoal(1, new SLRabbitPanicGoal((Rabbit) (Object) this, 2.2D));
+            this.goalSelector.addGoal(1, new ClimbOnTopOfPowderSnowGoal(this, this.level()));
+            this.goalSelector.addGoal(2, new RabbitBreedGoal(this));
+            this.goalSelector.addGoal(3, new TemptGoal(this, 1.2D, Ingredient.of(Items.CARROT, Items.GOLDEN_CARROT, Blocks.DANDELION), false));
+            this.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>((Rabbit) (Object) this, LivingEntity.class, livingEntity -> livingEntity.getType().is(SLEntityTags.RABBIT_AVOIDS)));
+            this.goalSelector.addGoal(4, new SLRabbitAvoidEntityGoal<>((Rabbit) (Object) this, Player.class));
+            this.goalSelector.addGoal(5, new RabbitRaidGardenGoal((Rabbit) (Object) this));
+            this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+            this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        }
     }
 
     @Inject(method = "getJumpPower()F", at = @At("HEAD"), cancellable = true)
     private void jumpPower(CallbackInfoReturnable<Float> cir) {
-        cir.cancel();
-        float f = 0.3F;
+        if (ShiftedLensConfig.RABBIT_REVAMP.get()) {
+            cir.cancel();
+            float f = 0.3F;
 
-        if (this.horizontalCollision || this.moveControl.hasWanted() && this.moveControl.getWantedY() > this.getY() + 0.5D) {
-            f = 0.6F;
-        }
-
-        Path path = this.navigation.getPath();
-        if (path != null && !path.isDone()) {
-            Vec3 vec3 = path.getNextEntityPos(this);
-            if (vec3.y > this.getY() + 0.5D) {
+            if (this.horizontalCollision || this.moveControl.hasWanted() && this.moveControl.getWantedY() > this.getY() + 0.5D) {
                 f = 0.6F;
             }
-        }
 
-        if (this.moveControl.getSpeedModifier() <= 0.6D) {
-            f = 0.3F;
+            Path path = this.navigation.getPath();
+            if (path != null && !path.isDone()) {
+                Vec3 vec3 = path.getNextEntityPos(this);
+                if (vec3.y > this.getY() + 0.5D) {
+                    f = 0.6F;
+                }
+            }
+
+            if (this.moveControl.getSpeedModifier() <= 0.6D) {
+                f = 0.3F;
+            }
+            cir.setReturnValue(f + this.getJumpBoostPower());
         }
-        cir.setReturnValue(f + this.getJumpBoostPower());
     }
 
     @Override
     protected int calculateFallDamage(float f, float f1) {
-        return super.calculateFallDamage(f, f1) - 12;
+        return ShiftedLensConfig.RABBIT_FALL_DAMAGE_TWEAK.get() ? super.calculateFallDamage(f, f1) - 12 : super.calculateFallDamage(f, f1);
     }
 
     @Inject(method = "setVariant(Lnet/minecraft/world/entity/animal/Rabbit$Variant;)V", at = @At("HEAD"), cancellable = true)
     public void setVariant(Rabbit.Variant variant, CallbackInfo ci) {
-        ci.cancel();
-        Rabbit rabbit = (Rabbit) (Object) this;
-        if (variant == Rabbit.Variant.EVIL) {
-            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0D);
-            this.heal(this.getMaxHealth());
-            this.goalSelector.addGoal(4, new MeleeAttackGoal(rabbit, 1.75D, false));
-            this.targetSelector.addGoal(1, new HurtByTargetGoal(rabbit).setAlertOthers());
-            this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(rabbit, Player.class, true));
-            this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(rabbit, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.KILLER_RABBIT_TARGETS)));
+        if (ShiftedLensConfig.RABBIT_REVAMP.get()) {
+            ci.cancel();
+            Rabbit rabbit = (Rabbit) (Object) this;
+            if (variant == Rabbit.Variant.EVIL) {
+                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
+                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0D);
+                this.heal(this.getMaxHealth());
+                this.goalSelector.addGoal(4, new MeleeAttackGoal(rabbit, 1.75D, false));
+                this.targetSelector.addGoal(1, new HurtByTargetGoal(rabbit).setAlertOthers());
+                this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(rabbit, Player.class, true));
+                this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(rabbit, LivingEntity.class, 10, true, false, livingEntity -> livingEntity.getType().is(SLEntityTags.KILLER_RABBIT_TARGETS)));
+            }
+            this.entityData.set(DATA_TYPE_ID, variant.id());
         }
-        this.entityData.set(DATA_TYPE_ID, variant.id());
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         if (this.getVariant() == Rabbit.Variant.EVIL) {
             this.playSound(SoundEvents.RABBIT_ATTACK, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             return super.doHurtTarget(entity);
@@ -126,7 +134,7 @@ public abstract class RabbitMixin extends Animal implements VariantHolder<Rabbit
     @Inject(method = "getRandomRabbitVariant(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/entity/animal/Rabbit$Variant;", at = @At("TAIL"), cancellable = true)
     private static void getRabbitVariant(LevelAccessor level, BlockPos pos, CallbackInfoReturnable<Rabbit.Variant> cir) {
         int i = level.getRandom().nextInt(2500);
-        if (i < 1) {
+        if (i < 1 && ShiftedLensConfig.NATURAL_KILLER_RABBITS.get()) {
             cir.setReturnValue(Rabbit.Variant.EVIL);
         }
     }

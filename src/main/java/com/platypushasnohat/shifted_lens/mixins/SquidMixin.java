@@ -46,6 +46,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Mixin(Squid.class)
 public abstract class SquidMixin extends WaterAnimal implements VariantAccess, AnimationStateAccess, Bucketable {
 
@@ -86,7 +87,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends WaterAnimal> entityType, Level level, CallbackInfo ci) {
-        if (ShiftedLensConfig.BETTER_SQUID_AI.get()) {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
             this.moveControl = new SmoothSwimmingMoveControl(this, 45, 10, 0.02F, 0.1F, false);
             this.lookControl = new SquidLookControl(this);
         }
@@ -94,7 +95,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Inject(method = "registerGoals()V", at = @At("HEAD"), cancellable = true)
     protected void registerGoals(CallbackInfo ci) {
-        if (ShiftedLensConfig.BETTER_SQUID_AI.get()) {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
             ci.cancel();
             this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
             this.goalSelector.addGoal(1, new SquidPanicGoal(this, 2.0D));
@@ -104,7 +105,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
-        if (ShiftedLensConfig.BETTER_SQUID_AI.get()) {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
             return new WaterBoundPathNavigation(this, level);
         }
         return super.createNavigation(level);
@@ -112,7 +113,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Override
     public void travel(@NotNull Vec3 travelVector) {
-        if (ShiftedLensConfig.BETTER_SQUID_AI.get()) {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
             if (this.isEffectiveAi() && this.isInWaterOrBubble()) {
                 this.moveRelative(this.getSpeed(), travelVector);
                 this.move(MoverType.SELF, this.getDeltaMovement());
@@ -129,7 +130,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Inject(method = "aiStep()V", at = @At("HEAD"), cancellable = true)
     public void aiStep(CallbackInfo ci) {
-        if (ShiftedLensConfig.BETTER_SQUID_AI.get()) {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
             ci.cancel();
             super.aiStep();
 
@@ -155,7 +156,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
             }
 
             // keep tentacle rotation values
-            this.shiftedLens$animateTentacles();
+//            this.shiftedLens$animateTentacles();
         }
 
         if (ShiftedLensConfig.FLOPPING_SQUIDS.get()) {
@@ -173,7 +174,7 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide && ShiftedLensConfig.SQUID_REVAMP.get()) {
             this.shiftedLens$setupAnimationStates();
         }
     }
@@ -237,14 +238,16 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Inject(at = @At("HEAD"), method = "spawnInk", cancellable = true)
     private void spawnInk(CallbackInfo ci) {
-        ci.cancel();
-        this.playSound(this.getSquirtSound(), this.getSoundVolume(), this.getVoicePitch());
-        if (!this.level().isClientSide) {
-            Vec3 inkDirection = new Vec3(0, 0, -1.2F).xRot(-this.getXRot() * Mth.DEG_TO_RAD).yRot(-this.yBodyRot * Mth.DEG_TO_RAD);
-            Vec3 vec3 = this.position().add(inkDirection);
-            for (int i = 0; i < 30; ++i) {
-                Vec3 vec32 = inkDirection.add(random.nextFloat() - 0.5F, random.nextFloat() - 0.5F, random.nextFloat() - 0.5F).scale(0.8D + (double) (this.random.nextFloat() * 2.0F));
-                ((ServerLevel) this.level()).sendParticles(this.getInkParticle(), vec3.x, vec3.y + 0.5D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
+            ci.cancel();
+            this.playSound(this.getSquirtSound(), this.getSoundVolume(), this.getVoicePitch());
+            if (!this.level().isClientSide) {
+                Vec3 inkDirection = new Vec3(0, 0, -1.2F).xRot(-this.getXRot() * Mth.DEG_TO_RAD).yRot(-this.yBodyRot * Mth.DEG_TO_RAD);
+                Vec3 vec3 = this.position().add(inkDirection);
+                for (int i = 0; i < 30; ++i) {
+                    Vec3 vec32 = inkDirection.add(random.nextFloat() - 0.5F, random.nextFloat() - 0.5F, random.nextFloat() - 0.5F).scale(0.8D + (double) (this.random.nextFloat() * 2.0F));
+                    ((ServerLevel) this.level()).sendParticles(this.getInkParticle(), vec3.x, vec3.y + 0.5D, vec3.z, 0, vec32.x, vec32.y, vec32.z, 0.1F);
+                }
             }
         }
         if (ShiftedLensConfig.BLINDING_SQUIDS.get()) {
@@ -302,7 +305,11 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+        if (ShiftedLensConfig.BUCKETABLE_SQUIDS.get()) {
+            return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+        } else {
+            return super.mobInteract(player, hand);
+        }
     }
 
     @Override
@@ -336,10 +343,17 @@ public abstract class SquidMixin extends WaterAnimal implements VariantAccess, A
         this.entityData.set(SQUID_VARIANT, variant);
     }
 
+    @Unique
+    private void shiftedLens$spawnSquidVariant() {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
+            if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_SQUID)) this.shiftedLens$setVariant(1);
+            else this.shiftedLens$setVariant(0);
+        }
+    }
+
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag compoundTag) {
-        if (this.level().getBiome(this.blockPosition()).is(SLBiomeTags.SPAWNS_COLD_SQUID)) this.shiftedLens$setVariant(1);
-        else this.shiftedLens$setVariant(0);
+        this.shiftedLens$spawnSquidVariant();
         return super.finalizeSpawn(level, difficulty, spawnType, spawnData, compoundTag);
     }
 }

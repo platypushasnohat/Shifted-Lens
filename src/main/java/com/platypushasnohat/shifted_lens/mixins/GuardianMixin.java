@@ -1,5 +1,6 @@
 package com.platypushasnohat.shifted_lens.mixins;
 
+import com.platypushasnohat.shifted_lens.ShiftedLensConfig;
 import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.core.particles.ParticleTypes;
@@ -56,8 +57,10 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends Guardian> entityType, Level level, CallbackInfo callbackInfo) {
-        this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
-        this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        if (ShiftedLensConfig.GUARDIAN_REVAMP.get()) {
+            this.moveControl = new SmoothSwimmingMoveControl(this, 1000, 10, 0.02F, 0.1F, false);
+            this.lookControl = new SmoothSwimmingLookControl(this, 10);
+        }
     }
 
     @Inject(method = "registerGoals()V", at = @At("TAIL"))
@@ -80,7 +83,7 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide()) {
+        if (this.level().isClientSide && ShiftedLensConfig.GUARDIAN_REVAMP.get()) {
             this.shiftedLens$setupAnimationStates();
             if (this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.01D) {
                 Vec3 vec31 = this.getViewVector(0.0F);
@@ -98,8 +101,12 @@ public abstract class GuardianMixin extends Monster implements AnimationStateAcc
 
     @Override
     public void calculateEntityAnimation(boolean flying) {
-        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
-        float f2 = Math.min(f1 * 10.0F, 1.0F);
-        this.walkAnimation.update(f2, 0.4F);
+        if (ShiftedLensConfig.GUARDIAN_REVAMP.get()) {
+            float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+            float f2 = Math.min(f1 * 10.0F, 1.0F);
+            this.walkAnimation.update(f2, 0.4F);
+        } else {
+            super.calculateEntityAnimation(flying);
+        }
     }
 }

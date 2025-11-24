@@ -26,7 +26,7 @@ public class SLSquidRenderer extends EntityRenderer<Squid> {
 
     @Override
     public void render(@NotNull Squid squid, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (ShiftedLensConfig.SQUID_REMODEL.get()) {
+        if (ShiftedLensConfig.SQUID_REVAMP.get()) {
             this.remodel.render(squid, yaw, partialTicks, poseStack, bufferSource, packedLight);
         } else {
             this.vanilla.render(squid, yaw, partialTicks, poseStack, bufferSource, packedLight);
@@ -35,6 +35,6 @@ public class SLSquidRenderer extends EntityRenderer<Squid> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Squid squid) {
-        return ShiftedLensConfig.SQUID_REMODEL.get() ? this.remodel.getTextureLocation(squid) : this.vanilla.getTextureLocation(squid);
+        return ShiftedLensConfig.SQUID_REVAMP.get() ? this.remodel.getTextureLocation(squid) : this.vanilla.getTextureLocation(squid);
     }
 }
