@@ -9,6 +9,8 @@ import com.platypushasnohat.shifted_lens.mixin_utils.AnimationStateAccess;
 import com.platypushasnohat.shifted_lens.registry.tags.SLEntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -24,6 +26,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Ghast.class)
 public abstract class GhastMixin extends Mob implements Enemy, AnimationStateAccess {
